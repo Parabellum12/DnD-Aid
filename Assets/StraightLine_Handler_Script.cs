@@ -47,7 +47,7 @@ public class StraightLine_Handler_Script : MonoBehaviour
 
     public void handleMove()
     {
-        Debug.Log("handleMove");
+        //Debug.Log("handleMove");
         if (pointToMove != null)
         {
             pointToMove.x = snapMarkerTransform.position.x;
