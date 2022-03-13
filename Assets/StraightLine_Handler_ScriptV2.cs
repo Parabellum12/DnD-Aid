@@ -131,6 +131,94 @@ public class StraightLine_Handler_ScriptV2 : MonoBehaviour
         }
         return new Point(pos);
     }
+    private Point getPointValueOrNull(Vector2 pos)
+    {
+        foreach (Point p in allPoints)
+        {
+            if (p.x == pos.x && p.y == pos.y)
+            {
+                return p;
+            }
+        }
+        return null;
+    }
+
+    private Point getPointValueOrNull(Vector2 pos, Point pointToIgnore)
+    {
+        foreach (Point p in allPoints)
+        {
+            if (p.x == pos.x && p.y == pos.y && p != pointToIgnore )
+            {
+                return p;
+            }
+        }
+        return null;
+    }
+
+
+    Point pointToMove = null;
+    bool moveStarted = false;
+    public void handleMoveStart(Vector2 pos)
+    {
+        pointToMove = getPointValueOrNull(pos);
+        if (pointToMove != null)
+        {
+            moveStarted = true;
+        }
+    }
+
+    public void handleMoveEnd()
+    {
+        if (!moveStarted)
+        {
+            return;
+        }
+        Point EndPointTest = getPointValueOrNull(new Vector2(pointToMove.x, pointToMove.y), pointToMove);
+        if (EndPointTest != null)
+        {
+            //moved over another point
+            List<Point> pointedToMovedPoint = getPointsPointingTo(pointToMove);
+            foreach (Point p in pointedToMovedPoint)
+            {
+                p.NextPoints.Remove(pointToMove);
+                p.NextPoints.Add(EndPointTest);
+            }
+            foreach (Point p in pointToMove.NextPoints)
+            {
+                if (!EndPointTest.NextPoints.Contains(p))
+                {
+                    EndPointTest.NextPoints.Add(p);
+                }
+            }
+            allPoints.Remove(pointToMove);
+        }
+        pointToMove = null;
+        moveStarted = false;
+        needToUpdateLines = true;
+    }
+
+    private List<Point> getPointsPointingTo(Point point)
+    {
+        List<Point> returner = new List<Point>();
+        foreach (Point p in allPoints)
+        {
+            if (p.NextPoints.Contains(point) && p != point)
+            {
+                returner.Add(p);
+            }
+        }
+        return returner;
+    }
+
+    public void handleMove(Vector2 pos)
+    {
+        if (moveStarted)
+        {
+            pointToMove.x = pos.x;
+            pointToMove.y = pos.y;
+            needToUpdateLines=true;
+        }
+    }
 
 
 
@@ -158,5 +246,6 @@ public class StraightLine_Handler_ScriptV2 : MonoBehaviour
             }
             return temp;
         }
+
     }
 }

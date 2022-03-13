@@ -24,7 +24,7 @@ public class Main_Handler_Script : MonoBehaviour
     }
 
     public tools ActiveTool = tools.DrawStraightLine;
-
+    bool Moveing = false;
     // Update is called once per frame
     void Update()
     {
@@ -47,6 +47,11 @@ public class Main_Handler_Script : MonoBehaviour
             {
                 handleCreateLine();
             }
+            if (ActiveTool == tools.move)
+            {
+                straightLine_Handler.handleMoveStart(new Vector2(GridSnapMarker.transform.position.x, GridSnapMarker.transform.position.y));
+                Moveing = true;
+            }
         }
         if (Input.GetMouseButtonDown(1))
         {
@@ -58,6 +63,26 @@ public class Main_Handler_Script : MonoBehaviour
                 pos1 = new Vector2();
             }
         }
+
+
+        if (Input.GetMouseButton(0))
+        {
+            if (ActiveTool == tools.move && Moveing)
+            {
+                straightLine_Handler.handleMove(new Vector2(GridSnapMarker.transform.position.x, GridSnapMarker.transform.position.y));
+            }
+        }
+
+        if (Input.GetMouseButtonUp(0))
+        {
+            if (ActiveTool == tools.move && Moveing)
+            {
+                straightLine_Handler.handleMoveEnd();
+                Moveing = false;
+            }
+        }
+
+
 
         if (!startNew)
         {
