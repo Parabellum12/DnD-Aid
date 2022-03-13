@@ -1,9 +1,9 @@
 ﻿
 
+/*
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
 public class WorldTileVisual : MonoBehaviour {
 
     private GridClass<World_Handler_Script.WorldBuildTile> objectGrid;
@@ -56,7 +56,7 @@ public class WorldTileVisual : MonoBehaviour {
         mesh.uv = uv;
         mesh.triangles = triangles;
     }
-
 }
+*/
 
 
