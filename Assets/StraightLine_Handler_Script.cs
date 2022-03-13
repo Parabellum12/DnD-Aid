@@ -10,13 +10,21 @@ public class StraightLine_Handler_Script : MonoBehaviour
     static Transform snapMarkerTransform;
     public handlerState state;
 
+
+    StraightLineShape mainShape;
+
+
+
+
     // Start is called before the first frame update
     void Start()
     {
         state = handlerState.New;
         snapMarkerTransform = snapMarker;
+        mainShape = new StraightLineShape(snapMarkerTransform);
     }
     bool needToUpdateRenderers = false;
+    public StraightLinePoint pointToMove;
     // Update is called once per frame
     void Update()
     {
@@ -36,6 +44,18 @@ public class StraightLine_Handler_Script : MonoBehaviour
             updateAllShapes();
         }
     }
+
+    public void handleMove()
+    {
+        Debug.Log("handleMove");
+        if (pointToMove != null)
+        {
+            pointToMove.x = snapMarkerTransform.position.x;
+            pointToMove.y = snapMarkerTransform.position.y;
+            needToUpdateRenderers = true;
+        }
+    }
+
 
     private void updateAllShapes()
     {
@@ -114,10 +134,10 @@ public class StraightLine_Handler_Script : MonoBehaviour
     StraightLineShape newShape;
     private void handleNewShapeClick()
     {
+        newShape = mainShape;
         StraightLinePoint clickedPoint = getClickedPoint();
         if (clickedPoint == null)
         {
-            newShape = new StraightLineShape(snapMarkerTransform);
             //not clicked on point as starter
             StraightLinePoint newPoint = new StraightLinePoint();
             newPoint.x = snapMarker.position.x;
@@ -128,10 +148,9 @@ public class StraightLine_Handler_Script : MonoBehaviour
         }
         else
         {
-            newShape = new StraightLineShape(snapMarkerTransform);
-            newShape.shapePoints.Add(clickedPoint);
-
-
+            //newShape.shapePoints.Add(clickedPoint);
+            CurrentSelectedPoint = clickedPoint;
+            /*
             StraightLinePoint newPoint = new StraightLinePoint();
             newPoint.x = snapMarker.position.x;
             newPoint.y = snapMarker.position.y;
@@ -139,6 +158,7 @@ public class StraightLine_Handler_Script : MonoBehaviour
             CurrentSelectedPoint.nextPoints.Add(newPoint);
             newShape.shapePoints.Add(newPoint);
             CurrentSelectedPoint = newPoint;
+            */
 
         }
 
@@ -148,7 +168,7 @@ public class StraightLine_Handler_Script : MonoBehaviour
 
     }
 
-    private StraightLinePoint getClickedPoint()
+    public StraightLinePoint getClickedPoint()
     {
         StraightLinePoint temp;
         foreach (StraightLineShape shape in straightLineShapes)

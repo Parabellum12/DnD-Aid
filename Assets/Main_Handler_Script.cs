@@ -13,22 +13,66 @@ public class Main_Handler_Script : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+
     }
 
+    public enum tools
+    {
+        select,
+        DrawStraightLine,
+        move
+    }
+
+    public tools ActiveTool = tools.DrawStraightLine;
     // Update is called once per frame
     void Update()
     {
+
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            ActiveTool = tools.DrawStraightLine;
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            ActiveTool = tools.move;
+        }
+
+
+
+
         updateBackgroundGrid();
 
+        //click button/mouse
         if (Input.GetMouseButtonDown(0))
         {
-            straightLine_Handler.handleLeftClick();
+            if (ActiveTool == tools.DrawStraightLine)
+            {
+                straightLine_Handler.handleLeftClick();
+            }
+            else if (ActiveTool == tools.move)
+            {
+                straightLine_Handler.pointToMove = straightLine_Handler.getClickedPoint();
+            }
         }
         if (Input.GetMouseButtonDown(1))
         {
-            straightLine_Handler.handleRightClick();
+            if (ActiveTool == tools.DrawStraightLine)
+            {
+                straightLine_Handler.handleRightClick();
+            }
         }
 
+
+        //hold button/mouse
+        if (Input.GetMouseButton(0))
+        {
+            //hold left click
+
+            if (ActiveTool == tools.move)
+            {
+                straightLine_Handler.handleMove();
+            }
+        }
     }
 
     List<Vector3> pointsList = new List<Vector3>();
