@@ -7,8 +7,8 @@ public class Main_Handler_Script : MonoBehaviour
     [SerializeField] LineRenderer BackGroundLR;
     [SerializeField] int modValue = 4;
     [SerializeField] Transform mainCam;
-    [SerializeField] StraightLine_Handler_Script straightLine_Handler;
-
+    [SerializeField] StraightLine_Handler_ScriptV2 straightLine_Handler;
+    [SerializeField] Transform GridSnapMarker;
 
     // Start is called before the first frame update
     void Start()
@@ -24,10 +24,11 @@ public class Main_Handler_Script : MonoBehaviour
     }
 
     public tools ActiveTool = tools.DrawStraightLine;
+
     // Update is called once per frame
     void Update()
     {
-
+        //change selected tools
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
             ActiveTool = tools.DrawStraightLine;
@@ -37,41 +38,57 @@ public class Main_Handler_Script : MonoBehaviour
             ActiveTool = tools.move;
         }
 
-
-
-
         updateBackgroundGrid();
 
-        //click button/mouse
         if (Input.GetMouseButtonDown(0))
         {
+            //left click
             if (ActiveTool == tools.DrawStraightLine)
             {
-                straightLine_Handler.handleLeftClick();
-            }
-            else if (ActiveTool == tools.move)
-            {
-                straightLine_Handler.pointToMove = straightLine_Handler.getClickedPoint();
+                handleCreateLine();
             }
         }
         if (Input.GetMouseButtonDown(1))
         {
             if (ActiveTool == tools.DrawStraightLine)
             {
-                straightLine_Handler.handleRightClick();
+                needToRemove = false;
+                straightLine_Handler.endGuideLine();
+                startNew = true;
+                pos1 = new Vector2();
             }
         }
 
-
-        //hold button/mouse
-        if (Input.GetMouseButton(0))
+        if (!startNew)
         {
-            //hold left click
+            straightLine_Handler.drawGuideLine(new Vector3(pos1.x, pos1.y, -1), new Vector3(GridSnapMarker.transform.position.x, GridSnapMarker.transform.position.y, -1));
+            needToRemove = true;
+        }
+        else if (needToRemove)
+        {
+            needToRemove = false;
+            straightLine_Handler.endGuideLine();
+        }
+    }
 
-            if (ActiveTool == tools.move)
-            {
-                straightLine_Handler.handleMove();
-            }
+    Vector2 pos1 = new Vector2();
+    bool startNew = true;
+    bool needToRemove = false;
+
+    private void handleCreateLine()
+    {
+        if (startNew)
+        {
+            //new line
+            startNew = false;
+            pos1 = new Vector2(GridSnapMarker.position.x, GridSnapMarker.position.y);
+        }
+        else
+        {
+            //continue line
+            Vector2 pos2 = new Vector2(GridSnapMarker.position.x, GridSnapMarker.position.y);
+            straightLine_Handler.AddLine(pos1, pos2);
+            pos1 = pos2;
         }
     }
 
