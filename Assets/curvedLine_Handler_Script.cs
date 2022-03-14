@@ -23,6 +23,8 @@ public class curvedLine_Handler_Script : MonoBehaviour
         }
     }
     bool needToUpdateSpline = false;
+
+
     public void addPos(Vector3 pos)
     {
         AllPositions.Add(pos);
