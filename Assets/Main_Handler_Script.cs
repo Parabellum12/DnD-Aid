@@ -8,6 +8,7 @@ public class Main_Handler_Script : MonoBehaviour
     [SerializeField] int modValue = 4;
     [SerializeField] Transform mainCam;
     [SerializeField] StraightLine_Handler_ScriptV2 straightLine_Handler;
+    [SerializeField] curvedLine_Handler_Script splineLineHandler;
     [SerializeField] Transform GridSnapMarker;
 
     // Start is called before the first frame update
@@ -20,7 +21,8 @@ public class Main_Handler_Script : MonoBehaviour
     {
         select,
         DrawStraightLine,
-        move
+        move,
+        curve
     }
 
     public tools ActiveTool = tools.DrawStraightLine;
@@ -37,6 +39,10 @@ public class Main_Handler_Script : MonoBehaviour
         {
             ActiveTool = tools.move;
         }
+        else if (Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            ActiveTool = tools.curve;
+        }
 
         updateBackgroundGrid();
 
@@ -51,6 +57,10 @@ public class Main_Handler_Script : MonoBehaviour
             {
                 straightLine_Handler.handleMoveStart(new Vector2(GridSnapMarker.transform.position.x, GridSnapMarker.transform.position.y));
                 Moveing = true;
+            }
+            if (ActiveTool == tools.curve)
+            {
+                splineLineHandler.addPos(GridSnapMarker.transform.position);
             }
         }
         if (Input.GetMouseButtonDown(1))

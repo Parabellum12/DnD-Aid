@@ -45,7 +45,7 @@ public class StraightLine_Handler_ScriptV2 : MonoBehaviour
             Vector4 vec4 = lines[i];
             Vector3 start = new Vector3(vec4.x, vec4.y, -1);
             Vector3 end = new Vector3(vec4.z, vec4.w, -1);
-            lineHolders[i] = new GameObject("LineHolder:+i");
+            lineHolders[i] = new GameObject("LineHolder:" + i);
             lineHolders[i].transform.parent = LineHolder.transform;
             lineHolders[i].AddComponent<LineRenderer>();
             lineRenderers[i] = lineHolders[i].GetComponent<LineRenderer>();
@@ -156,6 +156,8 @@ public class StraightLine_Handler_ScriptV2 : MonoBehaviour
     }
 
 
+
+    //handle moving
     Point pointToMove = null;
     bool moveStarted = false;
     public void handleMoveStart(Vector2 pos)
@@ -221,6 +223,59 @@ public class StraightLine_Handler_ScriptV2 : MonoBehaviour
     }
 
 
+    //save load
+
+    public List<string> ReturnSavePointsAsString()
+    {
+        List<string> returner = new List<string>();
+        foreach (Point p in allPoints)
+        {
+            returner.AddRange(p.getLinesAsSaveList());
+        }
+        return returner;
+    }
+
+    public void LoadFromSavePointsSAsString(List<string> lines)
+    {
+        foreach (string s in lines)
+        {
+            string[] data = s.Split(':');
+            if (data[0].Equals("SLCD"))
+            {
+                string[] dataValues = data[1].Split(',');
+                if (dataValues.Length != 4)
+                {
+                    Debug.Log("Error: Incorrect Line Data Points");
+                }
+                else
+                {
+                    Vector2 start = new Vector2(int.Parse(dataValues[0]), int.Parse(dataValues[1]));
+                    Vector2 end = new Vector2(int.Parse(dataValues[2]), int.Parse(dataValues[3]));
+                    AddLine(start, end);
+                }
+            }
+            else
+            {
+                Debug.Log("Error: Incorrect Line Load Tag");
+            }
+        }
+
+    }
+
+    //testing stuff
+
+    public void clearPoints()
+    {
+        foreach (GameObject g in lineHolders)
+        {
+            Destroy(g);
+        }
+        lineHolders = new GameObject[0];
+        lineRenderers = new LineRenderer[0];
+        allPoints.Clear();
+    }
+
+
 
     public class Point
     {
@@ -245,6 +300,16 @@ public class StraightLine_Handler_ScriptV2 : MonoBehaviour
                 temp.Add(new Vector4(x, y, p.x, p.y));
             }
             return temp;
+        }
+
+        public List<string> getLinesAsSaveList()
+        {
+            List<string> returner = new List<string>();
+            foreach (Point pEnd in NextPoints)
+            {
+                returner.Add("SLCD:" + x + "," + y + "," + pEnd.x + "," + pEnd.y);
+            }
+            return returner;
         }
 
     }
