@@ -106,7 +106,7 @@ public class curvedLine_Handler_Script : MonoBehaviour
     {
         V2.clearPoints();
         List<Vector3> pointsToRender = new List<Vector3>();
-        for (float i = 0; i < 1; i += 0.01f)
+        for (float i = 0; i < 1; i += 0.001f)
         {
             pointsToRender.Add(finalSpline.getLerpPoint(i));
         }

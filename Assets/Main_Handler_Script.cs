@@ -8,7 +8,7 @@ public class Main_Handler_Script : MonoBehaviour
     [SerializeField] int modValue = 4;
     [SerializeField] Transform mainCam;
     [SerializeField] StraightLine_Handler_ScriptV2 straightLine_Handler;
-    [SerializeField] curvedLine_Handler_Script splineLineHandler;
+    [SerializeField] CurvedLine_Handler_ScriptV2 splineLineHandler;
     [SerializeField] Transform GridSnapMarker;
 
     // Start is called before the first frame update
@@ -46,7 +46,7 @@ public class Main_Handler_Script : MonoBehaviour
 
         updateBackgroundGrid();
 
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0) && !UtilClass.IsPointerOverUIElement(LayerMask.NameToLayer("UI")))
         {
             //left click
             if (ActiveTool == tools.DrawStraightLine)
@@ -60,7 +60,7 @@ public class Main_Handler_Script : MonoBehaviour
             }
             if (ActiveTool == tools.curve)
             {
-                splineLineHandler.addPos(GridSnapMarker.transform.position);
+                splineLineHandler.addPoint(new Vector3(GridSnapMarker.transform.position.x, GridSnapMarker.transform.position.y, -2));
             }
         }
         if (Input.GetMouseButtonDown(1))
@@ -71,6 +71,11 @@ public class Main_Handler_Script : MonoBehaviour
                 straightLine_Handler.endGuideLine();
                 startNew = true;
                 pos1 = new Vector2();
+            }
+            if (ActiveTool == tools.curve)
+            {
+                splineLineHandler.handleEndGuideLine();
+                splineLineHandler.endCurve();
             }
         }
 
@@ -93,7 +98,9 @@ public class Main_Handler_Script : MonoBehaviour
         }
 
 
-
+        splineLineHandler.handleGuideLine(new Vector3(GridSnapMarker.transform.position.x, GridSnapMarker.transform.position.y, -2));
+        
+        
         if (!startNew)
         {
             straightLine_Handler.drawGuideLine(new Vector3(pos1.x, pos1.y, -1), new Vector3(GridSnapMarker.transform.position.x, GridSnapMarker.transform.position.y, -1));

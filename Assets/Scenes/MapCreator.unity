@@ -161,7 +161,7 @@ MonoBehaviour:
   modValue: 4
   mainCam: {fileID: 993399844}
   straightLine_Handler: {fileID: 32627905}
-  splineLineHandler: {fileID: 32627904}
+  splineLineHandler: {fileID: 32627907}
   GridSnapMarker: {fileID: 418869178}
   ActiveTool: 1
 --- !u!120 &32627902
@@ -337,6 +337,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 739b0714d2259494fa555eb5e114dd79, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  maxCurveLines: 12
+  LowOrHighResLine: 0
+  currentState: 0
 --- !u!1 &418869175
 GameObject:
   m_ObjectHideFlags: 0
