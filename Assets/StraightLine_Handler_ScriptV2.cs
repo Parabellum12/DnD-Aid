@@ -225,17 +225,27 @@ public class StraightLine_Handler_ScriptV2 : MonoBehaviour
 
     //save load
 
-    public List<string> ReturnSavePointsAsString()
+    public string ReturnSavePointsAsString()
     {
-        List<string> returner = new List<string>();
+        List<string> returnerData = new List<string>();
         foreach (Point p in allPoints)
         {
-            returner.AddRange(p.getLinesAsSaveList());
+            returnerData.AddRange(p.getLinesAsSaveList());
+        }
+        //SLTD = straight line total data
+        string returner = "SLTD[";
+        for (int i = 0; i < returnerData.Count; i++)
+        {
+            returner += returnerData[i];
+            if (i != returnerData.Count - 1)
+            {
+                returner += "|";
+            }
         }
         return returner;
     }
 
-    public void LoadFromSavePointsSAsString(List<string> lines)
+    public void LoadFromSavePointsAsString(List<string> lines)
     {
         foreach (string s in lines)
         {
