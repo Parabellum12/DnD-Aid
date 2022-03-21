@@ -19,6 +19,14 @@ public class CurvedLine_Handler_ScriptV2 : MonoBehaviour
         
     }
 
+    public void drawLines()
+    {
+        foreach (CurvedLine line in completeLines)
+        {
+            line.drawCurve();
+        }
+    }
+
 
     public void handleGuideLine(Vector3 mousePos)
     {
@@ -34,6 +42,62 @@ public class CurvedLine_Handler_ScriptV2 : MonoBehaviour
             TempLine.addPoint(mousePos);
             TempLine.drawCurve();
             TempLine.removeLastPoint();
+        }
+    }
+
+    public string getCurveLineSaveData()
+    {
+        string returner = "TCLD[";
+        if (completeLines.Count == 0)
+        {
+            return null;
+        }
+        for (int i = 0; i < completeLines.Count; i++)
+        {
+            returner += completeLines[i].getSaveDataAsString();
+            if (i != completeLines.Count-1)
+            {
+                returner += "|";
+            }
+        }
+        return returner;
+    }
+
+    public void loadFromString(string s)
+    {
+        string[] tagAndData = s.Split('[');
+        if (tagAndData[0].Equals("TCLD"))
+        {
+            endCurve();
+            foreach (CurvedLine cl in completeLines)
+            {
+                cl.killMe();
+            }
+            completeLines.Clear();
+            string[] data = tagAndData[1].Split('|');
+            foreach (string dataAndValue in data)
+            {
+                loadFromData(dataAndValue);
+            }
+        }
+    }
+
+    private void loadFromData(string data)
+    {
+        string[] tagAndValues = data.Split('}');
+        if (tagAndValues[0].Equals("CLD"))
+        {
+            //valid data tag
+            string[] values = tagAndValues[1].Split(':');
+            foreach (string vecData in values)
+            {
+                string[] nums = vecData.Split(',');
+                Vector3 vector3 = new Vector3(float.Parse(nums[0]), float.Parse(nums[1]), float.Parse(nums[2]));
+                addPoint(vector3);
+            }
+            endCurve();
+
+
         }
     }
 
@@ -155,6 +219,31 @@ public class CurvedLine_Handler_ScriptV2 : MonoBehaviour
             }
             lr.positionCount = pointsToDraw.Count;
             lr.SetPositions(pointsToDraw.ToArray());
+        }
+    
+        public string getSaveDataAsString()
+        {
+            string returner = "CLD}";
+            for (int i = 0; i < allPoints.Count; i++)
+            {
+                Vector3 vec = allPoints[i];
+                returner += Vector3ToSaveString(vec);
+                if (i != allPoints.Count-1)
+                {
+                    returner += ":";
+                }
+            }
+            return returner;
+        }
+
+        private string Vector3ToSaveString(Vector3 vec)
+        {
+            return vec.x + "," + vec.y + "," + vec.z;
+        }
+
+        public void killMe()
+        {
+            Destroy(holder);
         }
     }
 

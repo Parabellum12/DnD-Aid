@@ -66,6 +66,7 @@ public class StraightLine_Handler_ScriptV2 : MonoBehaviour
     private List<Vector4> getLines()
     {
         List<Vector4> returner = new List<Vector4>();
+        Debug.Log("Lines: " + allPoints.Count);
         foreach (Point p in allPoints)
         {
             p.AlreadyDrawnLines = false;
@@ -114,7 +115,7 @@ public class StraightLine_Handler_ScriptV2 : MonoBehaviour
         }
         if (!allPoints.Contains(endingPoint))
         {
-            allPoints.Add((endingPoint));
+            allPoints.Add(endingPoint);
         }
 
         needToUpdateLines = true;
@@ -227,15 +228,23 @@ public class StraightLine_Handler_ScriptV2 : MonoBehaviour
 
     public string ReturnSavePointsAsString()
     {
+       // getLines();
         List<string> returnerData = new List<string>();
+        Debug.Log("allPoints:" + allPoints.Count);
         foreach (Point p in allPoints)
         {
             returnerData.AddRange(p.getLinesAsSaveList());
+            Debug.Log(p.getLinesAsSaveList());
         }
         //SLTD = straight line total data
         string returner = "SLTD[";
+        if (returnerData.Count == 0)
+        {
+            return null;
+        }
         for (int i = 0; i < returnerData.Count; i++)
         {
+            Debug.Log(returnerData[i]);
             returner += returnerData[i];
             if (i != returnerData.Count - 1)
             {
@@ -245,7 +254,26 @@ public class StraightLine_Handler_ScriptV2 : MonoBehaviour
         return returner;
     }
 
-    public void LoadFromSavePointsAsString(List<string> lines)
+    public void LoadFromSavePointsAsString(string s)
+    {
+        string[] tag = s.Split('[');
+        if (tag[0].Equals("SLTD"))
+        {
+            //correct tag
+            Debug.Log("StraightLine SaveTag Correct:" + s);
+            allPoints.Clear();
+            string[] data = tag[1].Split('|');
+            List<string> lines = new List<string>();
+            foreach (string str in data)
+            {
+                lines.Add(str);
+            }
+            LoadFromSavePointsAsStringList(lines);
+        }
+
+    }
+
+    public void LoadFromSavePointsAsStringList(List<string> lines)
     {
         foreach (string s in lines)
         {
@@ -255,7 +283,7 @@ public class StraightLine_Handler_ScriptV2 : MonoBehaviour
                 string[] dataValues = data[1].Split(',');
                 if (dataValues.Length != 4)
                 {
-                    Debug.Log("Error: Incorrect Line Data Points");
+                    Debug.Log("Error: Incorrect Line Data Points:" + data[0]);
                 }
                 else
                 {
@@ -266,7 +294,7 @@ public class StraightLine_Handler_ScriptV2 : MonoBehaviour
             }
             else
             {
-                Debug.Log("Error: Incorrect Line Load Tag");
+                Debug.Log("Error: Incorrect Line Load Tag:" + s);
             }
         }
 
