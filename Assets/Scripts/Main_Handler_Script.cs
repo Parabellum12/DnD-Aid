@@ -22,7 +22,7 @@ public class Main_Handler_Script : MonoBehaviour
         select,
         DrawStraightLine,
         move,
-        curve
+        curve,
     }
 
     public tools ActiveTool = tools.DrawStraightLine;
@@ -30,16 +30,20 @@ public class Main_Handler_Script : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //change selected tools
+        //change selected tools 1:select 2:move 3:straight line 4:curve
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
-            ActiveTool = tools.DrawStraightLine;
+            ActiveTool = tools.select;
         }
         else if (Input.GetKeyDown(KeyCode.Alpha2))
         {
             ActiveTool = tools.move;
         }
         else if (Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            ActiveTool = tools.DrawStraightLine;
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha4))
         {
             ActiveTool = tools.curve;
         }
@@ -111,8 +115,17 @@ public class Main_Handler_Script : MonoBehaviour
             needToRemove = false;
             straightLine_Handler.endGuideLine();
         }
+
     }
 
+    
+
+
+
+
+
+
+    //background stuff
     Vector2 pos1 = new Vector2();
     bool startNew = true;
     bool needToRemove = false;

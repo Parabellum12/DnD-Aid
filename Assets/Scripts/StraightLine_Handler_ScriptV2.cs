@@ -224,6 +224,10 @@ public class StraightLine_Handler_ScriptV2 : MonoBehaviour
     }
 
 
+
+
+    
+
     //save load
 
     public string ReturnSavePointsAsString()
@@ -321,7 +325,6 @@ public class StraightLine_Handler_ScriptV2 : MonoBehaviour
         public float y;
         public List<Point> NextPoints;
         public bool AlreadyDrawnLines;
-
         public Point(Vector2 pos)
         {
             x = pos.x;
@@ -349,6 +352,8 @@ public class StraightLine_Handler_ScriptV2 : MonoBehaviour
             }
             return returner;
         }
+
+        
 
     }
 }

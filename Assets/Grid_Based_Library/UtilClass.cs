@@ -101,5 +101,15 @@ public static class UtilClass
         EventSystem.current.RaycastAll(eventData, raysastResults);
         return raysastResults;
     }
+
+    public static float GetClosestDistanceBetweenLineAndPoint2D(Vector2 a, Vector2 b, Vector2 c)
+    {
+        return Mathf.Abs((c.x - a.x) * (-b.y + a.y) + (c.y - a.y) * (b.x - a.x)) / Mathf.Sqrt(Mathf.Pow((-b.y+a.y), 2) + Mathf.Pow((b.x-a.x), 2));
+    }
+
+    public static bool isPointWithinDistanceToLine(Vector2 a, Vector2 b, Vector2 c, float dist)
+    {
+        return GetClosestDistanceBetweenLineAndPoint2D(a,b,c) <= dist;
+    }
 }
 
