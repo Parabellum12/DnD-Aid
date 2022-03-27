@@ -309,8 +309,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 739b0714d2259494fa555eb5e114dd79, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxCurveLines: 12
-  LowOrHighResLine: 0
+  maxCurveLines: 3
+  LowOrHighResLine: 1
   currentState: 0
 --- !u!114 &32627908
 MonoBehaviour:
@@ -609,6 +609,7 @@ GameObject:
   - component: {fileID: 993399844}
   - component: {fileID: 993399843}
   - component: {fileID: 993399842}
+  - component: {fileID: 993399845}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -681,6 +682,32 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &993399845
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 993399841}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 92f24b8122ec74846a49fc4fe3f597cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  HorizontalMovement: 1
+  VerticalMovement: 1
+  ShiftForFasterMovement: 1
+  baseMoveSpeed: 25
+  shiftMoveSpeedMultiplier: 2
+  MousePan: 1
+  MouseButtonToPanWith: 2
+  WASDPan: 1
+  ArrowKeyPan: 1
+  CamZoom: 1
+  minCameraZoom: 50
+  maxCameraZoom: 100
+  yPos: -10
+  cam: {fileID: 993399843}
 --- !u!1 &1513060862
 GameObject:
   m_ObjectHideFlags: 0

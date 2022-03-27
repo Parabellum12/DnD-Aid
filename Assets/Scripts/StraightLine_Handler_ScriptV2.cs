@@ -33,7 +33,7 @@ public class StraightLine_Handler_ScriptV2 : MonoBehaviour
     {
         needToUpdateLines = false;
         List<Vector4> lines = getLines();
-        Debug.Log("reDraw Lines:" + lines.Count);
+       // Debug.Log("reDraw Lines:" + lines.Count);
         foreach (GameObject g in lineHolders)
         {
             Destroy(g);
@@ -66,7 +66,7 @@ public class StraightLine_Handler_ScriptV2 : MonoBehaviour
     private List<Vector4> getLines()
     {
         List<Vector4> returner = new List<Vector4>();
-        Debug.Log("Lines: " + allPoints.Count);
+        //Debug.Log("Lines: " + allPoints.Count);
         foreach (Point p in allPoints)
         {
             p.AlreadyDrawnLines = false;
@@ -101,7 +101,7 @@ public class StraightLine_Handler_ScriptV2 : MonoBehaviour
 
     public void AddLine(Vector2 start, Vector2 end)
     {
-        Debug.Log("Add Line:" + start.ToString() + "," + end.ToString());
+        //Debug.Log("Add Line:" + start.ToString() + "," + end.ToString());
         Point startingPoint = getPointValue(start);
         Point endingPoint = getPointValue(end);
         if (!startingPoint.NextPoints.Contains(endingPoint))

@@ -34,11 +34,11 @@ public class CurvedLine_Handler_ScriptV2 : MonoBehaviour
         {
             if (TempLine.getLastPoint() == mousePos)
             {
-                Debug.Log("Guide Point And Last Point Same");
+               // Debug.Log("Guide Point And Last Point Same");
                 TempLine.drawCurve();
                 return;
             }
-            Debug.Log("Guide Point And Last Point different");
+            //Debug.Log("Guide Point And Last Point different");
             TempLine.addPoint(mousePos);
             TempLine.drawCurve();
             TempLine.removeLastPoint();
@@ -103,7 +103,10 @@ public class CurvedLine_Handler_ScriptV2 : MonoBehaviour
 
     public void handleEndGuideLine()
     {
-        TempLine.drawCurve();
+        if (currentState == state.continueCurve)
+        {
+            TempLine.drawCurve();
+        }
     }
 
 
