@@ -234,11 +234,11 @@ public class StraightLine_Handler_ScriptV2 : MonoBehaviour
     {
        // getLines();
         List<string> returnerData = new List<string>();
-        Debug.Log("allPoints:" + allPoints.Count);
+        //Debug.Log("allPoints:" + allPoints.Count);
         foreach (Point p in allPoints)
         {
             returnerData.AddRange(p.getLinesAsSaveList());
-            Debug.Log(p.getLinesAsSaveList());
+            //Debug.Log(p.getLinesAsSaveList());
         }
         //SLTD = straight line total data
         string returner = "SLTD[";
@@ -248,7 +248,7 @@ public class StraightLine_Handler_ScriptV2 : MonoBehaviour
         }
         for (int i = 0; i < returnerData.Count; i++)
         {
-            Debug.Log(returnerData[i]);
+            //Debug.Log(returnerData[i]);
             returner += returnerData[i];
             if (i != returnerData.Count - 1)
             {
@@ -264,7 +264,7 @@ public class StraightLine_Handler_ScriptV2 : MonoBehaviour
         if (tag[0].Equals("SLTD"))
         {
             //correct tag
-            Debug.Log("StraightLine SaveTag Correct:" + s);
+            //Debug.Log("StraightLine SaveTag Correct:" + s);
             allPoints.Clear();
             string[] data = tag[1].Split('|');
             List<string> lines = new List<string>();
