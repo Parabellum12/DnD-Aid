@@ -24,7 +24,6 @@ public class CurvedLine_Handler_ScriptV2 : MonoBehaviour
 
     public void drawLines()
     {
-        Native
         foreach (CurvedLine line in completeLines)
         {
             line.drawCurve();
