@@ -121,13 +121,13 @@ public class CurvedLine_Handler_ScriptV2 : MonoBehaviour
 
     public state currentState = state.newCurve;
 
-
+    [SerializeField] GameObject handlePrefab;
     CurvedLine TempLine;
     public void addPoint(Vector3 point)
     {
         if (currentState == state.newCurve)
         {
-            TempLine = new CurvedLine(LowOrHighResLine);
+            TempLine = new CurvedLine(LowOrHighResLine, handlePrefab);
             currentState = state.continueCurve;
         }
         TempLine.addPoint(point);
@@ -158,12 +158,44 @@ public class CurvedLine_Handler_ScriptV2 : MonoBehaviour
         bool LowOrHighResLine;
         GameObject holder;
         LineRenderer lr;
-        public CurvedLine(bool LowOrHighResLine)
+        GameObject handlePreFab;
+        public CurvedLine(bool LowOrHighResLine, GameObject handlePreFab)
         {
             this.LowOrHighResLine = LowOrHighResLine;
             holder = new GameObject("Curved Line Holder");
             lr = holder.AddComponent<LineRenderer>();
+            this.handlePreFab = handlePreFab;
         }
+
+        List<HandleMarker_Handler_Script> handleList = new List<HandleMarker_Handler_Script>();
+        public void CreateHandles()
+        {
+            for (int i = 0; i < allPoints.Count; i++)
+            {
+                
+                GameObject go = Instantiate(handlePreFab);
+                HandleMarker_Handler_Script scr = go.GetComponent<HandleMarker_Handler_Script>();
+                handleList.Add(scr);
+                scr.setPos(allPoints[i]);
+                StartCoroutine(scr.returnMyPos(i, (vec, pos) =>
+                {
+                    Vector3[] temp = allPoints.ToArray();
+                    temp[pos] = vec;
+                    allPoints.Clear();
+                    allPoints.AddRange(temp);
+                }));
+            }
+        }
+
+        public void removeAllHandles()
+        {
+            foreach (HandleMarker_Handler_Script hr in handleList)
+            {
+                hr.KILLME();
+            }
+            handleList.Clear();
+        }
+
 
         public Vector3 getLastPoint()
         {

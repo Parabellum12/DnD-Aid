@@ -16,4 +16,13 @@ public class HandleMarker_Handler_Script : MonoBehaviour
     {
         transform.position = pos;
     }
+
+    public IEnumerator returnMyPos(int pos, System.Action<Vector3, int> callback)
+    {
+        while (true)
+        {
+            callback.Invoke(transform.position, pos);
+            yield return null;
+        }
+    }
 }

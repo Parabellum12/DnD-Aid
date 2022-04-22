@@ -312,7 +312,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 739b0714d2259494fa555eb5e114dd79, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxCurveLines: 24
+  maxCurveLines: 6
   LowOrHighResLine: 1
   currentState: 0
 --- !u!114 &32627908
