@@ -137,6 +137,7 @@ GameObject:
   - component: {fileID: 32627905}
   - component: {fileID: 32627907}
   - component: {fileID: 32627908}
+  - component: {fileID: 32627909}
   m_Layer: 0
   m_Name: Handler
   m_TagString: Untagged
@@ -311,7 +312,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 739b0714d2259494fa555eb5e114dd79, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxCurveLines: 3
+  maxCurveLines: 24
   LowOrHighResLine: 1
   currentState: 0
 --- !u!114 &32627908
@@ -328,6 +329,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   straightLineHandler: {fileID: 32627905}
   curvedLineHandler: {fileID: 32627907}
+--- !u!114 &32627909
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 32627900}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6648d906ad8676a4da7934829807883a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &418869175
 GameObject:
   m_ObjectHideFlags: 0

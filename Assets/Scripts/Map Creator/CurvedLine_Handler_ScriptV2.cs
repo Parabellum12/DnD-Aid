@@ -1,6 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Unity.Jobs;
+using Unity.Collections;
+using Unity.Mathematics;
 
 public class CurvedLine_Handler_ScriptV2 : MonoBehaviour
 {
@@ -21,6 +24,7 @@ public class CurvedLine_Handler_ScriptV2 : MonoBehaviour
 
     public void drawLines()
     {
+        Native
         foreach (CurvedLine line in completeLines)
         {
             line.drawCurve();

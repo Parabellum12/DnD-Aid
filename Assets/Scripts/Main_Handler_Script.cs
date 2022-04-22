@@ -67,40 +67,42 @@ public class Main_Handler_Script : MonoBehaviour
                 splineLineHandler.addPoint(new Vector3(GridSnapMarker.transform.position.x, GridSnapMarker.transform.position.y, -2));
             }
         }
-        if (Input.GetMouseButtonDown(1))
-        {
-            if (ActiveTool == tools.DrawStraightLine)
-            {
-                needToRemove = false;
-                straightLine_Handler.endGuideLine();
-                startNew = true;
-                pos1 = new Vector2();
-            }
-            if (ActiveTool == tools.curve)
-            {
-                splineLineHandler.handleEndGuideLine();
-                splineLineHandler.endCurve();
-            }
-        }
 
 
-        if (Input.GetMouseButton(0))
-        {
-            if (ActiveTool == tools.move && Moveing)
+            if (Input.GetMouseButtonDown(1))
             {
-                straightLine_Handler.handleMove(new Vector2(GridSnapMarker.transform.position.x, GridSnapMarker.transform.position.y));
+                if (ActiveTool == tools.DrawStraightLine)
+                {
+                    needToRemove = false;
+                    straightLine_Handler.endGuideLine();
+                    startNew = true;
+                    pos1 = new Vector2();
+                }
+                if (ActiveTool == tools.curve)
+                {
+                    splineLineHandler.handleEndGuideLine();
+                    splineLineHandler.endCurve();
+                }
             }
-        }
+        
 
-        if (Input.GetMouseButtonUp(0))
-        {
-            if (ActiveTool == tools.move && Moveing)
+            if (Input.GetMouseButton(0))
             {
-                straightLine_Handler.handleMoveEnd();
-                Moveing = false;
+                if (ActiveTool == tools.move && Moveing)
+                {
+                    straightLine_Handler.handleMove(new Vector2(GridSnapMarker.transform.position.x, GridSnapMarker.transform.position.y));
+                }
             }
-        }
 
+            if (Input.GetMouseButtonUp(0))
+            {
+                if (ActiveTool == tools.move && Moveing)
+                {
+                    straightLine_Handler.handleMoveEnd();
+                    Moveing = false;
+                }
+            }
+        
 
         splineLineHandler.handleGuideLine(new Vector3(GridSnapMarker.transform.position.x, GridSnapMarker.transform.position.y, -2));
         
