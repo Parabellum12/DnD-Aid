@@ -24,5 +24,6 @@ public class HandleMarker_Handler_Script : MonoBehaviour
             callback.Invoke(transform.position, pos);
             yield return null;
         }
+        yield break;
     }
 }
