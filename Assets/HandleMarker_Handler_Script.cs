@@ -7,7 +7,7 @@ public class HandleMarker_Handler_Script : MonoBehaviour
 
     private void Start()
     {
-        
+
     }
     public void KILLME()
     {
@@ -20,9 +20,11 @@ public class HandleMarker_Handler_Script : MonoBehaviour
         transform.position = pos;
     }
 
+
+
     public IEnumerator returnMyPos(int pos, System.Action<Vector3, int> callback)
     {
-        while (true)
+        for (int i = 0; i < 100000; i++)
         {
             callback.Invoke(transform.position, pos);
             yield return null;

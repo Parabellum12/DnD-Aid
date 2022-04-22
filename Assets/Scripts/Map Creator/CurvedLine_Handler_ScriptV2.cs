@@ -31,6 +31,7 @@ public class CurvedLine_Handler_ScriptV2 : MonoBehaviour
     }
 
 
+
     public void handleGuideLine(Vector3 mousePos)
     {
         if (currentState == state.continueCurve)
@@ -127,7 +128,7 @@ public class CurvedLine_Handler_ScriptV2 : MonoBehaviour
     {
         if (currentState == state.newCurve)
         {
-            TempLine = new CurvedLine(LowOrHighResLine, handlePrefab);
+            TempLine = new CurvedLine(LowOrHighResLine, handlePrefab, this);
             currentState = state.continueCurve;
         }
         TempLine.addPoint(point);
@@ -154,13 +155,14 @@ public class CurvedLine_Handler_ScriptV2 : MonoBehaviour
     public class CurvedLine
     {
         List<Vector3> allPoints = new List<Vector3>();
-
+        MonoBehaviour parentMonoBehavior;
         bool LowOrHighResLine;
         GameObject holder;
         LineRenderer lr;
         GameObject handlePreFab;
-        public CurvedLine(bool LowOrHighResLine, GameObject handlePreFab)
+        public CurvedLine(bool LowOrHighResLine, GameObject handlePreFab, MonoBehaviour parentMonoBehavior)
         {
+            this.parentMonoBehavior = parentMonoBehavior;
             this.LowOrHighResLine = LowOrHighResLine;
             holder = new GameObject("Curved Line Holder");
             lr = holder.AddComponent<LineRenderer>();
@@ -177,7 +179,7 @@ public class CurvedLine_Handler_ScriptV2 : MonoBehaviour
                 HandleMarker_Handler_Script scr = go.GetComponent<HandleMarker_Handler_Script>();
                 handleList.Add(scr);
                 scr.setPos(allPoints[i]);
-                StartCoroutine(scr.returnMyPos(i, (vec, pos) =>
+                parentMonoBehavior.StartCoroutine(scr.returnMyPos(i, (vec, pos) =>
                 {
                     Vector3[] temp = allPoints.ToArray();
                     temp[pos] = vec;
@@ -195,6 +197,17 @@ public class CurvedLine_Handler_ScriptV2 : MonoBehaviour
                 hr.KILLME();
             }
             handleList.Clear();
+        }
+
+        public bool isCLickedOn(Vector2 mousePos)
+        {
+            for (int i = 0; i+1 < allPoints.Count-1; i++)
+            {
+                if (UtilClass.)
+                {
+
+                }
+            }
         }
 
 

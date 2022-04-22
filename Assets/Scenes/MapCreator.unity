@@ -315,6 +315,7 @@ MonoBehaviour:
   maxCurveLines: 6
   LowOrHighResLine: 1
   currentState: 0
+  handlePrefab: {fileID: 4473876618916341770, guid: 3f63c2024278e734e87cf96ae45877dd, type: 3}
 --- !u!114 &32627908
 MonoBehaviour:
   m_ObjectHideFlags: 0
