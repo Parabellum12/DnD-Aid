@@ -172,7 +172,7 @@ public class CurvedLine_Handler_ScriptV2 : MonoBehaviour
         {
             for (int i = 0; i < allPoints.Count; i++)
             {
-                
+               
                 GameObject go = Instantiate(handlePreFab);
                 HandleMarker_Handler_Script scr = go.GetComponent<HandleMarker_Handler_Script>();
                 handleList.Add(scr);
@@ -184,6 +184,7 @@ public class CurvedLine_Handler_ScriptV2 : MonoBehaviour
                     allPoints.Clear();
                     allPoints.AddRange(temp);
                 }));
+                
             }
         }
 

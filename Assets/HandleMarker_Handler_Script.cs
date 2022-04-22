@@ -4,8 +4,11 @@ using UnityEngine;
 
 public class HandleMarker_Handler_Script : MonoBehaviour
 {
-    
 
+    private void Start()
+    {
+        
+    }
     public void KILLME()
     {
         Debug.Log("KILL ME!!!!");
@@ -24,6 +27,7 @@ public class HandleMarker_Handler_Script : MonoBehaviour
             callback.Invoke(transform.position, pos);
             yield return null;
         }
-        yield break;
     }
+
+   
 }
