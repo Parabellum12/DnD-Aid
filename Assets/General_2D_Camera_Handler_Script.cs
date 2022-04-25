@@ -4,22 +4,22 @@ using UnityEngine;
 
 public class General_2D_Camera_Handler_Script : MonoBehaviour
 {
-    [SerializeField] bool HorizontalMovement = true;
-    [SerializeField] bool VerticalMovement = true;
-    [SerializeField] bool ShiftForFasterMovement = true;
+    public bool HorizontalMovement = true;
+    public bool VerticalMovement = true;
+    public bool ShiftForFasterMovement = true;
 
-    [SerializeField] float baseMoveSpeed = 5f;
-    [SerializeField] float shiftMoveSpeedMultiplier = 2f;
+    public float baseMoveSpeed = 5f;
+    public float shiftMoveSpeedMultiplier = 2f;
 
-    [SerializeField] bool MousePan = true;
-    [SerializeField] int MouseButtonToPanWith = 2;
+    public bool MousePan = true;
+    public int MouseButtonToPanWith = 2;
 
-    [SerializeField] bool WASDPan = true;
-    [SerializeField] bool ArrowKeyPan = true;
+    public bool WASDPan = true;
+    public bool ArrowKeyPan = true;
 
-    [SerializeField] bool CamZoom = true;
-    [SerializeField] float minCameraZoom = 50f;
-    [SerializeField] float maxCameraZoom = 100f;
+    public bool CamZoom = true;
+    public float minCameraZoom = 50f;
+    public float maxCameraZoom = 100f;
 
     [SerializeField] float yPos = -10;
 

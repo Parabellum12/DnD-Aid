@@ -10,6 +10,7 @@ public class Main_Handler_Script : MonoBehaviour
     [SerializeField] StraightLine_Handler_ScriptV2 straightLine_Handler;
     [SerializeField] CurvedLine_Handler_ScriptV2 splineLineHandler;
     [SerializeField] Transform GridSnapMarker;
+    [SerializeField] General_2D_Camera_Handler_Script cameraMoveScr;
 
     // Start is called before the first frame update
     void Start()
@@ -137,6 +138,31 @@ public class Main_Handler_Script : MonoBehaviour
             straightLine_Handler.endGuideLine();
         }
 
+    }
+
+    //camera stuff
+    int numOfControlHold = 0;
+    public void handleCameraMove(bool moveAllowed)
+    {
+        if (moveAllowed)
+        {
+            numOfControlHold++;
+        }
+        else
+        {
+            numOfControlHold--;
+        }
+
+        if (numOfControlHold > 0)
+        {
+            cameraMoveScr.HorizontalMovement = false;
+            cameraMoveScr.VerticalMovement = false;
+        }
+        else
+        {
+            cameraMoveScr.HorizontalMovement = true;
+            cameraMoveScr.VerticalMovement = true;
+        }
     }
 
     

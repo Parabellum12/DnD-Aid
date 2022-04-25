@@ -28,9 +28,20 @@ public class General_InputPopup_Handler : MonoBehaviour
         AcceptButton.onClick.AddListener(() => handleAcceptClick());
     }
 
+    public void addListenerToBothButtons(System.Action function)
+    {
+        AcceptButton.onClick.AddListener(() => function.Invoke());
+        cancelButton.onClick.AddListener(() => function.Invoke());
+    }
+    bool inputGiven = false;
+
     public void handleAcceptClick()
     {
-        Funccallback.Invoke(inputField.text);
+        if (!inputGiven)
+        {
+            Funccallback.Invoke(inputField.text);
+        }
+        inputGiven = true;
     }
 
     public void setCancelButtonText(string text)

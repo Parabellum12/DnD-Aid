@@ -52,5 +52,10 @@ public class SaveLoad_Handler_Script : MonoBehaviour
         CachedFile = straightLineHandler.ReturnSavePointsAsString() + ";" + curvedLineHandler.getCurveLineSaveData();
     }
 
+    public void saveToFile(string fileName)
+    {
+        Debug.Log("Save To File: " + fileName);
+    }
+
 
 }
