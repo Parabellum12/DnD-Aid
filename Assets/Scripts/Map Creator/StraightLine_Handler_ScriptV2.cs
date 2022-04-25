@@ -63,6 +63,44 @@ public class StraightLine_Handler_ScriptV2 : MonoBehaviour
 
     }
 
+    [SerializeField] GameObject HandlerPrefab;
+    public bool HandleIfSelected(Vector2 mousePos)
+    {
+        Point point1 = null;
+        Point point2 = null;
+
+        foreach (Point point in allPoints)
+        {
+            point.destroyHandle();
+            if (point.getIfLineSelected(mousePos, out Point p, out Point p2))
+            {
+                point1 = p;
+                point2 = p2;
+            }
+        }
+        if (point1 != null)
+        {
+            point1.createHandle(HandlerPrefab, () =>
+            {
+                drawLines();
+            });
+            point2.createHandle(HandlerPrefab, () =>
+            {
+                drawLines();
+            });
+            return true;
+        }
+        return false;
+    }
+
+    public void deleteAnyHandles()
+    {
+        foreach (Point point in allPoints)
+        {
+            point.destroyHandle();
+        }
+    }
+
     private List<Vector4> getLines()
     {
         List<Vector4> returner = new List<Vector4>();
@@ -342,6 +380,62 @@ public class StraightLine_Handler_ScriptV2 : MonoBehaviour
             }
             return temp;
         }
+
+        public Vector2 getPos()
+        {
+            return new Vector2(x, y);
+        }
+
+        public bool getIfLineSelected(Vector2 mousePos, out Point p, out Point p2)
+        {
+            Point nextPoint = null;
+            foreach (Point poi in NextPoints)
+            {
+                for (float i = 0; i < 1; i+=0.001f)
+                {
+                    if (Vector2.Distance(Vector2.Lerp(getPos(), poi.getPos(), i), mousePos) < 1f)
+                    {
+                        nextPoint = poi;
+                    }
+                }
+            }
+            if (nextPoint != null)
+            {
+                p = this;
+                p2 = nextPoint;
+                return true;
+            }
+            p = null;
+            p2 = null;
+            return false;
+        }
+
+        HandleMarker_Handler_Script handle = null;
+        public void createHandle(GameObject handlePrefab, System.Action drawLinesCallBack)
+        {
+            GameObject temp = Instantiate(handlePrefab);
+            HandleMarker_Handler_Script scr = temp.GetComponent<HandleMarker_Handler_Script>();
+            Vector3 handlePos = getPos();
+            handlePos.z = -2;
+            scr.setPos(handlePos);
+            handle = scr;
+            scr.StartCoroutine(scr.returnMyPos(0, (vec, index) =>
+            {
+                x = vec.x;
+                y = vec.y;
+                drawLinesCallBack.Invoke();
+            }));
+        }
+
+        public void destroyHandle()
+        {
+            if (handle != null)
+            {
+                handle.KILLME();
+            }
+        }
+
+
 
         public List<string> getLinesAsSaveList()
         {

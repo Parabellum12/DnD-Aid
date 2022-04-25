@@ -104,11 +104,13 @@ public static class UtilClass
 
     public static float GetClosestDistanceBetweenLineAndPoint2D(Vector2 a, Vector2 b, Vector2 c)
     {
-        return Mathf.Abs((c.x - a.x) * (-b.y + a.y) + (c.y - a.y) * (b.x - a.x)) / Mathf.Sqrt(Mathf.Pow((-b.y+a.y), 2) + Mathf.Pow((b.x-a.x), 2));
+        float dist = Mathf.Abs(((c.x - a.x) * (-b.y + a.y)) + ((c.y - a.y) * (b.x - a.x))) / Mathf.Sqrt(((-b.y+a.y) * (-b.y + a.y)) + ((b.x-a.x)) * (b.x - a.x));
+        return dist;
     }
 
     public static bool isPointWithinDistanceToLine(Vector2 a, Vector2 b, Vector2 c, float dist)
     {
+        //point c in relation to line a-b
         return GetClosestDistanceBetweenLineAndPoint2D(a,b,c) <= dist;
     }
 }

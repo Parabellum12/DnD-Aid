@@ -27,6 +27,8 @@ public class Main_Handler_Script : MonoBehaviour
 
     public tools ActiveTool = tools.DrawStraightLine;
     bool Moveing = false;
+
+    public HandleMarker_Handler_Script selectedHandle = null;
     // Update is called once per frame
     void Update()
     {
@@ -37,76 +39,93 @@ public class Main_Handler_Script : MonoBehaviour
         }
         else if (Input.GetKeyDown(KeyCode.Alpha2))
         {
-            ActiveTool = tools.move;
+            ActiveTool = tools.DrawStraightLine;
         }
         else if (Input.GetKeyDown(KeyCode.Alpha3))
         {
-            ActiveTool = tools.DrawStraightLine;
-        }
-        else if (Input.GetKeyDown(KeyCode.Alpha4))
-        {
             ActiveTool = tools.curve;
         }
-
+        if (ActiveTool != tools.select)
+        {
+            straightLine_Handler.deleteAnyHandles();
+            splineLineHandler.deleteAnyHandles();
+        }
         updateBackgroundGrid();
 
         if (Input.GetMouseButtonDown(0) && !UtilClass.IsPointerOverUIElement(LayerMask.NameToLayer("UI")))
         {
             //left click
+
+            
+
             if (ActiveTool == tools.DrawStraightLine)
             {
                 handleCreateLine();
             }
-            if (ActiveTool == tools.move)
-            {
-                straightLine_Handler.handleMoveStart(new Vector2(GridSnapMarker.transform.position.x, GridSnapMarker.transform.position.y));
-                Moveing = true;
-            }
-            if (ActiveTool == tools.curve)
+            else if (ActiveTool == tools.curve)
             {
                 splineLineHandler.addPoint(new Vector3(GridSnapMarker.transform.position.x, GridSnapMarker.transform.position.y, -2));
+            }
+            else if (ActiveTool == tools.select && selectedHandle == null)
+            {
+                straightLine_Handler.deleteAnyHandles();
+                splineLineHandler.deleteAnyHandles();
+                if (splineLineHandler.HandleIfSelected(UtilClass.getMouseWorldPosition()))
+                {
+
+                }
+                else if (straightLine_Handler.HandleIfSelected(UtilClass.getMouseWorldPosition()))
+                {
+
+                }
             }
         }
 
 
-            if (Input.GetMouseButtonDown(1))
+        if (Input.GetMouseButtonDown(1))
+        {
+            if (ActiveTool == tools.DrawStraightLine)
             {
-                if (ActiveTool == tools.DrawStraightLine)
-                {
-                    needToRemove = false;
-                    straightLine_Handler.endGuideLine();
-                    startNew = true;
-                    pos1 = new Vector2();
-                }
-                if (ActiveTool == tools.curve)
-                {
-                    splineLineHandler.handleEndGuideLine();
-                    splineLineHandler.endCurve();
-                }
+                needToRemove = false;
+                straightLine_Handler.endGuideLine();
+                startNew = true;
+                pos1 = new Vector2();
             }
-        
+            if (ActiveTool == tools.curve)
+            {
+                splineLineHandler.handleEndGuideLine();
+                splineLineHandler.endCurve();
+            }
+        }
 
-            if (Input.GetMouseButton(0))
-            {
-                if (ActiveTool == tools.move && Moveing)
-                {
-                    straightLine_Handler.handleMove(new Vector2(GridSnapMarker.transform.position.x, GridSnapMarker.transform.position.y));
-                }
-            }
 
-            if (Input.GetMouseButtonUp(0))
+        if (Input.GetMouseButton(0))
+        {
+            if (ActiveTool == tools.move && Moveing)
             {
-                if (ActiveTool == tools.move && Moveing)
-                {
-                    straightLine_Handler.handleMoveEnd();
-                    Moveing = false;
-                }
+                straightLine_Handler.handleMove(new Vector2(GridSnapMarker.transform.position.x, GridSnapMarker.transform.position.y));
             }
-        
+            else if (ActiveTool == tools.select && selectedHandle != null)
+            {
+                Debug.Log("Want To Move");
+                selectedHandle.setPos(GridSnapMarker.transform.position);
+            }
+            
+        }
+
+        if (Input.GetMouseButtonUp(0))
+        {
+            if (ActiveTool == tools.move && Moveing)
+            {
+                straightLine_Handler.handleMoveEnd();
+                Moveing = false;
+            }
+        }
+
 
         splineLineHandler.handleGuideLine(new Vector3(GridSnapMarker.transform.position.x, GridSnapMarker.transform.position.y, -2));
-        
-        
+
+
         if (!startNew)
         {
             straightLine_Handler.drawGuideLine(new Vector3(pos1.x, pos1.y, -1), new Vector3(GridSnapMarker.transform.position.x, GridSnapMarker.transform.position.y, -1));

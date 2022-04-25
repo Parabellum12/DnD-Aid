@@ -13,7 +13,7 @@ public class CurvedLine_Handler_ScriptV2 : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        UtilClass.isPointWithinDistanceToLine(new Vector2(1,1), new Vector2(1, 5), new Vector2(0, 10), 1);
     }
 
     // Update is called once per frame
@@ -27,6 +27,33 @@ public class CurvedLine_Handler_ScriptV2 : MonoBehaviour
         foreach (CurvedLine line in completeLines)
         {
             line.drawCurve();
+        }
+    }
+
+    public bool HandleIfSelected(Vector2 Pos)
+    {
+        CurvedLine temp = null;
+        foreach (CurvedLine cl in completeLines)
+        {
+            cl.removeAllHandles();
+            if (cl.isCLickedOn(Pos))
+            {
+                temp = cl;
+            }
+        }
+        if (temp != null)
+        {
+            temp.CreateHandles();
+            return true;
+        }
+        return false;
+    }
+
+    public void deleteAnyHandles()
+    {
+        foreach (CurvedLine cl in completeLines)
+        {
+            cl.removeAllHandles();
         }
     }
 
@@ -128,7 +155,7 @@ public class CurvedLine_Handler_ScriptV2 : MonoBehaviour
     {
         if (currentState == state.newCurve)
         {
-            TempLine = new CurvedLine(LowOrHighResLine, handlePrefab, this);
+            TempLine = new CurvedLine(LowOrHighResLine, handlePrefab);
             currentState = state.continueCurve;
         }
         TempLine.addPoint(point);
@@ -155,14 +182,12 @@ public class CurvedLine_Handler_ScriptV2 : MonoBehaviour
     public class CurvedLine
     {
         List<Vector3> allPoints = new List<Vector3>();
-        MonoBehaviour parentMonoBehavior;
         bool LowOrHighResLine;
         GameObject holder;
         LineRenderer lr;
         GameObject handlePreFab;
-        public CurvedLine(bool LowOrHighResLine, GameObject handlePreFab, MonoBehaviour parentMonoBehavior)
+        public CurvedLine(bool LowOrHighResLine, GameObject handlePreFab)
         {
-            this.parentMonoBehavior = parentMonoBehavior;
             this.LowOrHighResLine = LowOrHighResLine;
             holder = new GameObject("Curved Line Holder");
             lr = holder.AddComponent<LineRenderer>();
@@ -179,12 +204,13 @@ public class CurvedLine_Handler_ScriptV2 : MonoBehaviour
                 HandleMarker_Handler_Script scr = go.GetComponent<HandleMarker_Handler_Script>();
                 handleList.Add(scr);
                 scr.setPos(allPoints[i]);
-                parentMonoBehavior.StartCoroutine(scr.returnMyPos(i, (vec, pos) =>
+                scr.StartCoroutine(scr.returnMyPos(i, (vec, pos) =>
                 {
                     Vector3[] temp = allPoints.ToArray();
                     temp[pos] = vec;
                     allPoints.Clear();
                     allPoints.AddRange(temp);
+                    drawCurve();
                 }));
                 
             }
@@ -201,13 +227,16 @@ public class CurvedLine_Handler_ScriptV2 : MonoBehaviour
 
         public bool isCLickedOn(Vector2 mousePos)
         {
-            for (int i = 0; i+1 < allPoints.Count-1; i++)
+            Vector3[] poses = curvePoints.ToArray();
+            for (int i = 0; i < poses.Length; i++)
             {
-                if (UtilClass.)
+                if (Vector2.Distance(mousePos, poses[i]) <= 1)
                 {
-
+                    Debug.Log("CurvedLine: I Was TOUCHED!!!");
+                    return true;
                 }
             }
+            return false;
         }
 
 
@@ -229,10 +258,12 @@ public class CurvedLine_Handler_ScriptV2 : MonoBehaviour
         {
             allPoints.RemoveAt(allPoints.Count - 1);
         }
+        List<Vector3> curvePoints = new List<Vector3>();
 
         public void drawCurve()
         {
             lr.positionCount = 0;
+            curvePoints.Clear();
             if (allPoints.Count <= 1)
             {
                 return;
@@ -267,7 +298,9 @@ public class CurvedLine_Handler_ScriptV2 : MonoBehaviour
             }
             for (float t = 0f; t <= 1; t += increaseAmount)
             {
-                pointsToDraw.Add(lerps[0].getLerpPos(t));
+                Vector3 tempPoint = lerps[0].getLerpPos(t);
+                pointsToDraw.Add(tempPoint);
+                curvePoints.Add(tempPoint);
             }
             lr.positionCount = pointsToDraw.Count;
             lr.SetPositions(pointsToDraw.ToArray());

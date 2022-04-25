@@ -299,6 +299,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   LineHolder: {fileID: 0}
+  HandlerPrefab: {fileID: 4473876618916341770, guid: 3f63c2024278e734e87cf96ae45877dd, type: 3}
   guideLineRenderer: {fileID: 0}
 --- !u!114 &32627907
 MonoBehaviour:
