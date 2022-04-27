@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Unity.Mathematics;
 
 public class StraightLine_Handler_ScriptV2 : MonoBehaviour
 {
@@ -13,6 +14,29 @@ public class StraightLine_Handler_ScriptV2 : MonoBehaviour
         LineHolder = new GameObject("Main Line Holder");
         guideHolder = new GameObject("guideLineHolder");
         guideLineRenderer = guideHolder.AddComponent<LineRenderer>();
+    }
+
+    public float2[][] getLinePoints()
+    {
+        float2[][] returner = new float2[allPoints.Count][];
+        for (int i = 0; i < allPoints.Count; i++)
+        {
+            returner[i] = allPoints[i].getAsSaveData();
+        }
+        return returner;
+    }
+
+    public void setDataFromSaveData(float2[][] data)
+    {
+        deleteAnyHandles();
+        clearPoints();
+        foreach (float2[] arr in data)
+        {
+            for (int i = 1; i < arr.Length; i++)
+            {
+                AddLine(new Vector2(arr[0].x, arr[0].y), new Vector2(arr[i].x, arr[i].y));
+            }
+        }
     }
 
 
@@ -370,6 +394,24 @@ public class StraightLine_Handler_ScriptV2 : MonoBehaviour
             NextPoints = new List<Point>();
             AlreadyDrawnLines = false;
         }
+
+        public float2 getXYAsFloat2()
+        {
+            return new float2(x, y);
+        }
+
+        public float2[] getAsSaveData()
+        {
+            float2[] returner = new float2[NextPoints.Count+1];
+            returner[0] = getXYAsFloat2();
+            for (int i = 0; i < NextPoints.Count; i++)
+            {
+                returner[i + 1] = NextPoints[i].getXYAsFloat2();
+            }
+            return returner;
+        }
+
+
 
         public List<Vector4> getLines()
         {

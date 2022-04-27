@@ -30,6 +30,37 @@ public class CurvedLine_Handler_ScriptV2 : MonoBehaviour
         }
     }
 
+    public float3[][] getCurvedLinesAsSaveData()
+    {
+        float3[][] returner = new float3[completeLines.Count][];
+        for (int i = 0; i < completeLines.Count; i++)
+        {
+            returner[i] = completeLines[i].getAsSaveData();
+        }
+        return returner;
+    }
+
+    public void setDataFromSaveData(float3[][] data)
+    {
+        deleteAnyHandles();
+        endCurve();
+        foreach (CurvedLine cl in completeLines)
+        {
+            cl.killMe();
+        }
+        completeLines.Clear();
+        
+
+        foreach (float3[] points in data)
+        {
+            foreach (float3 point in points)
+            {
+                addPoint(new Vector3(point.x, point.y, point.z));
+            }
+            endCurve();
+        }
+    }
+
     public bool HandleIfSelected(Vector2 Pos)
     {
         CurvedLine temp = null;
@@ -181,11 +212,24 @@ public class CurvedLine_Handler_ScriptV2 : MonoBehaviour
 
     public class CurvedLine
     {
-        List<Vector3> allPoints = new List<Vector3>();
+        public List<Vector3> allPoints = new List<Vector3>();
         bool LowOrHighResLine;
         GameObject holder;
         LineRenderer lr;
         GameObject handlePreFab;
+
+
+        public float3[] getAsSaveData()
+        {
+            float3[] returner = new float3[allPoints.Count];
+            for (int i = 0; i < allPoints.Count; i++)
+            {
+                returner[i] = new float3(allPoints[i].x, allPoints[i].y, allPoints[i].z);
+            }
+            return returner;
+        }
+
+
         public CurvedLine(bool LowOrHighResLine, GameObject handlePreFab)
         {
             this.LowOrHighResLine = LowOrHighResLine;

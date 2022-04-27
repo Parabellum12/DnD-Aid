@@ -18,6 +18,11 @@ public class EditorSaveButton_Handler : MonoBehaviour
     bool alreadyActive = false;
     void createSavePopUp()
     {
+        if (alreadyActive)
+        {
+            return;
+        }
+
         alreadyActive = true;
         GameObject go = Instantiate(promptPrefab);
         General_InputPopup_Handler popupHandler = go.GetComponent<General_InputPopup_Handler>();
