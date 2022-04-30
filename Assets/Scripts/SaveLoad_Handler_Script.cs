@@ -7,10 +7,10 @@ using System.Runtime.Serialization.Formatters.Binary;
 
 public class SaveLoad_Handler_Script : MonoBehaviour
 {
-    string CachedFile;
     [SerializeField] StraightLine_Handler_ScriptV2 straightLineHandler;
     [SerializeField] CurvedLine_Handler_ScriptV2 curvedLineHandler;
-
+    List<saveClass> CachedSaveData = new List<saveClass>();
+    saveClass CurrentlyLoadedSaveData;
     //file data standard: <string data>;<string data>
     //string data standard: <overall tag>[<data>|<data>
     //data standard: <data value tag>:<value>,<value>
@@ -20,56 +20,10 @@ public class SaveLoad_Handler_Script : MonoBehaviour
         getSaveFiles();
     }
 
-    public void loadFromCache()
-    {
-        string[] data = CachedFile.Split(';');
-        if (data.Length == 0)
-        {
-            return;
-        }
-        for (int i = 0; i < data.Length; i++)
-        {
-            Debug.Log("LoadTagSys:" + data[i]);
-            string[] tagAndValues = data[i].Split('[');
-            if (tagAndValues[0].Equals("SLTD"))
-            {
-                //straight line
-                straightLineHandler.LoadFromSavePointsAsString(data[i]);
-            }
-            else if (tagAndValues[0].Equals("TCLD"))
-            {
-                //curve line data
-                curvedLineHandler.loadFromString(data[i]);
-            }
-        }
-        straightLineHandler.drawLines();
-        curvedLineHandler.drawLines();
-    }
-    public void saveToCache()
-    {
-        CachedFile = straightLineHandler.ReturnSavePointsAsString() + ";" + curvedLineHandler.getCurveLineSaveData();
-    }
+    
+    
 
-    public void saveToFile(string fileName)
-    {
-        Debug.Log("Save To File: " + fileName);
-        BinaryFormatter bf = new BinaryFormatter();
-        string persistentDataPath = Application.persistentDataPath + "/" + fileName + "." + fileType;
-        FileStream fs;
-        Debug.Log("FilePath:" + persistentDataPath);
-        if (File.Exists(persistentDataPath))
-        {
-            Debug.Log("replace F");
-            fs = new FileStream(persistentDataPath, FileMode.Truncate);
-        }
-        else
-        {
-            Debug.Log("new F");
-            fs = new FileStream(persistentDataPath, FileMode.CreateNew);
-        }
-        bf.Serialize(fs, getSaveData());
-        fs.Close();
-    }
+    
 
     public string fileNamePathSeperator = ":_|-|_:";
     public string fileType = "SaveData";
@@ -142,30 +96,87 @@ public class SaveLoad_Handler_Script : MonoBehaviour
     public void loadFromFile(string fileName)
     {
         Debug.Log(fileName);
-    }
-
-
-    public void saveToObjectCache()
-    {
-        objectCashe = getSaveData();
-    }
-
-    public void loadFromObjectCache()
-    {
-        if (objectCashe != null)
+        if (doesCacheContainFile(fileName) != null)
         {
-            curvedLineHandler.setDataFromSaveData(objectCashe.CurvedLines);
-            straightLineHandler.setDataFromSaveData(objectCashe.StraightLinePoints);
+            loadFromObjectCache(fileName);
+        }
+        else 
+        {
+            //not currently loaded in cache
+            string persistentDataPath = Application.persistentDataPath + "/" + fileName + "." + fileType;
+            BinaryFormatter bf = new BinaryFormatter();
+            FileStream sr = new FileStream(persistentDataPath, FileMode.Open);
+            saveClass temp = bf.Deserialize(sr) as saveClass;
+            CachedSaveData.Add(temp);
+            loadFromObjectCache(fileName);
+        }
+
+    }
+
+
+    public void saveToFile(string fileName)
+    {
+        Debug.Log("Save To File: " + fileName);
+        BinaryFormatter bf = new BinaryFormatter();
+        string persistentDataPath = Application.persistentDataPath + "/" + fileName + "." + fileType;
+        FileStream fs;
+        Debug.Log("FilePath:" + persistentDataPath);
+        if (File.Exists(persistentDataPath))
+        {
+            Debug.Log("replace F");
+            fs = new FileStream(persistentDataPath, FileMode.Truncate);
+        }
+        else
+        {
+            Debug.Log("new F");
+            fs = new FileStream(persistentDataPath, FileMode.CreateNew);
+        }
+        bf.Serialize(fs, getSaveData(fileName));
+        fs.Close();
+    }
+
+    public void loadFromObjectCache(string fileName)
+    {
+        foreach (saveClass sc in CachedSaveData)
+        {
+            if (sc.MapName.Equals(fileName))
+            {
+                CurrentlyLoadedSaveData = sc;
+                LoadCurrentObjectCache();
+                break;
+            }
         }
     }
 
-
-    saveClass objectCashe;
-
-
-    private saveClass getSaveData()
+    private void LoadCurrentObjectCache()
     {
-        return new saveClass(curvedLineHandler.getCurvedLinesAsSaveData(), straightLineHandler.getLinePoints());
+        if (CurrentlyLoadedSaveData != null)
+        {
+            curvedLineHandler.setDataFromSaveData(CurrentlyLoadedSaveData.CurvedLines);
+            curvedLineHandler.drawLines();
+            straightLineHandler.setDataFromSaveData(CurrentlyLoadedSaveData.StraightLinePoints);
+            straightLineHandler.drawLines();
+        }
+    }
+
+    saveClass doesCacheContainFile(string fileName)
+    {
+        foreach (saveClass data in CachedSaveData)
+        {
+            if (data.MapName.Equals(fileName))
+            {
+                return data;
+            }
+        }
+        return null;
+    }
+
+
+
+
+    private saveClass getSaveData(string fileName)
+    {
+        return new saveClass(fileName, curvedLineHandler.getCurvedLinesAsSaveData(), straightLineHandler.getLinePoints());
     }
 
     [System.Serializable]
@@ -173,12 +184,15 @@ public class SaveLoad_Handler_Script : MonoBehaviour
     {
         public float3[][] CurvedLines;
         public float2[][] StraightLinePoints;
+        public string MapName;
 
-        public saveClass(float3[][] CurvedLines, float2[][] StraightLinePoints)
+        public saveClass(string fileName, float3[][] CurvedLines, float2[][] StraightLinePoints)
         {
             this.CurvedLines = CurvedLines;
             this.StraightLinePoints = StraightLinePoints;
+            this.MapName = fileName;
         }
+
     }
 
 }
