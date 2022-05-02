@@ -20,12 +20,51 @@ public class TitleScreenHandler : MonoBehaviourPunCallbacks
         PhotonNetwork.ConnectUsingSettings();
     }
 
+
+    void createLobby()
+    {
+        Photon.Realtime.RoomOptions options = new Photon.Realtime.RoomOptions();
+        options.MaxPlayers = 0;
+        options.IsOpen = false;
+        PhotonNetwork.JoinOrCreateRoom(createRandomRoomName(), options, Photon.Realtime.TypedLobby.Default);
+    }
+
+    string createRandomRoomName()
+    {
+        string roomNameCharacters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+        string roomName = "";
+
+        for (int i = 0; i < 6; i++)
+        {
+            int charPos = Random.Range(0, roomNameCharacters.Length);
+            roomName += roomNameCharacters.ToCharArray()[charPos];
+        }
+        return roomName;
+    }
+
+    public override void OnCreateRoomFailed(short returnCode, string message)
+    {
+        base.OnCreateRoomFailed(returnCode, message);
+        createLobby();
+    }
+
+    public override void OnCreatedRoom()
+    {
+        base.OnCreatedRoom();
+        Debug.Log("RoomName:"+PhotonNetwork.CurrentRoom.Name);
+        PhotonNetwork.AutomaticallySyncScene = true;
+        SceneManager.LoadScene("MainGame");
+    }
+
     public override void OnConnectedToMaster()
     {
         Debug.Log("connected to master");
         showConnectionText = false;
         base.OnConnectedToMaster();
+
+        createLobby();
     }
+
 
     private void Update()
     {

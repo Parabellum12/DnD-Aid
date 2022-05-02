@@ -57,4 +57,14 @@ public class General_InputPopup_Handler : MonoBehaviour
     {
         promptText.text = prompt;
     }
+
+    public void setPlaceHolderText(string temp)
+    {
+        inputField_PlaceHolderText.text = temp; 
+    }
+
+    public void setInputText(string text)
+    {
+        inputField.text = text;
+    }
 }

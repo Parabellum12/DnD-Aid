@@ -116,6 +116,13 @@ public class SaveLoad_Handler_Script : MonoBehaviour
 
     public void saveToFile(string fileName)
     {
+        saveClass test = doesCacheContainFile(fileName);
+        if (test != null)
+        {
+            CachedSaveData.Remove(test);
+        }
+
+
         Debug.Log("Save To File: " + fileName);
         BinaryFormatter bf = new BinaryFormatter();
         string persistentDataPath = Application.persistentDataPath + "/" + fileName + "." + fileType;
@@ -133,6 +140,7 @@ public class SaveLoad_Handler_Script : MonoBehaviour
         }
         bf.Serialize(fs, getSaveData(fileName));
         fs.Close();
+        loadFromFile(fileName);
     }
 
     public void loadFromObjectCache(string fileName)
@@ -145,6 +153,18 @@ public class SaveLoad_Handler_Script : MonoBehaviour
                 LoadCurrentObjectCache();
                 break;
             }
+        }
+    }
+
+    public string getCurrentlyLoadedMapName()
+    {
+        if (CurrentlyLoadedSaveData == null)
+        {
+            return "";
+        }
+        else
+        {
+            return CurrentlyLoadedSaveData.MapName;
         }
     }
 
@@ -178,6 +198,7 @@ public class SaveLoad_Handler_Script : MonoBehaviour
     {
         return new saveClass(fileName, curvedLineHandler.getCurvedLinesAsSaveData(), straightLineHandler.getLinePoints());
     }
+
 
     [System.Serializable]
     public class saveClass
