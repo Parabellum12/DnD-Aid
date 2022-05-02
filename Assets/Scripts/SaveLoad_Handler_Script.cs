@@ -10,7 +10,7 @@ public class SaveLoad_Handler_Script : MonoBehaviour
     [SerializeField] StraightLine_Handler_ScriptV2 straightLineHandler;
     [SerializeField] CurvedLine_Handler_ScriptV2 curvedLineHandler;
     List<saveClass> CachedSaveData = new List<saveClass>();
-    saveClass CurrentlyLoadedSaveData;
+    saveClass CurrentlyLoadedSaveData = null;
     //file data standard: <string data>;<string data>
     //string data standard: <overall tag>[<data>|<data>
     //data standard: <data value tag>:<value>,<value>
@@ -98,10 +98,12 @@ public class SaveLoad_Handler_Script : MonoBehaviour
         Debug.Log(fileName);
         if (doesCacheContainFile(fileName) != null)
         {
+            Debug.Log("loadFromFile Cache");
             loadFromObjectCache(fileName);
         }
         else 
         {
+            Debug.Log("loadFromFile File");
             //not currently loaded in cache
             string persistentDataPath = Application.persistentDataPath + "/" + fileName + "." + fileType;
             BinaryFormatter bf = new BinaryFormatter();
@@ -145,15 +147,18 @@ public class SaveLoad_Handler_Script : MonoBehaviour
 
     public void loadFromObjectCache(string fileName)
     {
+        Debug.Log("CachedSaveData:" + CachedSaveData.Count + " loadFromObjectCache:" + fileName);
         foreach (saveClass sc in CachedSaveData)
         {
-            if (sc.MapName.Equals(fileName))
+            Debug.Log("AAA:"+sc.MapName);
+            if (sc != null && sc.MapName.Equals(fileName))
             {
                 CurrentlyLoadedSaveData = sc;
                 LoadCurrentObjectCache();
-                break;
+                return;
             }
         }
+        Debug.LogError("No Cached Obejct Found");
     }
 
     public string getCurrentlyLoadedMapName()
@@ -203,9 +208,9 @@ public class SaveLoad_Handler_Script : MonoBehaviour
     [System.Serializable]
     public class saveClass
     {
-        public float3[][] CurvedLines;
-        public float2[][] StraightLinePoints;
-        public string MapName;
+        public float3[][] CurvedLines = new float3[0][];
+        public float2[][] StraightLinePoints = new float2[0][];
+        public string MapName = "";
 
         public saveClass(string fileName, float3[][] CurvedLines, float2[][] StraightLinePoints)
         {
