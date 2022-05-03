@@ -31,7 +31,7 @@ public class TitleScreenHandler : MonoBehaviourPunCallbacks
 
     string createRandomRoomName()
     {
-        string roomNameCharacters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+        string roomNameCharacters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890";
         string roomName = "";
 
         for (int i = 0; i < 6; i++)
@@ -51,9 +51,17 @@ public class TitleScreenHandler : MonoBehaviourPunCallbacks
     public override void OnCreatedRoom()
     {
         base.OnCreatedRoom();
+        GlobalPermissionsHandler.setPermsAsHost();
         Debug.Log("RoomName:"+PhotonNetwork.CurrentRoom.Name);
         PhotonNetwork.AutomaticallySyncScene = true;
-        SceneManager.LoadScene("MainGame");
+        PhotonNetwork.LoadLevel("MainGame");
+    }
+
+    public override void OnJoinedRoom()
+    {
+        base.OnJoinedRoom();
+        GlobalPermissionsHandler.setPermsAsClient();
+        PhotonNetwork.AutomaticallySyncScene = true;
     }
 
     public override void OnConnectedToMaster()

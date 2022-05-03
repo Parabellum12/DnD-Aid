@@ -723,7 +723,7 @@ MonoBehaviour:
   VerticalMovement: 1
   ShiftForFasterMovement: 1
   baseMoveSpeed: 25
-  shiftMoveSpeedMultiplier: 2
+  shiftMoveSpeedMultiplier: 3
   MousePan: 1
   MouseButtonToPanWith: 2
   WASDPan: 1
@@ -2150,6 +2150,7 @@ GameObject:
   - component: {fileID: 1251303679}
   - component: {fileID: 1251303678}
   - component: {fileID: 1251303682}
+  - component: {fileID: 1251303683}
   m_Layer: 0
   m_Name: GameHandler
   m_TagString: Untagged
@@ -2232,6 +2233,29 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   SaveLoadHandler: {fileID: 1251303680}
+  localView: {fileID: 1251303683}
+--- !u!114 &1251303683
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1251303677}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 0
+  observableSearch: 2
+  ObservedComponents: []
+  sceneViewId: 1
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
 --- !u!114 &1518451959 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 7757641140645435595, guid: 56a50b8f2f00810489ffca354f175395, type: 3}

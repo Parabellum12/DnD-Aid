@@ -105,14 +105,56 @@ public class SaveLoad_Handler_Script : MonoBehaviour
         {
             Debug.Log("loadFromFile File");
             //not currently loaded in cache
-            string persistentDataPath = Application.persistentDataPath + "/" + fileName + "." + fileType;
-            BinaryFormatter bf = new BinaryFormatter();
-            FileStream sr = new FileStream(persistentDataPath, FileMode.Open);
-            saveClass temp = bf.Deserialize(sr) as saveClass;
-            CachedSaveData.Add(temp);
+            addToCache(fileName);
             loadFromObjectCache(fileName);
         }
 
+    }
+
+    public void addToCache(string fileName)
+    {
+        string persistentDataPath = Application.persistentDataPath + "/" + fileName + "." + fileType;
+        BinaryFormatter bf = new BinaryFormatter();
+        FileStream sr = new FileStream(persistentDataPath, FileMode.Open);
+        saveClass temp = bf.Deserialize(sr) as saveClass;
+        CachedSaveData.Add(temp);
+    }
+
+    public void removeFromCache(string fileName)
+    {
+        foreach (saveClass sc in CachedSaveData)
+        {
+            if (sc.MapName.Equals(fileName))
+            {
+                CachedSaveData.Remove(sc);
+                return;
+            }
+        }
+    }
+
+    public saveClass getMapData(string mapName)
+    {
+        foreach (saveClass sc in CachedSaveData)
+        {
+            if (sc.MapName.Equals(mapName))
+            {
+                return sc;
+            }
+        }
+        bool avalible = false;
+        foreach (string s in getSaveFileNames())
+        {
+            if (s.Equals(mapName))
+            {
+                avalible = true;
+            }
+        }
+        if (!avalible)
+        {
+            return null;
+        }
+        addToCache(mapName);
+        return getMapData(mapName);
     }
 
 
@@ -159,6 +201,21 @@ public class SaveLoad_Handler_Script : MonoBehaviour
             }
         }
         Debug.LogError("No Cached Obejct Found");
+    }
+
+    public void loadMap(saveClass mapToLoad)
+    {
+        if (mapToLoad == null)
+        {
+            return;
+        }
+        CurrentlyLoadedSaveData = mapToLoad;
+        LoadCurrentObjectCache();
+    }
+
+    public List<saveClass> getLocalMapCache()
+    {
+        return CachedSaveData;
     }
 
     public string getCurrentlyLoadedMapName()
@@ -219,6 +276,31 @@ public class SaveLoad_Handler_Script : MonoBehaviour
             this.MapName = fileName;
         }
 
+    }
+
+
+    public byte[] ObjectToByteArray(saveClass obj)
+    {
+        if (obj == null)
+            return null;
+
+        BinaryFormatter bf = new BinaryFormatter();
+        MemoryStream ms = new MemoryStream();
+        bf.Serialize(ms, obj);
+
+        return ms.ToArray();
+    }
+
+    // Convert a byte array to an Object
+    public saveClass ByteArrayToObject(byte[] arrBytes)
+    {
+        MemoryStream memStream = new MemoryStream();
+        BinaryFormatter binForm = new BinaryFormatter();
+        memStream.Write(arrBytes, 0, arrBytes.Length);
+        memStream.Seek(0, SeekOrigin.Begin);
+        saveClass obj = (saveClass)binForm.Deserialize(memStream);
+
+        return obj;
     }
 
 }

@@ -4,6 +4,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using UnityEngine.EventSystems;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 
 public static class UtilClass 
 {
@@ -113,5 +115,7 @@ public static class UtilClass
         //point c in relation to line a-b
         return GetClosestDistanceBetweenLineAndPoint2D(a,b,c) <= dist;
     }
+
+
 }
 
