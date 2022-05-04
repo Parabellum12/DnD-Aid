@@ -218,6 +218,7 @@ MonoBehaviour:
   ContentTransform: {fileID: 260001446}
   GameHandler: {fileID: 1251303677}
   prefab: {fileID: 7757641142457187667, guid: 56a50b8f2f00810489ffca354f175395, type: 3}
+  mainHandler: {fileID: 1251303682}
 --- !u!114 &199119148
 MonoBehaviour:
   m_ObjectHideFlags: 0

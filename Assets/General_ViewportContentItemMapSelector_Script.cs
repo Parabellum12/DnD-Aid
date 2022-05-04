@@ -9,12 +9,14 @@ public class General_ViewportContentItemMapSelector_Script : MonoBehaviour
     [SerializeField] TMP_Text mapNameText;
     [SerializeField] Button loadMapButton;
     [SerializeField] Image CachedSelector;
-    bool isCached;
+    public bool isCached;
     float selectorMoveDist = 20;
+    public string mapName;
 
     System.Action onChangeChacheValue;
     public void setup(string mapName, bool isChached, System.Action loadMapButtonOnClick, System.Action onChangeChacheValue)
     {
+        this.mapName = mapName;
         mapNameText.text = mapName;
         this.onChangeChacheValue = onChangeChacheValue;
         this.isCached = isChached;

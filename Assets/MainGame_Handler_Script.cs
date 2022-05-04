@@ -24,6 +24,11 @@ public class MainGame_Handler_Script : MonoBehaviour
     //map loading and cache sharing
     public void addMapToGlobalCachePush(string FileName)
     {
+        if (doesGlobalCacheContain(FileName))
+        {
+            return;
+        }
+        Debug.Log("add to cache:" + FileName);
         localView.RPC("addMapToGLobalCacheHandle", RpcTarget.All, SaveLoadHandler.ObjectToByteArray(SaveLoadHandler.getMapData(FileName)));
     }
 
@@ -36,13 +41,26 @@ public class MainGame_Handler_Script : MonoBehaviour
     
     public void removeMapFromGlobalCachePush(string FileName)
     {
+        if (!doesGlobalCacheContain(FileName))
+        {
+            return;
+        }
+        Debug.Log("remove to cache:" + FileName);
         localView.RPC("removeMapFromGLobalCacheHandle", RpcTarget.All, SaveLoadHandler.ObjectToByteArray(SaveLoadHandler.getMapData(FileName)));
     }
 
     [PunRPC]
     public void removeMapFromGLobalCacheHandle(byte[] mapData)
     {
-        GlobalCachedMaps.Remove(SaveLoadHandler.ByteArrayToObject(mapData));
+        SaveLoad_Handler_Script.saveClass test = SaveLoadHandler.ByteArrayToObject(mapData);
+        foreach (SaveLoad_Handler_Script.saveClass sc in GlobalCachedMaps)
+        {
+            if (sc.MapName.Equals(test.MapName))
+            {
+                GlobalCachedMaps.Remove(sc);
+                break;
+            }
+        }
     }
 
     public void CallRequestMapDataSyncPush()

@@ -10,6 +10,8 @@ public class MapSelectorBackground_Script : MonoBehaviour
     [SerializeField] RectTransform ContentTransform;
     [SerializeField] GameObject GameHandler;
     [SerializeField] GameObject prefab;
+    [SerializeField] MainGame_Handler_Script mainHandler;
+    List<General_ViewportContentItemMapSelector_Script> mapSelectors = new List<General_ViewportContentItemMapSelector_Script>();
     // Start is called before the first frame update
     void Start()
     {
@@ -26,7 +28,22 @@ public class MapSelectorBackground_Script : MonoBehaviour
             go.transform.localPosition = new Vector3(0, (-102 * i) - 55, 0);
             go.transform.localScale = Vector3.one;
             General_ViewportContentItemMapSelector_Script scr = go.GetComponent<General_ViewportContentItemMapSelector_Script>();
-            scr.setup(fileNames[i], false, () => {  }, () => {  });
+            mapSelectors.Add(scr);
+            scr.setup(fileNames[i], false, () => { mainHandler.LoadMapDataPush(scr.mapName); scr.setCachedSelectorToTrue(); }, () => { handleCacheButtonUpdate(scr); });
         }
     }
+
+
+    void handleCacheButtonUpdate(General_ViewportContentItemMapSelector_Script scr)
+    {
+        if (scr.isCached)
+        {
+            mainHandler.addMapToGlobalCachePush(scr.mapName);
+        }
+        else
+        {
+            mainHandler.removeMapFromGlobalCachePush(scr.mapName);
+        }
+    }
+
 }
