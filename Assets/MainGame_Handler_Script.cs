@@ -15,6 +15,13 @@ public class MainGame_Handler_Script : MonoBehaviour
     }
 
     
+
+
+
+
+
+
+    //map loading and cache sharing
     public void addMapToGlobalCachePush(string FileName)
     {
         localView.RPC("addMapToGLobalCacheHandle", RpcTarget.All, SaveLoadHandler.ObjectToByteArray(SaveLoadHandler.getMapData(FileName)));
@@ -101,4 +108,15 @@ public class MainGame_Handler_Script : MonoBehaviour
         }
         return false;
     }
+
+
+
+
+
+    //network room handling
+    public void ToggleRoomJoinable(bool joinable)
+    {
+        PhotonNetwork.CurrentRoom.IsOpen = joinable;
+    }
+
 }
