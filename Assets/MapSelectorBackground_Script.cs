@@ -18,8 +18,8 @@ public class MapSelectorBackground_Script : MonoBehaviour
         string[] fileNames = GameHandler.GetComponent<SaveLoad_Handler_Script>().getSaveFileNames();
         //ScrollViewTransform.rect.Set(ScrollViewTransform.rect.x, ScrollViewTransform.rect.y, ScrollViewTransform.rect.width, 20 + (100 * fileNames.Length));
         ScrollViewTransform.sizeDelta = new Vector2(ScrollViewTransform.sizeDelta.x, 20 + (100 * fileNames.Length));
-        Debug.Log(ScrollViewTransform.rect.height);
-        Debug.Log(20 + (100 * fileNames.Length));
+        //Debug.Log(ScrollViewTransform.rect.height);
+        //Debug.Log(20 + (100 * fileNames.Length));
         for (int i = 0; i < fileNames.Length; i++)
         {
             GameObject go = Instantiate(prefab);
@@ -29,7 +29,7 @@ public class MapSelectorBackground_Script : MonoBehaviour
             go.transform.localScale = Vector3.one;
             General_ViewportContentItemMapSelector_Script scr = go.GetComponent<General_ViewportContentItemMapSelector_Script>();
             mapSelectors.Add(scr);
-            scr.setup(fileNames[i], false, () => { mainHandler.LoadMapDataPush(scr.mapName); scr.setCachedSelectorToTrue(); }, () => { handleCacheButtonUpdate(scr); });
+            scr.setup(fileNames[i], false, () => { mainHandler.LoadMapDataPush(scr.mapName); scr.isCached = true; scr.reflectCachedValueValue(); }, () => { handleCacheButtonUpdate(scr); });
         }
     }
 

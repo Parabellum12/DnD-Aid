@@ -8,6 +8,7 @@ using TMPro;
 public class TitleScreenHandler : MonoBehaviourPunCallbacks
 {
 
+
     public void toMapCreator()
     {
         SceneManager.LoadScene("MapCreator", LoadSceneMode.Single);
@@ -31,7 +32,7 @@ public class TitleScreenHandler : MonoBehaviourPunCallbacks
 
     string createRandomRoomName()
     {
-        string roomNameCharacters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890";
+        string roomNameCharacters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
         string roomName = "";
 
         for (int i = 0; i < 6; i++)

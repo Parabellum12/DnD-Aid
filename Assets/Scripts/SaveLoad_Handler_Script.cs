@@ -53,7 +53,7 @@ public class SaveLoad_Handler_Script : MonoBehaviour
                 mapName += s.ToCharArray()[i];
             }
             returner[index] = mapName;
-            Debug.Log(returner[index]);
+            //Debug.Log(returner[index]);
             index++;
         }
         return returner;
@@ -87,7 +87,7 @@ public class SaveLoad_Handler_Script : MonoBehaviour
             }
             returner[index] = mapName + fileNamePathSeperator + s;
 
-            Debug.Log(returner[index]);
+            //Debug.Log(returner[index]);
             index++;
         }
         return returner;
@@ -95,7 +95,7 @@ public class SaveLoad_Handler_Script : MonoBehaviour
 
     public void loadFromFile(string fileName)
     {
-        Debug.Log(fileName);
+        //Debug.Log(fileName);
         if (doesCacheContainFile(fileName) != null)
         {
             Debug.Log("loadFromFile Cache");
@@ -167,19 +167,19 @@ public class SaveLoad_Handler_Script : MonoBehaviour
         }
 
 
-        Debug.Log("Save To File: " + fileName);
+        //Debug.Log("Save To File: " + fileName);
         BinaryFormatter bf = new BinaryFormatter();
         string persistentDataPath = Application.persistentDataPath + "/" + fileName + "." + fileType;
         FileStream fs;
-        Debug.Log("FilePath:" + persistentDataPath);
+        //Debug.Log("FilePath:" + persistentDataPath);
         if (File.Exists(persistentDataPath))
         {
-            Debug.Log("replace F");
+            //Debug.Log("replace F");
             fs = new FileStream(persistentDataPath, FileMode.Truncate);
         }
         else
         {
-            Debug.Log("new F");
+            //Debug.Log("new F");
             fs = new FileStream(persistentDataPath, FileMode.CreateNew);
         }
         bf.Serialize(fs, getSaveData(fileName));
@@ -189,7 +189,7 @@ public class SaveLoad_Handler_Script : MonoBehaviour
 
     public void loadFromObjectCache(string fileName)
     {
-        Debug.Log("CachedSaveData:" + CachedSaveData.Count + " loadFromObjectCache:" + fileName);
+        //Debug.Log("CachedSaveData:" + CachedSaveData.Count + " loadFromObjectCache:" + fileName);
         foreach (saveClass sc in CachedSaveData)
         {
             Debug.Log("AAA:"+sc.MapName);
@@ -200,7 +200,7 @@ public class SaveLoad_Handler_Script : MonoBehaviour
                 return;
             }
         }
-        Debug.LogError("No Cached Obejct Found");
+        //Debug.LogError("No Cached Obejct Found");
     }
 
     public void loadMap(saveClass mapToLoad)

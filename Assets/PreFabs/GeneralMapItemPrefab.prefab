@@ -35,8 +35,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -123.75006, y: 15}
-  m_SizeDelta: {x: 247.5, y: 70}
+  m_AnchoredPosition: {x: -52.95, y: 15}
+  m_SizeDelta: {x: 389.1, y: 70}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7757641140645435588
 CanvasRenderer:
@@ -101,7 +101,7 @@ MonoBehaviour:
   m_fontSizeMax: 48
   m_fontStyle: 0
   m_HorizontalAlignment: 1
-  m_VerticalAlignment: 1024
+  m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
   m_wordSpacing: 0
@@ -988,3 +988,5 @@ MonoBehaviour:
   mapNameText: {fileID: 7757641140645435595}
   loadMapButton: {fileID: 7757641142302431607}
   CachedSelector: {fileID: 7757641141557941475}
+  isCached: 0
+  mapName: 
