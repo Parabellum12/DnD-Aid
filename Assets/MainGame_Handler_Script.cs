@@ -11,7 +11,7 @@ public class MainGame_Handler_Script : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
+        ToggleRoomJoinable(true);
     }
 
     
@@ -29,7 +29,8 @@ public class MainGame_Handler_Script : MonoBehaviour
             return;
         }
         Debug.Log("add to cache:" + FileName);
-        localView.RPC("addMapToGLobalCacheHandle", RpcTarget.All, SaveLoadHandler.ObjectToByteArray(SaveLoadHandler.getMapData(FileName)));
+        SaveLoad_Handler_Script.saveClass temp = SaveLoadHandler.getMapData(FileName);
+        localView.RPC("addMapToGLobalCacheHandle", RpcTarget.All, SaveLoadHandler.ObjectToByteArray(temp));
     }
 
     [PunRPC]
@@ -46,7 +47,8 @@ public class MainGame_Handler_Script : MonoBehaviour
             return;
         }
         Debug.Log("remove to cache:" + FileName);
-        localView.RPC("removeMapFromGLobalCacheHandle", RpcTarget.All, SaveLoadHandler.ObjectToByteArray(SaveLoadHandler.getMapData(FileName)));
+        SaveLoad_Handler_Script.saveClass temp = SaveLoadHandler.getMapData(FileName);
+        localView.RPC("removeMapFromGLobalCacheHandle", RpcTarget.All, SaveLoadHandler.ObjectToByteArray(temp));
     }
 
     [PunRPC]

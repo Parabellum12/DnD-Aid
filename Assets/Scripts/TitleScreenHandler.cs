@@ -7,8 +7,12 @@ using TMPro;
 
 public class TitleScreenHandler : MonoBehaviourPunCallbacks
 {
-
-
+    [SerializeField] TMP_InputField gameCode;
+    private void Start()
+    {
+        Screen.fullScreenMode = FullScreenMode.Windowed;
+        Screen.SetResolution(1920, 1080, FullScreenMode.Windowed);
+    }
     public void toMapCreator()
     {
         SceneManager.LoadScene("MapCreator", LoadSceneMode.Single);
@@ -27,7 +31,12 @@ public class TitleScreenHandler : MonoBehaviourPunCallbacks
         Photon.Realtime.RoomOptions options = new Photon.Realtime.RoomOptions();
         options.MaxPlayers = 0;
         options.IsOpen = false;
-        PhotonNetwork.JoinOrCreateRoom(createRandomRoomName(), options, Photon.Realtime.TypedLobby.Default);
+        string roomName = createRandomRoomName();
+        if (gameCode.text.Length == 6)
+        {
+            roomName = gameCode.text;
+        }
+        PhotonNetwork.JoinOrCreateRoom(roomName, options, Photon.Realtime.TypedLobby.Default);
     }
 
     string createRandomRoomName()

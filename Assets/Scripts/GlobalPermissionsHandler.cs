@@ -29,6 +29,7 @@ public static class GlobalPermissionsHandler
         AddToken = 6,
         RemoveTokens = 7,
         GlobalMoveTokens = 8,
+        Error
     }
 
     static public void setPermsAsHost()
@@ -66,5 +67,37 @@ public static class GlobalPermissionsHandler
     {
         //Debug.Log("Changed " + permToValue.ToString() + ":" + (int)permToValue + " To " + value.ToString());
         permBools[(int)permToValue] = value;
+    }
+
+    static public PermisionNameToValue getPermFromIndex(int index)
+    {
+        switch (index)
+        {
+            case 0:
+                return PermisionNameToValue.ChangeOtherPlayerPerms;
+            case 1:
+                return PermisionNameToValue.LoadMaps;
+            case 2:
+                return PermisionNameToValue.KickPlayers;
+            case 3:
+                return PermisionNameToValue.EditInitiativeList;
+            case 4:
+                return PermisionNameToValue.EditFogOfWarMask;
+            case 5:
+                return PermisionNameToValue.SeeThroughFogOfWarMask;
+            case 6:
+                return PermisionNameToValue.AddToken;
+            case 7:
+                return PermisionNameToValue.RemoveTokens;
+            case 8:
+                return PermisionNameToValue.GlobalMoveTokens;
+            default:
+                return PermisionNameToValue.Error;
+        }
+    }
+
+    static public bool[] returnPermissions()
+    {
+        return permBools;
     }
 }
