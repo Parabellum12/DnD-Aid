@@ -8,11 +8,6 @@ public class MainGame_Handler_Script : MonoBehaviour
     [SerializeField] SaveLoad_Handler_Script SaveLoadHandler;
     public PhotonView localView;
     List<SaveLoad_Handler_Script.saveClass> GlobalCachedMaps = new List<SaveLoad_Handler_Script.saveClass>();
-    // Start is called before the first frame update
-    void Start()
-    {
-        ToggleRoomJoinable(true);
-    }
 
     
 
