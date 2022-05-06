@@ -2,17 +2,39 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
+using Photon.Realtime;
+using UnityEngine.SceneManagement;
 
-public class MainGame_Handler_Script : MonoBehaviour
+public class MainGame_Handler_Script : MonoBehaviourPunCallbacks
 {
     [SerializeField] SaveLoad_Handler_Script SaveLoadHandler;
     public PhotonView localView;
     List<SaveLoad_Handler_Script.saveClass> GlobalCachedMaps = new List<SaveLoad_Handler_Script.saveClass>();
 
-    
+
+    private void Start()
+    {
+        if (!PhotonNetwork.IsMasterClient)
+        {
+            //client
+            Debug.Log("CallRequestMapDataSyncPush");
+            CallRequestMapDataSyncPush();
+        }
+        else
+        {
+            //master client
+        }
+    }
 
 
 
+    public override void OnMasterClientSwitched(Player newMasterClient)
+    {
+        PhotonNetwork.AutomaticallySyncScene = false;
+        PhotonNetwork.LeaveRoom();
+        PhotonNetwork.Disconnect();
+        SceneManager.LoadScene("TitleScreen");
+    }
 
 
 
@@ -68,15 +90,16 @@ public class MainGame_Handler_Script : MonoBehaviour
     [PunRPC]
     public void RequestMapDataSyncPush(Photon.Realtime.Player plr)
     {
-        localView.RPC("RequestMapDataSyncHandle", plr, GlobalCachedMaps, SaveLoadHandler.getMapData(SaveLoadHandler.getCurrentlyLoadedMapName()));
+        localView.RPC("RequestMapDataSyncHandle", plr, returnGlobalCacheAsByteArray(), SaveLoadHandler.ObjectToByteArray(SaveLoadHandler.getMapData(SaveLoadHandler.getCurrentlyLoadedMapName())));
     }
 
     [PunRPC]
-    public void RequestMapDataSyncHandle(List<SaveLoad_Handler_Script.saveClass> allData, SaveLoad_Handler_Script.saveClass currentlyLoadedMap)
+    public void RequestMapDataSyncHandle(byte[][] allData, byte[] currentlyLoadedMap)
     {
+        Debug.Log("RequestMapDataSyncHandle");
         GlobalCachedMaps.Clear();
-        GlobalCachedMaps.AddRange(allData);
-        SaveLoadHandler.loadMap(currentlyLoadedMap);
+        GlobalCachedMaps.AddRange(returnGlobalCacheByte2DArrayToList(allData));
+        SaveLoadHandler.loadMap(SaveLoadHandler.ByteArrayToObject(currentlyLoadedMap));
     }
 
 
@@ -132,6 +155,26 @@ public class MainGame_Handler_Script : MonoBehaviour
     public void ToggleRoomJoinable(bool joinable)
     {
         PhotonNetwork.CurrentRoom.IsOpen = joinable;
+    }
+
+    byte[][] returnGlobalCacheAsByteArray()
+    {
+        byte[][] returner = new byte[GlobalCachedMaps.Count][];
+        for (int i = 0; i < GlobalCachedMaps.Count; i++)
+        {
+            returner[i] = SaveLoadHandler.ObjectToByteArray(GlobalCachedMaps[i]);
+        }
+        return returner;
+    }
+
+    List<SaveLoad_Handler_Script.saveClass> returnGlobalCacheByte2DArrayToList(byte[][] data)
+    {
+        List<SaveLoad_Handler_Script.saveClass> returner = new List<SaveLoad_Handler_Script.saveClass>();
+        foreach (byte[] dat in data)
+        {
+            returner.Add(SaveLoadHandler.ByteArrayToObject(dat));
+        }
+        return returner;
     }
 
 }
