@@ -68,11 +68,14 @@ public class TitleScreenHandler : MonoBehaviourPunCallbacks
         base.OnCreateRoomFailed(returnCode, message);
         createLobby();
     }
-
+    bool alreadySetPerms = false;
     public override void OnCreatedRoom()
     {
-        base.OnCreatedRoom();
-        GlobalPermissionsHandler.setPermsAsHost();
+        if (!alreadySetPerms)
+        {
+            alreadySetPerms = true;
+            GlobalPermissionsHandler.setPermsAsHost();
+        }
         Debug.Log("RoomName:"+PhotonNetwork.CurrentRoom.Name);
         PhotonNetwork.AutomaticallySyncScene = true;
         PhotonNetwork.LoadLevel("MainGame");
@@ -81,7 +84,11 @@ public class TitleScreenHandler : MonoBehaviourPunCallbacks
     public override void OnJoinedRoom()
     {
         base.OnJoinedRoom();
-        GlobalPermissionsHandler.setPermsAsClient();
+        if (!alreadySetPerms)
+        {
+            alreadySetPerms = true;
+            GlobalPermissionsHandler.setPermsAsClient();
+        }
         PhotonNetwork.AutomaticallySyncScene = true;
     }
 

@@ -34,6 +34,7 @@ public static class GlobalPermissionsHandler
 
     static public void setPermsAsHost()
     {
+        Debug.Log("Perms As Host");
         setPermAs(PermisionNameToValue.ChangeOtherPlayerPerms, true);
         setPermAs(PermisionNameToValue.LoadMaps, true);
         setPermAs(PermisionNameToValue.KickPlayers, true);
@@ -47,6 +48,7 @@ public static class GlobalPermissionsHandler
 
     static public void setPermsAsClient()
     {
+        Debug.Log("Perms As Client");
         setPermAs(PermisionNameToValue.ChangeOtherPlayerPerms, false);
         setPermAs(PermisionNameToValue.LoadMaps, false);
         setPermAs(PermisionNameToValue.KickPlayers, false);
