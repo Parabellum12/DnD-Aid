@@ -22,11 +22,10 @@ public class MapSelectorBackground_Script : MonoBehaviour
         //Debug.Log(20 + (100 * fileNames.Length));
         for (int i = 0; i < fileNames.Length; i++)
         {
-            GameObject go = Instantiate(prefab);
-            go.transform.SetParent(ContentTransform);
-            go.transform.localPosition = Vector3.zero;
-            go.transform.localPosition = new Vector3(0, (-102 * i) - 55, 0);
+            GameObject go = Instantiate(prefab, ContentTransform);
             go.transform.localScale = Vector3.one;
+            go.transform.localPosition = Vector3.zero;
+            go.transform.localPosition = new Vector2(0, (-102 * i) - 55);
             General_ViewportContentItemMapSelector_Script scr = go.GetComponent<General_ViewportContentItemMapSelector_Script>();
             mapSelectors.Add(scr);
             scr.setup(fileNames[i], false, () => { mainHandler.LoadMapDataPush(scr.mapName); scr.isCached = true; scr.reflectCachedValueValue(); }, () => { handleCacheButtonUpdate(scr); });
