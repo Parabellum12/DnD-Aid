@@ -20,6 +20,10 @@ public class TitleScreenHandler : MonoBehaviourPunCallbacks
 
     public void toRoomConnect()
     {
+        if (PhotonNetwork.NickName.Length == 0)
+        {
+            PhotonNetwork.NickName = "Unknown Player";
+        }
         if (!PhotonNetwork.IsConnected)
         {
             textValue = "Connecting";
