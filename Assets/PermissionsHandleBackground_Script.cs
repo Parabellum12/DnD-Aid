@@ -10,12 +10,14 @@ public class PermissionsHandleBackground_Script : MonoBehaviour
     [SerializeField] RectTransform contentViewPort;
     [SerializeField] PhotonView photonview;
     List<PlayerPerm_UIHandler> playerPermUiList = new List<PlayerPerm_UIHandler>();
+    MainGame_Handler_Script mainHandler;
 
     public void Start()
     {
+        mainHandler = GameObject.FindGameObjectWithTag("GameController").GetComponent<MainGame_Handler_Script>();
         CreateUi();
     }
-    void CreateUi()
+    public void CreateUi()
     {
         destroyAnyUi();
         Photon.Realtime.Player[] allPlayers =  PhotonNetwork.PlayerList;
@@ -25,8 +27,19 @@ public class PermissionsHandleBackground_Script : MonoBehaviour
             GameObject go = Instantiate(permissionsHandlerPrefab, contentViewPort);
             go.transform.localPosition = new Vector2(0, -VerticalOffset - 75);
             PlayerPerm_UIHandler scr = go.GetComponent<PlayerPerm_UIHandler>();
-            scr.setup(this.photonview, allPlayers[i]);
+            scr.setup(ref allPlayers[i], mainHandler.returnPlayerPerms(allPlayers[i]), (index, value) =>
+            {
+                mainHandler.changePlayersPerms(allPlayers[i], index, value);
+            });
             VerticalOffset += scr.getSize();
+        }
+    }
+
+    public void updateUi(Photon.Realtime.Player plr, bool[] perms)
+    {
+        foreach(PlayerPerm_UIHandler scr in playerPermUiList)
+        {
+            scr.setValues(plr, perms);
         }
     }
 

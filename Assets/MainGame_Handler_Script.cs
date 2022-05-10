@@ -24,8 +24,15 @@ public class MainGame_Handler_Script : MonoBehaviourPunCallbacks
         {
             //master client
         }
+
+        callForPlayerPermsUpdate();
     }
 
+
+    private void OnPlayerConnected()
+    {
+        callForPlayerPermsUpdate();
+    }
 
 
     public override void OnMasterClientSwitched(Player newMasterClient)
@@ -166,6 +173,58 @@ public class MainGame_Handler_Script : MonoBehaviourPunCallbacks
         }
         return returner;
     }
+
+
+    [SerializeField]PermissionsHandleBackground_Script permUIHandler;
+    Dictionary<Photon.Realtime.Player, bool[]> playerToPerms = new Dictionary<Player, bool[]>();
+
+    public bool[] returnPlayerPerms(Photon.Realtime.Player plr)
+    {
+        return playerToPerms.GetValueOrDefault(plr);
+    }
+
+    public void callForPlayerPermsUpdate()
+    {
+        playerToPerms.Clear();
+    }
+
+    [PunRPC]
+    public void RequestPlayerPermsPush(Player plrToReturnDataTo)
+    {
+        localView.RPC("RequestPlayerPermsHandle", plrToReturnDataTo, PhotonNetwork.LocalPlayer, GlobalPermissionsHandler.returnPermissions());
+    }
+
+    [PunRPC]
+    public void RequestPlayerPermsHandle(Player plr, bool[] perms)
+    {
+        playerToPerms.Add(plr, perms);
+        permUIHandler.CreateUi();
+    }
+
+    public void changePlayersPerms(Player plrToChangePermsOn, int index, bool value)
+    {
+        localView.RPC("changeThisPlayersPerms", plrToChangePermsOn, index, value);
+    }
+
+    [PunRPC]
+    public void changeThisPlayersPerms(int index, bool value)
+    {
+        Debug.Log("Change Perm:" + GlobalPermissionsHandler.getPermFromIndex(index) + " To: " + value);
+        GlobalPermissionsHandler.setPermAs(GlobalPermissionsHandler.getPermFromIndex(index), value);
+        localView.RPC("updatePerms", RpcTarget.All, PhotonNetwork.LocalPlayer, GlobalPermissionsHandler.returnPermissions());
+    }
+
+    [PunRPC]
+
+    public void updatePerms(Player plrPermsChanged, bool[] perms)
+    {
+        playerToPerms.Remove(plrPermsChanged);
+        playerToPerms.Add(plrPermsChanged, perms);
+    }
+
+
+
+
 
     List<SaveLoad_Handler_Script.saveClass> returnGlobalCacheByte2DArrayToList(byte[][] data)
     {

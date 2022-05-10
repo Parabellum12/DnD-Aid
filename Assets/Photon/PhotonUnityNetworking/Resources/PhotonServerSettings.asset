@@ -52,6 +52,10 @@ MonoBehaviour:
   - HandleRequestPermArray
   - ReturnRequestPermArray
   - updatePlayerPermsHandle
+  - RequestPlayerPermsHandle
+  - RequestPlayerPermsPush
+  - changeThisPlayersPerms
+  - updatePerms
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 1

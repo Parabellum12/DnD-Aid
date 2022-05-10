@@ -13,37 +13,40 @@ public class PlayerPerm_UIHandler : MonoBehaviour
     [SerializeField] TMP_Text playerName;
     [SerializeField] List<changePermsPrefab_Script> uiElements;
     Photon.Realtime.Player plr;
-    PhotonView photonView;
+    MainGame_Handler_Script gameHandler;
 
-    public void setup(PhotonView photonView, Photon.Realtime.Player plr)
+    System.Action<int, bool> OnPermChangeCallback;
+    public void setup(ref Photon.Realtime.Player plr, bool[] permValues, System.Action<int, bool> OnPermChangeCallback)
     {
+        Debug.Log("DDDDDDDDDDDDDDDDDDD:" + (OnPermChangeCallback == null));
+        this.OnPermChangeCallback = OnPermChangeCallback;
+        gameHandler = GameObject.FindGameObjectWithTag("GameController").GetComponent<MainGame_Handler_Script>();
         playerName.text = plr.NickName;
-        this.photonView = photonView;
+        gameHandler.localView = gameObject.AddComponent<PhotonView>();
         this.plr = plr;
-        //requestPermArray();
+        setValues(permValues);
     }
 
-    void requestPermArray()
+    public void setValues(Photon.Realtime.Player plr, bool[] perms)
     {
-        photonView.RPC("HandleRequestPermArray", plr, PhotonNetwork.LocalPlayer);
+        if (this.plr.Equals(plr))
+        {
+            setValues(perms);
+        }
     }
 
-    [PunRPC]
-    public void HandleRequestPermArray(Photon.Realtime.Player plr)
+    void setValues(bool[] perms)
     {
-        photonView.RPC("ReturnRequestPermArray", plr, GlobalPermissionsHandler.returnPermissions());
-    }
-
-    [PunRPC]
-    public void ReturnRequestPermArray(bool[] perms)
-    {
-        setvalues(perms);
-    }
-
-    void setvalues(bool[] perms)
-    {
+        if (perms == null)
+        {
+            Debug.Log("setValues(bool[]) perms is null");
+            return;
+        }
         for (int i = 0; i < uiElements.Count; i++)
         {
+            Debug.Log("whatHappened:" + i);
+            Debug.Log(uiElements.Count);
+            Debug.Log(perms.Length);
             uiElements[i].setup(GlobalPermissionsHandler.getPermFromIndex(i).ToString(), perms[i], i, (index, value) =>
             {
                 updatePlayerPermsPush(index, value);
@@ -63,27 +66,7 @@ public class PlayerPerm_UIHandler : MonoBehaviour
 
     void updatePlayerPermsPush(int index, bool value)
     {
-        photonView.RPC("updatePlayerPermsHandle", plr, index, value);
-    }
-
-    [PunRPC]
-    public void updatePlayerPermsHandle(int index, bool value)
-    {
-        GlobalPermissionsHandler.setPermAs(GlobalPermissionsHandler.getPermFromIndex(index), value);
-    }
-
-    void callPermValueUpdate()
-    {
-        photonView.RPC("HandlePermValueUpdate", RpcTarget.Others, plr);
-    }
-
-    [PunRPC]
-    public void HandlePermValueUpdate(Photon.Realtime.Player callingPlayer)
-    {
-        if (plr.Equals(callingPlayer))
-        {
-            requestPermArray();
-        }
+        OnPermChangeCallback.Invoke(index, value);
     }
 
 
