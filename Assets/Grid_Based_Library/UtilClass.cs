@@ -117,5 +117,36 @@ public static class UtilClass
     }
 
 
+
+
+    public static byte[] ObjectToByteArray<TObject>(TObject obj)
+    {
+        if (obj == null)
+            return null;
+
+        BinaryFormatter bf = new BinaryFormatter();
+        MemoryStream ms = new MemoryStream();
+        bf.Serialize(ms, obj);
+
+        return ms.ToArray();
+    }
+
+    // Convert a byte array to an Object
+    public static TObject ByteArrayToObject<TObject>(byte[] arrBytes)
+    {
+        if (arrBytes == null)
+        {
+            return default(TObject);
+        }
+        MemoryStream memStream = new MemoryStream();
+        BinaryFormatter binForm = new BinaryFormatter();
+        memStream.Write(arrBytes, 0, arrBytes.Length);
+        memStream.Seek(0, SeekOrigin.Begin);
+        TObject obj = (TObject)binForm.Deserialize(memStream);
+
+        return obj;
+    }
+
+
 }
 

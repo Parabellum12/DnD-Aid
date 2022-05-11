@@ -4,6 +4,8 @@ using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine.SceneManagement;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.IO;
 
 public class MainGame_Handler_Script : MonoBehaviourPunCallbacks
 {
@@ -31,11 +33,18 @@ public class MainGame_Handler_Script : MonoBehaviourPunCallbacks
     }
 
 
-    private void OnPlayerConnected()
+    public override void OnPlayerEnteredRoom(Player newPlayer)
     {
-        Debug.Log("testWhy1");
+        //Debug.Log("testWhy1");
         callAllPlayerPermUpdate();
-        Debug.Log("testWhy2");
+        //Debug.Log("testWhy2");
+    }
+
+    public override void OnPlayerLeftRoom(Player otherPlayer)
+    {
+        //Debug.Log("testWhy1");
+        callAllPlayerPermUpdate();
+        //Debug.Log("testWhy2");
     }
 
 
@@ -59,13 +68,13 @@ public class MainGame_Handler_Script : MonoBehaviourPunCallbacks
         }
         Debug.Log("add to cache:" + FileName);
         SaveLoad_Handler_Script.saveClass temp = SaveLoadHandler.getMapData(FileName);
-        localView.RPC("addMapToGLobalCacheHandle", RpcTarget.All, SaveLoadHandler.ObjectToByteArray(temp));
+        localView.RPC("addMapToGLobalCacheHandle", RpcTarget.All, UtilClass.ObjectToByteArray(temp));
     }
 
     [PunRPC]
     public void addMapToGLobalCacheHandle(byte[] mapData)
     {
-        GlobalCachedMaps.Add(SaveLoadHandler.ByteArrayToObject(mapData));
+        GlobalCachedMaps.Add(UtilClass.ByteArrayToObject<SaveLoad_Handler_Script.saveClass>(mapData));
     }
 
     
@@ -77,13 +86,13 @@ public class MainGame_Handler_Script : MonoBehaviourPunCallbacks
         }
         Debug.Log("remove to cache:" + FileName);
         SaveLoad_Handler_Script.saveClass temp = SaveLoadHandler.getMapData(FileName);
-        localView.RPC("removeMapFromGLobalCacheHandle", RpcTarget.All, SaveLoadHandler.ObjectToByteArray(temp));
+        localView.RPC("removeMapFromGLobalCacheHandle", RpcTarget.All, UtilClass.ObjectToByteArray(temp));
     }
 
     [PunRPC]
     public void removeMapFromGLobalCacheHandle(byte[] mapData)
     {
-        SaveLoad_Handler_Script.saveClass test = SaveLoadHandler.ByteArrayToObject(mapData);
+        SaveLoad_Handler_Script.saveClass test = UtilClass.ByteArrayToObject<SaveLoad_Handler_Script.saveClass>(mapData);
         foreach (SaveLoad_Handler_Script.saveClass sc in GlobalCachedMaps)
         {
             if (sc.MapName.Equals(test.MapName))
@@ -102,16 +111,16 @@ public class MainGame_Handler_Script : MonoBehaviourPunCallbacks
     [PunRPC]
     public void RequestMapDataSyncPush(Photon.Realtime.Player plr)
     {
-        localView.RPC("RequestMapDataSyncHandle", plr, returnGlobalCacheAsByteArray(), SaveLoadHandler.ObjectToByteArray(SaveLoadHandler.getMapData(SaveLoadHandler.getCurrentlyLoadedMapName())));
+        localView.RPC("RequestMapDataSyncHandle", plr, returnGlobalCacheAsByteArray(), UtilClass.ObjectToByteArray(SaveLoadHandler.getMapData(SaveLoadHandler.getCurrentlyLoadedMapName())));
     }
 
     [PunRPC]
-    public void RequestMapDataSyncHandle(byte[][] allData, byte[] currentlyLoadedMap)
+    public void RequestMapDataSyncHandle(byte[] allData, byte[] currentlyLoadedMap)
     {
         Debug.Log("RequestMapDataSyncHandle");
         GlobalCachedMaps.Clear();
         GlobalCachedMaps.AddRange(returnGlobalCacheByte2DArrayToList(allData));
-        SaveLoadHandler.loadMap(SaveLoadHandler.ByteArrayToObject(currentlyLoadedMap));
+        SaveLoadHandler.loadMap(UtilClass.ByteArrayToObject<SaveLoad_Handler_Script.saveClass>(currentlyLoadedMap));
     }
 
 
@@ -124,7 +133,7 @@ public class MainGame_Handler_Script : MonoBehaviourPunCallbacks
         else 
         {
             addMapToGlobalCachePush(map);
-            localView.RPC("LoadMapDataHandle", RpcTarget.All, SaveLoadHandler.ObjectToByteArray(SaveLoadHandler.getMapData(map)));
+            localView.RPC("LoadMapDataHandle", RpcTarget.All, UtilClass.ObjectToByteArray(SaveLoadHandler.getMapData(map)));
         }
     }
 
@@ -132,7 +141,7 @@ public class MainGame_Handler_Script : MonoBehaviourPunCallbacks
     public void LoadMapDataHandle(byte[] mapData)
     {
         Debug.Log("load Map from data");
-        SaveLoadHandler.loadMap(SaveLoadHandler.ByteArrayToObject(mapData));
+        SaveLoadHandler.loadMap(UtilClass.ByteArrayToObject<SaveLoad_Handler_Script.saveClass>(mapData));
     }
     [PunRPC]
     public void LoadMapDataHandle(string mapName)
@@ -169,15 +178,31 @@ public class MainGame_Handler_Script : MonoBehaviourPunCallbacks
         PhotonNetwork.CurrentRoom.IsOpen = joinable;
     }
 
-    byte[][] returnGlobalCacheAsByteArray()
+    byte[] returnGlobalCacheAsByteArray()
     {
-        byte[][] returner = new byte[GlobalCachedMaps.Count][];
-        for (int i = 0; i < GlobalCachedMaps.Count; i++)
-        {
-            returner[i] = SaveLoadHandler.ObjectToByteArray(GlobalCachedMaps[i]);
-        }
+        CachedMapsWrapper wrapper = new CachedMapsWrapper(GlobalCachedMaps.ToArray());
+        return UtilClass.ObjectToByteArray(wrapper);
+    }
+
+    List<SaveLoad_Handler_Script.saveClass> returnGlobalCacheByte2DArrayToList(byte[] data)
+    {
+        CachedMapsWrapper wrapper = UtilClass.ByteArrayToObject<CachedMapsWrapper>(data);
+        List<SaveLoad_Handler_Script.saveClass> returner = new List<SaveLoad_Handler_Script.saveClass>();
+        returner.AddRange(wrapper.CachedMaps);
         return returner;
     }
+
+    [System.Serializable]
+    public class CachedMapsWrapper
+    {
+        public SaveLoad_Handler_Script.saveClass[] CachedMaps;
+
+        public CachedMapsWrapper(SaveLoad_Handler_Script.saveClass[] dat)
+        {
+            CachedMaps = dat;
+        }
+    }
+
 
 
     [SerializeField]PermissionsHandleBackground_Script permUIHandler;
@@ -241,15 +266,5 @@ public class MainGame_Handler_Script : MonoBehaviourPunCallbacks
 
 
 
-
-    List<SaveLoad_Handler_Script.saveClass> returnGlobalCacheByte2DArrayToList(byte[][] data)
-    {
-        List<SaveLoad_Handler_Script.saveClass> returner = new List<SaveLoad_Handler_Script.saveClass>();
-        foreach (byte[] dat in data)
-        {
-            returner.Add(SaveLoadHandler.ByteArrayToObject(dat));
-        }
-        return returner;
-    }
 
 }

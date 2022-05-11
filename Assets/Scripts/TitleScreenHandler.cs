@@ -80,7 +80,7 @@ public class TitleScreenHandler : MonoBehaviourPunCallbacks
         if (!alreadySetPerms)
         {
 
-            PhotonNetwork.IsMessageQueueRunning = false;
+            //PhotonNetwork.IsMessageQueueRunning = false;
             alreadySetPerms = true;
             GlobalPermissionsHandler.setPermsAsHost();
             Debug.Log("RoomName:" + PhotonNetwork.CurrentRoom.Name);
@@ -95,10 +95,10 @@ public class TitleScreenHandler : MonoBehaviourPunCallbacks
         if (!alreadySetPerms)
         {
 
-            PhotonNetwork.IsMessageQueueRunning = false;
+            //PhotonNetwork.IsMessageQueueRunning = false;
             Debug.Log("JoinedRoom");
             alreadySetPerms = true;
-            GlobalPermissionsHandler.setPermsAsClient();
+            GlobalPermissionsHandler.setPermsAsHost();
             PhotonNetwork.AutomaticallySyncScene = true;
         }
     }
