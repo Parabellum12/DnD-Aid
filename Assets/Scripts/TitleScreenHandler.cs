@@ -45,13 +45,15 @@ public class TitleScreenHandler : MonoBehaviourPunCallbacks
         showDots = true;
         Photon.Realtime.RoomOptions options = new Photon.Realtime.RoomOptions();
         options.MaxPlayers = 0;
-        options.IsOpen = false;
+        options.IsOpen = true;
         string roomName = createRandomRoomName();
         if (gameCode.text.Length == 6)
         {
             roomName = gameCode.text;
         }
-        PhotonNetwork.JoinOrCreateRoom(roomName, options, Photon.Realtime.TypedLobby.Default);
+        Photon.Realtime.TypedLobby lobbyType = new Photon.Realtime.TypedLobby(roomName, Photon.Realtime.LobbyType.Default);
+
+        PhotonNetwork.JoinOrCreateRoom(roomName, options, null);
     }
 
     string createRandomRoomName()
@@ -77,12 +79,14 @@ public class TitleScreenHandler : MonoBehaviourPunCallbacks
     {
         if (!alreadySetPerms)
         {
+
+            PhotonNetwork.IsMessageQueueRunning = false;
             alreadySetPerms = true;
             GlobalPermissionsHandler.setPermsAsHost();
+            Debug.Log("RoomName:" + PhotonNetwork.CurrentRoom.Name);
+            PhotonNetwork.AutomaticallySyncScene = true;
+            PhotonNetwork.LoadLevel("MainGame");
         }
-        Debug.Log("RoomName:"+PhotonNetwork.CurrentRoom.Name);
-        PhotonNetwork.AutomaticallySyncScene = true;
-        PhotonNetwork.LoadLevel("MainGame");
     }
 
     public override void OnJoinedRoom()
@@ -90,10 +94,13 @@ public class TitleScreenHandler : MonoBehaviourPunCallbacks
         base.OnJoinedRoom();
         if (!alreadySetPerms)
         {
+
+            PhotonNetwork.IsMessageQueueRunning = false;
+            Debug.Log("JoinedRoom");
             alreadySetPerms = true;
             GlobalPermissionsHandler.setPermsAsClient();
+            PhotonNetwork.AutomaticallySyncScene = true;
         }
-        PhotonNetwork.AutomaticallySyncScene = true;
     }
 
     public override void OnJoinRoomFailed(short returnCode, string message)

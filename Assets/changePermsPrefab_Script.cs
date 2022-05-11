@@ -16,11 +16,11 @@ public class changePermsPrefab_Script : MonoBehaviour
     System.Action<int, bool> callBack;
     public void setup(string text, bool value, int index, System.Action<int, bool> callback)
     {
-        Debug.Log("AAAAAAAAAAAAAAAAAAAAAAAAAAA" + (callback == null));
+        //Debug.Log("AAAAAAAAAAAAAAAAAAAAAAAAAAA" + (callback == null));
         this.index = index;
         nameText.text = text;
         this.callBack = callback;
-        Debug.Log("LOLOL:" + (callback == null) + ":" + (this.callBack == null));
+        //Debug.Log("LOLOL:" + (callback == null) + ":" + (this.callBack == null));
         isActive = value;
         reflectColor();
     }
@@ -57,9 +57,9 @@ public class changePermsPrefab_Script : MonoBehaviour
 
     public void HandleButtonClick()
     {
-        Debug.Log("Click!:" + isActive);
+        //Debug.Log("Click!:" + isActive);
         isActive = !isActive;
-        Debug.Log("Click! 2:" + isActive);
+        //Debug.Log("Click! 2:" + isActive);
         reflectColor();
         callBack?.Invoke(index, isActive);
     }

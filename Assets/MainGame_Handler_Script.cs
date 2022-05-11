@@ -8,12 +8,14 @@ using UnityEngine.SceneManagement;
 public class MainGame_Handler_Script : MonoBehaviourPunCallbacks
 {
     [SerializeField] SaveLoad_Handler_Script SaveLoadHandler;
-    public PhotonView localView;
+    [SerializeField] PhotonView localView;
     List<SaveLoad_Handler_Script.saveClass> GlobalCachedMaps = new List<SaveLoad_Handler_Script.saveClass>();
 
 
     private void Start()
     {
+
+        PhotonNetwork.IsMessageQueueRunning = true;
         if (!PhotonNetwork.IsMasterClient)
         {
             //client
@@ -23,20 +25,23 @@ public class MainGame_Handler_Script : MonoBehaviourPunCallbacks
         else
         {
             //master client
+            callForPlayerPermsUpdate();
         }
 
-        callForPlayerPermsUpdate();
     }
 
 
     private void OnPlayerConnected()
     {
-        callForPlayerPermsUpdate();
+        Debug.Log("testWhy1");
+        callAllPlayerPermUpdate();
+        Debug.Log("testWhy2");
     }
 
 
     public override void OnMasterClientSwitched(Player newMasterClient)
     {
+        Debug.Log("OnMasterClientSwitched");
         PhotonNetwork.AutomaticallySyncScene = false;
         PhotonNetwork.LeaveRoom();
         PhotonNetwork.Disconnect();
@@ -183,9 +188,19 @@ public class MainGame_Handler_Script : MonoBehaviourPunCallbacks
         return playerToPerms.GetValueOrDefault(plr);
     }
 
+    public void callAllPlayerPermUpdate()
+    {
+        localView.RPC("callForPlayerPermsUpdate", RpcTarget.All);
+    }
+
+    [PunRPC]
     public void callForPlayerPermsUpdate()
     {
         playerToPerms.Clear();
+        //Debug.Log("reset player perms");
+        //playerToPerms.Add(PhotonNetwork.LocalPlayer, GlobalPermissionsHandler.returnPermissions());
+        //permUIHandler.CreateUi();
+        localView.RPC("RequestPlayerPermsPush", RpcTarget.All, PhotonNetwork.LocalPlayer);
     }
 
     [PunRPC]
@@ -197,6 +212,7 @@ public class MainGame_Handler_Script : MonoBehaviourPunCallbacks
     [PunRPC]
     public void RequestPlayerPermsHandle(Player plr, bool[] perms)
     {
+        //Debug.Log("returned player perms");
         playerToPerms.Add(plr, perms);
         permUIHandler.CreateUi();
     }
@@ -209,7 +225,7 @@ public class MainGame_Handler_Script : MonoBehaviourPunCallbacks
     [PunRPC]
     public void changeThisPlayersPerms(int index, bool value)
     {
-        Debug.Log("Change Perm:" + GlobalPermissionsHandler.getPermFromIndex(index) + " To: " + value);
+        //Debug.Log("Change Perm:" + GlobalPermissionsHandler.getPermFromIndex(index) + " To: " + value);
         GlobalPermissionsHandler.setPermAs(GlobalPermissionsHandler.getPermFromIndex(index), value);
         localView.RPC("updatePerms", RpcTarget.All, PhotonNetwork.LocalPlayer, GlobalPermissionsHandler.returnPermissions());
     }

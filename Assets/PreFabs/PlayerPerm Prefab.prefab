@@ -206,7 +206,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2213616505042932884}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 2213616505314514745}
+        m_TargetAssemblyTypeName: PlayerPerm_UIHandler, Assembly-CSharp
+        m_MethodName: openClosePermissions
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &2213616505083654739
 GameObject:
   m_ObjectHideFlags: 0
@@ -438,6 +450,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   backgorund: {fileID: 2213616505314514744}
   permsBackgournd: {fileID: 2213616504419362666}
+  permsBackgourndGameObject: {fileID: 2213616504419362644}
   PermsGameobject: {fileID: 2213616504419362644}
   playerName: {fileID: 2213616505083654737}
   uiElements:
@@ -450,6 +463,8 @@ MonoBehaviour:
   - {fileID: 8275350164657169287}
   - {fileID: 8275350165420175787}
   - {fileID: 8275350164562988558}
+  showHidePermissionsButton: {fileID: 2213616505042932885}
+  KickPlayerButton: {fileID: 2213616506094884809}
 --- !u!1 &2213616505429718181
 GameObject:
   m_ObjectHideFlags: 0

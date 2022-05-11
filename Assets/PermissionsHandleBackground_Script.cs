@@ -27,11 +27,27 @@ public class PermissionsHandleBackground_Script : MonoBehaviour
             GameObject go = Instantiate(permissionsHandlerPrefab, contentViewPort);
             go.transform.localPosition = new Vector2(0, -VerticalOffset - 75);
             PlayerPerm_UIHandler scr = go.GetComponent<PlayerPerm_UIHandler>();
-            scr.setup(ref allPlayers[i], mainHandler.returnPlayerPerms(allPlayers[i]), (index, value) =>
+            playerPermUiList.Add(scr);
+            //Debug.Log("hello world pain:" + i);
+            scr.setup(ref allPlayers[i], mainHandler.returnPlayerPerms(allPlayers[i]), (plr, index, value) =>
             {
-                mainHandler.changePlayersPerms(allPlayers[i], index, value);
+                //Debug.Log("CHangePerm: "+ i  + ":" + index + ":" + value);
+                mainHandler.changePlayersPerms(plr, index, value);
+            }, () => 
+            { 
+                updateUiPos(); 
             });
             VerticalOffset += scr.getSize();
+        }
+    }
+
+    void updateUiPos()
+    {
+        float VerticalOffset = 0;
+        for (int i = 0; i < playerPermUiList.Count; i++)
+        {
+            playerPermUiList[i].gameObject.transform.localPosition = new Vector2(0, -VerticalOffset - 75);
+            VerticalOffset += playerPermUiList[i].getSize();
         }
     }
 
@@ -49,5 +65,7 @@ public class PermissionsHandleBackground_Script : MonoBehaviour
         {
             Destroy(scr.gameObject);
         }
+
+        playerPermUiList.Clear();
     }
 }
