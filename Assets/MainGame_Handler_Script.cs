@@ -237,7 +237,7 @@ public class MainGame_Handler_Script : MonoBehaviourPunCallbacks
     [PunRPC]
     public void RequestPlayerPermsHandle(Player plr, bool[] perms)
     {
-        //Debug.Log("returned player perms");
+        Debug.Log("returned player perms");
         playerToPerms.Add(plr, perms);
         permUIHandler.CreateUi();
     }
@@ -259,8 +259,10 @@ public class MainGame_Handler_Script : MonoBehaviourPunCallbacks
 
     public void updatePerms(Player plrPermsChanged, bool[] perms)
     {
+        Debug.Log("updatePerms:" + plrPermsChanged.ToString());
         playerToPerms.Remove(plrPermsChanged);
         playerToPerms.Add(plrPermsChanged, perms);
+        permUIHandler.updateUi(plrPermsChanged, perms);
     }
 
 

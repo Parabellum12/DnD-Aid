@@ -21,11 +21,6 @@ public class HandleRightPanelButtons : MonoBehaviour
 
     public void toPerms()
     {
-        if (!GlobalPermissionsHandler.getPermValue(GlobalPermissionsHandler.PermisionNameToValue.ChangeOtherPlayerPerms) && !GlobalPermissionsHandler.getPermValue(GlobalPermissionsHandler.PermisionNameToValue.KickPlayers))
-        {
-            Debug.Log("No Perms perm");
-            return;
-        }
         disableAll();
         permissions.SetActive(true);
     }

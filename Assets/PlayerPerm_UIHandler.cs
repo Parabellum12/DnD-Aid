@@ -57,6 +57,22 @@ public class PlayerPerm_UIHandler : MonoBehaviour
         {
             setValues(perms);
         }
+        if (!GlobalPermissionsHandler.getPermValue(GlobalPermissionsHandler.PermisionNameToValue.ChangeOtherPlayerPerms))
+        {
+            showHidePermissionsButton.interactable = false;
+        }
+        else
+        {
+            showHidePermissionsButton.interactable = true;
+        }
+        if (!GlobalPermissionsHandler.getPermValue(GlobalPermissionsHandler.PermisionNameToValue.KickPlayers) || plr.Equals(PhotonNetwork.LocalPlayer))
+        {
+            KickPlayerButton.interactable = false;
+        }
+        else
+        {
+            KickPlayerButton.interactable = true;
+        }
     }
 
     void setValues(bool[] perms)
@@ -100,7 +116,7 @@ public class PlayerPerm_UIHandler : MonoBehaviour
         {
             permsBackgourndGameObject.SetActive(false);
         }
-        else
+        else if (GlobalPermissionsHandler.getPermValue(GlobalPermissionsHandler.PermisionNameToValue.ChangeOtherPlayerPerms) && !permsBackgourndGameObject.activeSelf)
         {
             permsBackgourndGameObject.SetActive(true);
         }

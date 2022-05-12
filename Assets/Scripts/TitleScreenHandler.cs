@@ -98,7 +98,7 @@ public class TitleScreenHandler : MonoBehaviourPunCallbacks
             //PhotonNetwork.IsMessageQueueRunning = false;
             Debug.Log("JoinedRoom");
             alreadySetPerms = true;
-            GlobalPermissionsHandler.setPermsAsHost();
+            GlobalPermissionsHandler.setPermsAsClient();
             PhotonNetwork.AutomaticallySyncScene = true;
         }
     }
