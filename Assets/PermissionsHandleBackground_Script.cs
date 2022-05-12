@@ -36,6 +36,9 @@ public class PermissionsHandleBackground_Script : MonoBehaviour
             }, () => 
             { 
                 updateUiPos(); 
+            }, (plrToKick) =>
+            {
+                mainHandler.kickPlayerPush(plrToKick);
             });
             VerticalOffset += scr.getSize();
         }

@@ -40,7 +40,7 @@ public class PlayerPerm_UIHandler : MonoBehaviour
 
 
 
-    public void setup(ref Photon.Realtime.Player plr, bool[] permValues, System.Action<Photon.Realtime.Player, int, bool> OnPermChangeCallback, System.Action updateUiPositions)
+    public void setup(ref Photon.Realtime.Player plr, bool[] permValues, System.Action<Photon.Realtime.Player, int, bool> OnPermChangeCallback, System.Action updateUiPositions, System.Action<Photon.Realtime.Player> kickPlayerCallback)
     {
         this.updateUiPositions = updateUiPositions;
         //Debug.Log("DDDDDDDDDDDDDDDDDDD:" + (OnPermChangeCallback == null));
@@ -49,6 +49,7 @@ public class PlayerPerm_UIHandler : MonoBehaviour
         playerName.text = plr.NickName;
         this.plr = plr;
         setValues(permValues);
+        KickPlayerButton.onClick.AddListener(() => { kickPlayerCallback.Invoke(this.plr); });
     }
 
     public void setValues(Photon.Realtime.Player plr, bool[] perms)
@@ -65,7 +66,7 @@ public class PlayerPerm_UIHandler : MonoBehaviour
         {
             showHidePermissionsButton.interactable = true;
         }
-        if (!GlobalPermissionsHandler.getPermValue(GlobalPermissionsHandler.PermisionNameToValue.KickPlayers) || plr.Equals(PhotonNetwork.LocalPlayer))
+        if (!GlobalPermissionsHandler.getPermValue(GlobalPermissionsHandler.PermisionNameToValue.KickPlayers) || this.plr.Equals(PhotonNetwork.LocalPlayer))
         {
             KickPlayerButton.interactable = false;
         }

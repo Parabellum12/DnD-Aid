@@ -268,5 +268,25 @@ public class MainGame_Handler_Script : MonoBehaviourPunCallbacks
 
 
 
+    
+    public void kickPlayerPush(Photon.Realtime.Player plrToKick)
+    {
+        Debug.Log("kick Player Push");
+        localView.RPC("kickPlayerHandle", plrToKick);
+    }
+
+    [PunRPC]
+    public void kickPlayerHandle()
+    {
+        Debug.Log("kick Player Handle");
+        PhotonNetwork.LeaveRoom();
+        PhotonNetwork.Disconnect();
+        PhotonNetwork.AutomaticallySyncScene = false;
+        SceneManager.LoadScene("TitleScreen");
+    }
+
+
+
+
 
 }
