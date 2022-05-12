@@ -118,7 +118,7 @@ public static class UtilClass
 
 
 
-
+    //covert object <-> byte[]
     public static byte[] ObjectToByteArray<TObject>(TObject obj)
     {
         if (obj == null)

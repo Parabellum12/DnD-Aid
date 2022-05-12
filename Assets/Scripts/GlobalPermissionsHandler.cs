@@ -67,7 +67,7 @@ public static class GlobalPermissionsHandler
 
     static public void setPermAs(PermisionNameToValue permToValue, bool value)
     {
-        //Debug.Log("Changed " + permToValue.ToString() + ":" + (int)permToValue + " To " + value.ToString());
+        Debug.Log("Changed " + permToValue.ToString() + ":" + (int)permToValue + " To " + value.ToString());
         permBools[(int)permToValue] = value;
     }
 
