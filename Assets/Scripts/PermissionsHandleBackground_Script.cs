@@ -32,6 +32,13 @@ public class PermissionsHandleBackground_Script : MonoBehaviour
             scr.setup(ref allPlayers[i], mainHandler.returnPlayerPerms(allPlayers[i]), (plr, index, value) =>
             {
                 //Debug.Log("CHangePerm: "+ i  + ":" + index + ":" + value);
+                if (plr.Equals(PhotonNetwork.LocalPlayer))
+                {
+                    if (GlobalPermissionsHandler.getPermFromIndex(index) == GlobalPermissionsHandler.PermisionNameToValue.ChangeOtherPlayerPerms)
+                    {
+                        return;
+                    }
+                }
                 mainHandler.changePlayersPerms(plr, index, value);
             }, () => 
             { 

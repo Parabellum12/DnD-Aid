@@ -88,8 +88,13 @@ public class PlayerPerm_UIHandler : MonoBehaviour
             //Debug.Log("whatHappened:" + i);
             //Debug.Log(uiElements.Count);
             //Debug.Log(perms.Length);
-            uiElements[i].setup(GlobalPermissionsHandler.getPermFromIndex(i).ToString(), perms[i], i, (index, value) =>
+            uiElements[i].setup(GlobalPermissionsHandler.getPermFromIndex(i).ToString(), perms[i], i, (index, value, scr) =>
             {
+                if (GlobalPermissionsHandler.getPermFromIndex(index) == GlobalPermissionsHandler.PermisionNameToValue.ChangeOtherPlayerPerms)
+                {
+                    scr.setActiveUi();
+                    return;
+                }
                 updatePlayerPermsPush(index, value);
             });
         }

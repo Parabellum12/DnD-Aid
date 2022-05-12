@@ -1,6 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
+using UnityEngine.SceneManagement;
 
 public class Main_Handler_Script : MonoBehaviour
 {
@@ -15,7 +18,7 @@ public class Main_Handler_Script : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
+        quitToMainMenuButton.onClick.AddListener(() => { quitToMainMenu(); });
     }
 
     public enum tools
@@ -227,5 +230,12 @@ public class Main_Handler_Script : MonoBehaviour
         BackGroundLR.positionCount = pointsList.Count;
         //Debug.Log("done");
         BackGroundLR.SetPositions(pointsList.ToArray());
+    }
+
+    [SerializeField] Button quitToMainMenuButton;
+
+    public void quitToMainMenu()
+    {
+        SceneManager.LoadScene("TitleScreen");
     }
 }

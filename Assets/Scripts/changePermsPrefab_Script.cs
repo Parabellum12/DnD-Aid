@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using Photon.Pun;
 
 public class changePermsPrefab_Script : MonoBehaviour
 {
@@ -13,8 +14,8 @@ public class changePermsPrefab_Script : MonoBehaviour
     int index;
 
 
-    System.Action<int, bool> callBack;
-    public void setup(string text, bool value, int index, System.Action<int, bool> callback)
+    System.Action<int, bool, changePermsPrefab_Script> callBack;
+    public void setup(string text, bool value, int index, System.Action<int, bool, changePermsPrefab_Script> callback)
     {
         //Debug.Log("AAAAAAAAAAAAAAAAAAAAAAAAAAA" + (callback == null));
         this.index = index;
@@ -61,6 +62,12 @@ public class changePermsPrefab_Script : MonoBehaviour
         isActive = !isActive;
         //Debug.Log("Click! 2:" + isActive);
         reflectColor();
-        callBack?.Invoke(index, isActive);
+        callBack?.Invoke(index, isActive, this);
+    }
+
+    public void setActiveUi()
+    {
+        isActive = true;
+        reflectColor();
     }
 }
