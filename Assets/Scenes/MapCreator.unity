@@ -158,7 +158,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   BackGroundLR: {fileID: 32627902}
-  modValue: 4
+  modValue: 12
   mainCam: {fileID: 993399844}
   straightLine_Handler: {fileID: 32627905}
   splineLineHandler: {fileID: 32627907}

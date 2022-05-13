@@ -60,7 +60,7 @@ public class CurvedLine_Handler_ScriptV2 : MonoBehaviour
             endCurve();
         }
     }
-
+    
     public bool HandleIfSelected(Vector2 Pos)
     {
         CurvedLine temp = null;

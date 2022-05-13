@@ -17,7 +17,7 @@ public class backgroundLine_Script : MonoBehaviour
     }
 
     [SerializeField] LineRenderer BackGroundLR;
-    [SerializeField] int modValue = 4;
+    [SerializeField] int modValue = 8;
     [SerializeField] Transform mainCam;
     List<Vector3> pointsList = new List<Vector3>();
     void updateBackgroundGrid()

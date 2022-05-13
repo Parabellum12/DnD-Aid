@@ -8,7 +8,7 @@ using UnityEngine.SceneManagement;
 public class Main_Handler_Script : MonoBehaviour
 {
     [SerializeField] LineRenderer BackGroundLR;
-    [SerializeField] int modValue = 4;
+    [SerializeField] int modValue = 8;
     [SerializeField] Transform mainCam;
     [SerializeField] StraightLine_Handler_ScriptV2 straightLine_Handler;
     [SerializeField] CurvedLine_Handler_ScriptV2 splineLineHandler;
