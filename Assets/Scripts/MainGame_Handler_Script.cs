@@ -12,11 +12,10 @@ public class MainGame_Handler_Script : MonoBehaviourPunCallbacks
     [SerializeField] SaveLoad_Handler_Script SaveLoadHandler;
     [SerializeField] PhotonView localView;
     List<SaveLoad_Handler_Script.saveClass> GlobalCachedMaps = new List<SaveLoad_Handler_Script.saveClass>();
-
+    [SerializeField] General_UI_DropDown_Handler_Script generalUiDropdownMainScr;
 
     private void Start()
     {
-
         PhotonNetwork.IsMessageQueueRunning = true;
         if (!PhotonNetwork.IsMasterClient)
         {
@@ -30,6 +29,15 @@ public class MainGame_Handler_Script : MonoBehaviourPunCallbacks
             callForPlayerPermsUpdate();
         }
 
+    }
+    bool firstUpdateLoop = true;
+    public void Update()
+    {
+        if (firstUpdateLoop)
+        {
+            firstUpdateLoop = false;
+            generalUiDropdownMainScr.setUiPositionsNoCallback();
+        }
     }
 
 
