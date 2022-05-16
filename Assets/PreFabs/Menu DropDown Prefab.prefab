@@ -528,9 +528,10 @@ MonoBehaviour:
   offsetDist: 0
   globalOffset: 0
   childDropDowns: []
-  interactable: 1
+  IsChildOrParent: 1
   dropDownImageFollowChilrenSize: 1
   childrenHolder: {fileID: 2273570197537932400}
+  buttonRectTransform: {fileID: 2273570196853200531}
   contentRectTransform: {fileID: 0}
 --- !u!1 &2273570197440314564
 GameObject:

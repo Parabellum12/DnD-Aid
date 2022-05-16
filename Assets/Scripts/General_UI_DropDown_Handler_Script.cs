@@ -13,9 +13,10 @@ public class General_UI_DropDown_Handler_Script : MonoBehaviour
     [SerializeField] List<General_UI_DropDown_Handler_Script> childDropDowns = new List<General_UI_DropDown_Handler_Script>();
     bool engaged = false;
     public System.Action updateUICallBack = null;
-    [SerializeField] bool interactable = true;
+    [SerializeField] bool IsChildOrParent = true;
     [SerializeField] bool dropDownImageFollowChilrenSize = true;
     [SerializeField] GameObject childrenHolder = null;
+    [SerializeField] RectTransform buttonRectTransform;
 
 
 
@@ -32,7 +33,7 @@ public class General_UI_DropDown_Handler_Script : MonoBehaviour
     void Start()
     {
 
-        if (interactable)
+        if (IsChildOrParent)
         {
             engaged = false;
             dropDownBackGroundImage?.SetActive(false);
@@ -71,10 +72,16 @@ public class General_UI_DropDown_Handler_Script : MonoBehaviour
         for (int i = 0; i < childDropDowns.Count; i++)
         {
             //Debug.Log(gameObject.name+":settingPosOF: " + childDropDowns [i].gameObject.name+ " to " + offsetDist);
-            childDropDowns[i].transform.localPosition = new Vector2(0, -offsetDist-2.5f);
+            childDropDowns[i].transform.localPosition = new Vector2(0, -offsetDist);
             offsetDist += childDropDowns[i].getSize();
         }
-        if (interactable)
+        setPosHelper();
+        updateUICallBack?.Invoke();
+    }
+
+    void setPosHelper()
+    {
+        if (IsChildOrParent)
         {
             if (dropDownImageFollowChilrenSize)
             {
@@ -84,15 +91,14 @@ public class General_UI_DropDown_Handler_Script : MonoBehaviour
                 temp.sizeDelta = new Vector2(temp.rect.width, offsetDist - globalOffset);
                 //Debug.Log(gameObject.name + ":TempHeight5:" + ((temp.rect.size.y / 2f) - globalOffset));
                 //temp.localPosition = Vector2.zero;
-                temp.localPosition = new Vector2(0, -(temp.rect.size.y) - 2.5f);// - (globalOffset / 2)));
+                temp.localPosition = new Vector2(0, -(temp.rect.size.y/2) - (gameObject.GetComponent<RectTransform>().rect.height/2));
                 //Debug.Log(gameObject.name + ":TemplocalPos:" + temp.localPosition);
             }
         }
         else
         {
-            contentRectTransform.sizeDelta = new Vector2(512, offsetDist-globalOffset);
+            contentRectTransform.sizeDelta = new Vector2(512, offsetDist - globalOffset);
         }
-        updateUICallBack?.Invoke();
     }
 
     public void setUiPositionsNoCallback()
@@ -106,29 +112,13 @@ public class General_UI_DropDown_Handler_Script : MonoBehaviour
             //Debug.Log(childDropDowns[i].gameObject.name + " Setting to offset " +  offsetDist);
             offsetDist += childDropDowns[i].getSize();
         }
-        if (interactable)
-        {
-            RectTransform temp = dropDownBackGroundImage.GetComponent<RectTransform>();
-            if (dropDownImageFollowChilrenSize)
-            {
-                //Debug.Log("rectFollowSize");
-                //temp.rect.Set(temp.rect.x, temp.rect.y, temp.rect.width, offsetDist - globalOffset);
-                temp.sizeDelta = new Vector2(temp.rect.width, offsetDist - globalOffset);
-                //Debug.Log("TempHeight:" + (float)temp.rect.height / 2f);
-                temp.localPosition = Vector2.zero;
-                temp.localPosition = new Vector2(0, (-(float)temp.rect.size.y / 2f));
-            }
-        }
-        else
-        {
-            contentRectTransform.sizeDelta = new Vector2(512, offsetDist - globalOffset);
-        }
+        setPosHelper();
     }
 
     public void HandleClick()
     {
         Debug.Log("HandleClick");
-        if (!interactable)
+        if (!IsChildOrParent)
         {
             return;
         }
@@ -136,11 +126,13 @@ public class General_UI_DropDown_Handler_Script : MonoBehaviour
         if (!engaged)
         {
             dropDownBackGroundImage.SetActive(true);
+            buttonRectTransform.rotation = Quaternion.Euler(0,0,180);
             childrenHolder?.SetActive(true);
         }
         else
         {
             dropDownBackGroundImage.SetActive(false);
+            buttonRectTransform.rotation = Quaternion.Euler(0, 0, 0);
             childrenHolder?.SetActive(false);
         }
         engaged = !engaged;
