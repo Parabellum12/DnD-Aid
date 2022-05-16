@@ -70,8 +70,8 @@ public class General_UI_DropDown_Handler_Script : MonoBehaviour
         offsetDist = globalOffset;
         for (int i = 0; i < childDropDowns.Count; i++)
         {
-            Debug.Log(gameObject.name+":settingPosOF: " + childDropDowns [i].gameObject.name+ " to " + offsetDist);
-            childDropDowns[i].transform.localPosition = new Vector2(childDropDowns[i].transform.localPosition.x, -offsetDist);
+            //Debug.Log(gameObject.name+":settingPosOF: " + childDropDowns [i].gameObject.name+ " to " + offsetDist);
+            childDropDowns[i].transform.localPosition = new Vector2(0, -offsetDist-2.5f);
             offsetDist += childDropDowns[i].getSize();
         }
         if (interactable)
@@ -79,13 +79,13 @@ public class General_UI_DropDown_Handler_Script : MonoBehaviour
             if (dropDownImageFollowChilrenSize)
             {
                 RectTransform temp = dropDownBackGroundImage.GetComponent<RectTransform>();
-                Debug.Log(gameObject.name + ":rectFollowSize");
+                //Debug.Log(gameObject.name + ":rectFollowSize");
                 //temp.rect.Set(temp.rect.x, temp.rect.y, temp.rect.width, offsetDist - globalOffset);
                 temp.sizeDelta = new Vector2(temp.rect.width, offsetDist - globalOffset);
-                Debug.Log(gameObject.name + ":TempHeight5:" + ((temp.rect.size.y / 2f) - globalOffset));
+                //Debug.Log(gameObject.name + ":TempHeight5:" + ((temp.rect.size.y / 2f) - globalOffset));
                 //temp.localPosition = Vector2.zero;
-                temp.localPosition = new Vector2(0, -(temp.rect.size.y / 2f) - (globalOffset/2));
-                Debug.Log(gameObject.name + ":TemplocalPos:" + temp.localPosition);
+                temp.localPosition = new Vector2(0, -(temp.rect.size.y) - 2.5f);// - (globalOffset / 2)));
+                //Debug.Log(gameObject.name + ":TemplocalPos:" + temp.localPosition);
             }
         }
         else
@@ -97,13 +97,13 @@ public class General_UI_DropDown_Handler_Script : MonoBehaviour
 
     public void setUiPositionsNoCallback()
     {
-        Debug.Log(gameObject.name + " Handling setUiPositionsNoCallback()");
+        //Debug.Log(gameObject.name + " Handling setUiPositionsNoCallback()");
         offsetDist = globalOffset;
         for (int i = 0; i < childDropDowns.Count; i++)
         {
             childDropDowns[i].setUiPositionsNoCallback();
-            childDropDowns[i].transform.localPosition = new Vector3(childDropDowns[i].transform.localPosition.x, -offsetDist, 0);
-            Debug.Log(childDropDowns[i].gameObject.name + " Setting to offset " +  offsetDist);
+            childDropDowns[i].transform.localPosition = new Vector3(0, -offsetDist, 0);
+            //Debug.Log(childDropDowns[i].gameObject.name + " Setting to offset " +  offsetDist);
             offsetDist += childDropDowns[i].getSize();
         }
         if (interactable)
@@ -116,7 +116,7 @@ public class General_UI_DropDown_Handler_Script : MonoBehaviour
                 temp.sizeDelta = new Vector2(temp.rect.width, offsetDist - globalOffset);
                 //Debug.Log("TempHeight:" + (float)temp.rect.height / 2f);
                 temp.localPosition = Vector2.zero;
-                temp.localPosition = new Vector2(0, -(float)temp.rect.size.y / 2f);
+                temp.localPosition = new Vector2(0, (-(float)temp.rect.size.y / 2f));
             }
         }
         else
