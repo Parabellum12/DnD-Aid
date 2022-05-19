@@ -6,7 +6,6 @@ using TMPro;
 using UnityEngine.EventSystems;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
-
 public static class UtilClass 
 {
 
@@ -148,5 +147,20 @@ public static class UtilClass
     }
 
 
+
+    public static Texture2D LoadPNG(string filePath)
+    {
+
+        Texture2D tex = null;
+        byte[] fileData;
+
+        if (File.Exists(filePath))
+        {
+            fileData = File.ReadAllBytes(filePath);
+            tex = new Texture2D(2, 2);
+            tex.LoadImage(fileData); //..this will auto-resize the texture dimensions.
+        }
+        return tex;
+    }
 }
 

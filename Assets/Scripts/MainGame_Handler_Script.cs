@@ -28,8 +28,14 @@ public class MainGame_Handler_Script : MonoBehaviourPunCallbacks
             //master client
             callForPlayerPermsUpdate();
         }
-
     }
+
+
+
+
+
+
+
     bool firstUpdateLoop = true;
     public void Update()
     {

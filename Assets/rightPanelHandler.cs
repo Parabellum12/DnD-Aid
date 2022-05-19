@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class rightPanelHandler : MonoBehaviour
 {
     [SerializeField] Button openCloseButton;
-    [SerializeField] Transform parentTransform;
+    [SerializeField] RectTransform parentTransform;
     [SerializeField] Image BackgorundImage;
     [SerializeField] float moveSpeed;
     bool openOrClosed = true;
@@ -23,15 +23,16 @@ public class rightPanelHandler : MonoBehaviour
         if (startingOpenOrClosed)
         {
             //starting open
-            openPos = parentTransform.position.x;
+            openPos = parentTransform.localPosition.x;
             closePos = openPos + BackgorundImage.rectTransform.sizeDelta.x;
         }
         else
         {
             //starting closed
-            closePos = parentTransform.position.x;
+            closePos = parentTransform.localPosition.x;
             openPos = closePos - BackgorundImage.rectTransform.sizeDelta.x;
         }
+        Debug.Log("OpenPos:" + openPos + " ClosePos:" + closePos);
     }
 
 
@@ -40,21 +41,23 @@ public class rightPanelHandler : MonoBehaviour
 
     public IEnumerator open()
     {
-        while (parentTransform.position.x > openPos)
+        while (parentTransform.localPosition.x > openPos)
         {
-            parentTransform.position.Set(parentTransform.position.x - (moveSpeed * Time.deltaTime), parentTransform.position.y, 0);
+            parentTransform.localPosition = new Vector2(parentTransform.localPosition.x - (moveSpeed * Time.deltaTime), parentTransform.localPosition.y);
             yield return null;
         }
+        parentTransform.localPosition = new Vector2(openPos, parentTransform.localPosition.y);
         yield break;
     }
 
     public IEnumerator close()
     {
-        while (parentTransform.position.x < closePos)
+        while (parentTransform.localPosition.x < closePos)
         {
-            parentTransform.position.Set(parentTransform.position.x + (moveSpeed * Time.deltaTime), parentTransform.position.y, 0);
+            parentTransform.localPosition = new Vector2(parentTransform.localPosition.x + (moveSpeed * Time.deltaTime), parentTransform.localPosition.y);
             yield return null;
         }
+        parentTransform.localPosition = new Vector2(closePos, parentTransform.localPosition.y);
         yield break;
     }
 
@@ -63,12 +66,16 @@ public class rightPanelHandler : MonoBehaviour
         StopAllCoroutines();
         if (openOrClosed)
         {
+            Debug.Log("Close");
             openOrClosed = false;
+            openCloseButton.transform.rotation = Quaternion.Euler(0, 0, 180);
             StartCoroutine(close());
         }
         else
         {
+            Debug.Log("Open");
             openOrClosed = true;
+            openCloseButton.transform.rotation = Quaternion.Euler(0, 0, 0);
             StartCoroutine(open());
         }
     }

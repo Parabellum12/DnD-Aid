@@ -17,7 +17,7 @@ public class General_UI_DropDown_Handler_Script : MonoBehaviour
     [SerializeField] bool dropDownImageFollowChilrenSize = true;
     [SerializeField] GameObject childrenHolder = null;
     [SerializeField] RectTransform buttonRectTransform;
-
+    [SerializeField] bool IsHolder = false;
 
 
     /*
@@ -36,9 +36,15 @@ public class General_UI_DropDown_Handler_Script : MonoBehaviour
         if (IsChildOrParent)
         {
             engaged = false;
+
+            if (dropDownBackGroundImage != null)
             dropDownBackGroundImage?.SetActive(false);
-            childrenHolder?.SetActive(false);
-            InteractButton?.onClick.AddListener(() => { HandleClick(); });
+
+            if (childrenHolder != null)
+                childrenHolder?.SetActive(false);
+
+            if (InteractButton != null)
+                InteractButton?.onClick.AddListener(() => { HandleClick(); });
         }
         foreach (General_UI_DropDown_Handler_Script scr in childDropDowns)
         {
@@ -51,7 +57,7 @@ public class General_UI_DropDown_Handler_Script : MonoBehaviour
 
     public float getSize()
     {
-        if (dropDownBackGroundImage != null && dropDownBackGroundImage.activeSelf)
+        if (dropDownBackGroundImage != null && dropDownBackGroundImage.activeSelf && !IsHolder)
         {
             Debug.Log(gameObject.name + ":returnAllsize");
             return dropDownBackGroundImage.GetComponent<RectTransform>().rect.height + mainImage.GetComponent<RectTransform>().rect.height;
@@ -67,10 +73,17 @@ public class General_UI_DropDown_Handler_Script : MonoBehaviour
 
     public void setUiPositions()
     {
-
+        if (IsHolder)
+        {
+            return;
+        }
         offsetDist = globalOffset;
         for (int i = 0; i < childDropDowns.Count; i++)
         {
+            if (!childDropDowns[i].gameObject.activeSelf)
+            {
+                continue;
+            }
             //Debug.Log(gameObject.name+":settingPosOF: " + childDropDowns [i].gameObject.name+ " to " + offsetDist);
             childDropDowns[i].transform.localPosition = new Vector2(0, -offsetDist);
             offsetDist += childDropDowns[i].getSize();
@@ -81,6 +94,10 @@ public class General_UI_DropDown_Handler_Script : MonoBehaviour
 
     void setPosHelper()
     {
+        if (IsHolder)
+        {
+            return;
+        }
         if (IsChildOrParent)
         {
             if (dropDownImageFollowChilrenSize)
@@ -107,6 +124,10 @@ public class General_UI_DropDown_Handler_Script : MonoBehaviour
         offsetDist = globalOffset;
         for (int i = 0; i < childDropDowns.Count; i++)
         {
+            if (!childDropDowns[i].gameObject.activeSelf)
+            {
+                continue;
+            }
             childDropDowns[i].setUiPositionsNoCallback();
             childDropDowns[i].transform.localPosition = new Vector3(0, -offsetDist, 0);
             //Debug.Log(childDropDowns[i].gameObject.name + " Setting to offset " +  offsetDist);
