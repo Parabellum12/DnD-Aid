@@ -74,16 +74,35 @@ public class General_2D_Camera_Handler_Script : MonoBehaviour
                 verticalMove--;
             }
         }
+        if (!HorizontalMovement)
+        {
+            horizontalMove = 0;
+        }
+        if (!VerticalMovement)
+        {
+            verticalMove = 0;
+        }
 
 
 
 
 
 
-
-
+        handleScroll();
         handleKeyMove();
         handleCameraPan();
+    }
+
+
+    void handleScroll()
+    {
+        if (!CamZoom)
+        {
+            return;
+        }
+        Vector2 mouseScrollDelta = Input.mouseScrollDelta;
+        cam.orthographicSize -= mouseScrollDelta.y;
+        cam.orthographicSize = Mathf.Clamp(cam.orthographicSize, minCameraZoom, maxCameraZoom);
     }
 
 
