@@ -281,6 +281,8 @@ MonoBehaviour:
   TokenPfp: {fileID: 7369888810246304128}
   TokenInfoHandler_Script: {fileID: 0}
   localView: {fileID: 7280033392466084733}
+  tokenName: 
+  tokenId: 0
 --- !u!114 &7280033392466084733
 MonoBehaviour:
   m_ObjectHideFlags: 0

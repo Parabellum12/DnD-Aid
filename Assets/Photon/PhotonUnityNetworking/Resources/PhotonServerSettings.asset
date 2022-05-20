@@ -61,6 +61,10 @@ MonoBehaviour:
   - removeTokenHandle
   - spawnTokenHandle
   - UpdateUiIfSelectedKilled
+  - setID
+  - setName
+  - addPlayerToMoveListHandle
+  - removePlayerToMoveListHandle
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 1

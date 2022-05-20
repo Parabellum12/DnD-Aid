@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Photon.Pun;
+using TMPro;
 
 public class TokenInfoHandler : MonoBehaviour
 {
@@ -15,7 +16,7 @@ public class TokenInfoHandler : MonoBehaviour
     [SerializeField] Button InitativeListButton;
     [SerializeField] Button RemoveTokenButton;
     [SerializeField] Button AddTokenButton;
-
+    [SerializeField] TMP_InputField tokenNameInput;
     public TokenHandler_Script ActiveSelectedToken;
 
     private void Start()
@@ -23,6 +24,28 @@ public class TokenInfoHandler : MonoBehaviour
         SetUIToInactive();
         tokenInfoDropDownHandler.setUiPositions();
     }
+
+    [SerializeField] General_2D_Camera_Handler_Script camMoveHandle;
+
+    bool changingName = false;
+    public void onInputSelected()
+    {
+        changingName = true;
+        camMoveHandle.WASDPan = false;
+        camMoveHandle.ArrowKeyPan = false;
+    }
+    public void onInputUnSelected()
+    {
+        changingName = false;
+        camMoveHandle.WASDPan = true;
+        camMoveHandle.ArrowKeyPan = true;
+    }
+
+
+
+
+
+
 
     public void SetUIToInactive()
     {
@@ -65,6 +88,11 @@ public class TokenInfoHandler : MonoBehaviour
         {
             AddTokenButton.interactable = false;
         }
+
+        if (ActiveSelectedToken != null && !changingName)
+        {
+            tokenNameInput.text = ActiveSelectedToken.tokenName;
+        }
     }
 
 
@@ -88,6 +116,7 @@ public class TokenInfoHandler : MonoBehaviour
         ActiveSelectedToken = scr;
         if (scr != null)
         {
+            tokenNameInput.text = scr.tokenName;
             SetUIToActive();
         }
         else
@@ -95,6 +124,7 @@ public class TokenInfoHandler : MonoBehaviour
             SetUIToInactive();
         }
     }
+
 
 
     public void spawnTokenPush()
@@ -110,6 +140,7 @@ public class TokenInfoHandler : MonoBehaviour
         GameObject go = PhotonNetwork.InstantiateRoomObject("Token", temp, Quaternion.identity);
         TokenHandler_Script scr = go.GetComponent<TokenHandler_Script>();
         scr.TokenInfoHandler_Script = this;
+        scr.setID(getID(), false);
         if (PhotonNetwork.LocalPlayer.Equals(RequestingPlayer))
         {
             scr.setInfoToThis();
@@ -128,8 +159,32 @@ public class TokenInfoHandler : MonoBehaviour
         {
             return;
         }
+        usedIDs.Remove(ActiveSelectedToken.tokenId);
         ActiveSelectedToken.KILLME();
     }
 
+    public void setTokenName()
+    {
+        if (ActiveSelectedToken == null)
+        {
+            return;
+        }
+        ActiveSelectedToken.setName(tokenNameInput.text, false);
+    }
+
+
+
+    List<long> usedIDs = new List<long>();
+   
+    long getID()
+    {
+        long test = 0;
+        while (usedIDs.Contains(test))
+        {
+            test++;
+        }
+        usedIDs.Add(test);
+        return test;
+    }
     
 }

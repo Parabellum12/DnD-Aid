@@ -15,6 +15,6 @@ public class keepMylocalPosZero : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        recttr.localPosition = new Vector2(256, recttr.localPosition.y);
     }
 }

@@ -59,12 +59,12 @@ public class General_UI_DropDown_Handler_Script : MonoBehaviour
     {
         if (dropDownBackGroundImage != null && dropDownBackGroundImage.activeSelf && !IsHolder)
         {
-            Debug.Log(gameObject.name + ":returnAllsize");
+            //Debug.Log(gameObject.name + ":returnAllsize");
             return dropDownBackGroundImage.GetComponent<RectTransform>().rect.height + mainImage.GetComponent<RectTransform>().rect.height;
         }
         else
         {
-            Debug.Log(gameObject.name + ":returnCLosedsize");
+            //Debug.Log(gameObject.name + ":returnCLosedsize");
             return mainImage.GetComponent<RectTransform>().rect.height;
         }
     }
@@ -138,12 +138,12 @@ public class General_UI_DropDown_Handler_Script : MonoBehaviour
 
     public void HandleClick()
     {
-        Debug.Log("HandleClick");
+        //Debug.Log("HandleClick");
         if (!IsChildOrParent)
         {
             return;
         }
-        Debug.Log("HandleClickInteractable");
+        //Debug.Log("HandleClickInteractable");
         if (!engaged)
         {
             dropDownBackGroundImage.SetActive(true);
