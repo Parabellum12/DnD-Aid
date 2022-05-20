@@ -96,7 +96,7 @@ public class TokenInfoHandler : MonoBehaviour
     }
 
 
-
+    [SerializeField] tokenUiPlayerPerms_Handler tokenUiPermsHandler;
     public void SetUIToActive()
     {
         foreach (GameObject go in ActiveTokenUi)
@@ -108,7 +108,8 @@ public class TokenInfoHandler : MonoBehaviour
             go.SetActive(false);
         }
         tokenInfoDropDownHandler.setUiPositions();
-        
+
+
     }
 
     public void setActiveSelected(TokenHandler_Script scr)
@@ -117,6 +118,10 @@ public class TokenInfoHandler : MonoBehaviour
         if (scr != null)
         {
             tokenNameInput.text = scr.tokenName;
+            tokenUiPermsHandler.setPlayerPermUIUp(ActiveSelectedToken.getMoveAllowedPlayers(), (plr, value) =>
+            {
+                ActiveSelectedToken.changePlayerMovePerm(plr, value, false);
+            });
             SetUIToActive();
         }
         else

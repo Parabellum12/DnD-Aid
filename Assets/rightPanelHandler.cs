@@ -32,7 +32,7 @@ public class rightPanelHandler : MonoBehaviour
             closePos = parentTransform.localPosition.x;
             openPos = closePos - BackgorundImage.rectTransform.sizeDelta.x;
         }
-        Debug.Log("OpenPos:" + openPos + " ClosePos:" + closePos);
+        //Debug.Log("OpenPos:" + openPos + " ClosePos:" + closePos);
     }
 
 

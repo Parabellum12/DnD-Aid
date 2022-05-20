@@ -88,6 +88,28 @@ public class TokenHandler_Script : MonoBehaviourPunCallbacks
     }
 
 
+    [PunRPC]
+    public void changePlayerMovePerm(Photon.Realtime.Player plr, bool value, bool networkedCall)
+    {
+        if (value)
+        {
+            if (!MoveAllowedPlayers.Contains(plr))
+            {
+                MoveAllowedPlayers.Add(plr);
+            }
+        }
+        else
+        {
+            if (MoveAllowedPlayers.Contains(plr))
+            {
+                MoveAllowedPlayers.Remove(plr);
+            }
+        }
+        if (!networkedCall)
+        {
+            localView.RPC("changePlayerMovePerm", RpcTarget.Others, plr, value, true);
+        }
+    }
 
 
 
@@ -115,7 +137,7 @@ public class TokenHandler_Script : MonoBehaviourPunCallbacks
 
     private void OnMouseExit()
     {
-        if (moving)
+        if (moving || clickedOn)
         {
             return;
         }
@@ -125,6 +147,7 @@ public class TokenHandler_Script : MonoBehaviourPunCallbacks
     Vector2 mouseInitialPos = Vector2.zero;
     bool firstClick = true;
     bool allowed = false;
+    bool clickedOn = false;
     private void Update()
     {
         if (UtilClass.IsPointerOverUIElement(LayerMask.NameToLayer("UI")))
@@ -139,6 +162,21 @@ public class TokenHandler_Script : MonoBehaviourPunCallbacks
         {
             TokenInfoHandler_Script.setActiveSelected(null);
         }
+
+        if (Input.GetMouseButtonDown(0) && mouseOver && TokenInfoHandler_Script.ActiveSelectedToken == this)
+        {
+            clickedOn = true;
+        }
+
+        if (Input.GetMouseButtonUp(0))
+        {
+            clickedOn = false;
+            if (mouseOver)
+            {
+                mouseOver = false;
+            }
+        }
+
         if (Input.GetMouseButton(0) && mouseOver && TokenInfoHandler_Script.ActiveSelectedToken == this && (GlobalPermissionsHandler.getPermValue(GlobalPermissionsHandler.PermisionNameToValue.GlobalMoveTokens) || MoveAllowedPlayers.Contains(PhotonNetwork.LocalPlayer)))
         {
             if (firstClick)
@@ -171,6 +209,11 @@ public class TokenHandler_Script : MonoBehaviourPunCallbacks
             allowed = false;
             moving = false;
         }
+    }
+
+    public List<Photon.Realtime.Player> getMoveAllowedPlayers()
+    {
+        return MoveAllowedPlayers;
     }
 
 

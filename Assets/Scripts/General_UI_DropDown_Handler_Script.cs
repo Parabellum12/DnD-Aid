@@ -159,4 +159,14 @@ public class General_UI_DropDown_Handler_Script : MonoBehaviour
         engaged = !engaged;
         setUiPositions();
     }
+
+    public void addToChildDropDowns(General_UI_DropDown_Handler_Script scr)
+    {
+        childDropDowns.Add(scr);
+    }
+
+    public void clearChildDropDowns()
+    {
+        childDropDowns.Clear();
+    }
 }

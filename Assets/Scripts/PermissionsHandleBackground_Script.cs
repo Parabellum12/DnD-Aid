@@ -28,7 +28,7 @@ public class PermissionsHandleBackground_Script : MonoBehaviour
             go.transform.localPosition = new Vector2(0, -VerticalOffset - 75);
             PlayerPerm_UIHandler scr = go.GetComponent<PlayerPerm_UIHandler>();
             playerPermUiList.Add(scr);
-            Debug.Log("hello world pain:" + i);
+            //Debug.Log("hello world pain:" + i);
             scr.setup(ref allPlayers[i], mainHandler.returnPlayerPerms(allPlayers[i]), (plr, index, value) =>
             {
                 //Debug.Log("CHangePerm: "+ i  + ":" + index + ":" + value);
