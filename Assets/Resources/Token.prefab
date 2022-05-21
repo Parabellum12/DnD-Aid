@@ -283,6 +283,7 @@ MonoBehaviour:
   localView: {fileID: 7280033392466084733}
   tokenName: 
   tokenId: 0
+  inInitiativeList: 0
 --- !u!114 &7280033392466084733
 MonoBehaviour:
   m_ObjectHideFlags: 0

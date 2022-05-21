@@ -89,9 +89,21 @@ public class TokenInfoHandler : MonoBehaviour
             AddTokenButton.interactable = false;
         }
 
-        if (ActiveSelectedToken != null && !changingName)
+        if (ActiveSelectedToken != null)
         {
-            tokenNameInput.text = ActiveSelectedToken.tokenName;
+            if (!changingName)
+            {
+                tokenNameInput.text = ActiveSelectedToken.tokenName;
+            }
+
+            if (!ActiveSelectedToken.inInitiativeList)
+            {
+                initiativeListButtonText.text = "Add To Initiative List";
+            }
+            else
+            {
+                initiativeListButtonText.text = "Remove From Initiative List";
+            }
         }
     }
 
@@ -127,6 +139,21 @@ public class TokenInfoHandler : MonoBehaviour
         else
         {
             SetUIToInactive();
+        }
+    }
+
+
+    [SerializeField] InitiativeList_Handler initiativeListHandler;
+    [SerializeField] TMP_Text initiativeListButtonText;
+    public void addTokenToInitiativeList()
+    {
+        if (ActiveSelectedToken.inInitiativeList)
+        {
+            initiativeListHandler.removeUiTokenElement(ActiveSelectedToken);
+        }
+        else
+        {
+            initiativeListHandler.addTokenUiElement(ActiveSelectedToken);
         }
     }
 

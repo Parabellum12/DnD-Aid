@@ -10,7 +10,7 @@ public class InitiativeTokenUiHandler : MonoBehaviour
     [SerializeField] TMP_InputField InitianiveInput;
     [SerializeField] Button killMeButton;
     [SerializeField] TMP_Text tokenName;
-    TokenHandler_Script referenceToken;
+    public TokenHandler_Script referenceToken;
     bool isMyTurn = false;
     public General_UI_DropDown_Handler_Script dropdownHandler;
 
@@ -40,7 +40,7 @@ public class InitiativeTokenUiHandler : MonoBehaviour
         SelectedImage.enabled = true;
     }
 
-    void KILLME()
+    public void KILLME()
     {
         setUiCallback.Invoke(this);
         Destroy(gameObject);

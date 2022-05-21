@@ -19,7 +19,7 @@ public class InitiativeList_Handler : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        reloadObjectPos();
     }
 
     // Update is called once per frame
@@ -28,17 +28,41 @@ public class InitiativeList_Handler : MonoBehaviour
         
     }
 
+
+    public void clearList()
+    {
+        foreach (InitiativeTokenUiHandler scr in Handlers)
+        {
+            removeUiTokenElement(scr);
+        }
+    }
+
     public void addTokenUiElement(TokenHandler_Script scr)
     {
+        scr.inInitiativeList = true;
         GameObject go = Instantiate(InitiativeListUiInteractPrefab, Children.transform);
         InitiativeTokenUiHandler scrHandler = go.GetComponent<InitiativeTokenUiHandler>();
+
+        Handlers.Add(scrHandler);
+
         scrHandler.setUp(scr, (uiHandler) =>
         {
             removeUiTokenElement(uiHandler);
             reloadObjectPos();
         });
-        Handlers.Add(scrHandler);
         reloadObjectPos();
+    }
+
+    public void removeUiTokenElement(TokenHandler_Script scr)
+    {
+        foreach (InitiativeTokenUiHandler scr2 in Handlers)
+        {
+            if (scr2.referenceToken.Equals(scr))
+            {
+                removeUiTokenElement(scr2);
+                return;
+            }
+        }
     }
 
 
@@ -58,16 +82,32 @@ public class InitiativeList_Handler : MonoBehaviour
 
     void removeUiTokenElement(InitiativeTokenUiHandler handler)
     {
+        handler.referenceToken.inInitiativeList = false;
         Handlers.Remove(handler);
         dropdownScript.RemoveFromChildDropDowns(handler.dropdownHandler);
-        dropdownScript.setUiPositions();
-        selectedIndex = selectedIndex % Handlers.Count;
+        Destroy(handler.gameObject);
+        if (Handlers.Count == 0)
+        {
+            selectedIndex = 0;
+        }
+        else
+        {
+            selectedIndex = selectedIndex % Handlers.Count;
+        }
+        reloadObjectPos();
     }
 
     void increaseSelectedIndex()
     {
         selectedIndex++;
-        selectedIndex = selectedIndex % Handlers.Count;
+        if (Handlers.Count == 0)
+        {
+            selectedIndex = 0;
+        }
+        else
+        {
+            selectedIndex = selectedIndex % Handlers.Count;
+        }
     }
 
     public void deSelectAll()

@@ -13,6 +13,7 @@ public class TokenHandler_Script : MonoBehaviourPunCallbacks
     List<Photon.Realtime.Player> MoveAllowedPlayers = new List<Photon.Realtime.Player>();
     public string tokenName;
     public long tokenId;
+    public bool inInitiativeList = false;
 
     private void Start()
     {
