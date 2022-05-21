@@ -165,6 +165,11 @@ public class General_UI_DropDown_Handler_Script : MonoBehaviour
         childDropDowns.Add(scr);
     }
 
+    public void RemoveFromChildDropDowns(General_UI_DropDown_Handler_Script scr)
+    {
+        childDropDowns.Remove(scr);
+    }
+
     public void clearChildDropDowns()
     {
         childDropDowns.Clear();
