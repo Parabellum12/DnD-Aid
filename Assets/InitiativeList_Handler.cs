@@ -88,13 +88,9 @@ public class InitiativeList_Handler : MonoBehaviour
         Handlers.Remove(handler);
         dropdownScript.RemoveFromChildDropDowns(handler.dropdownHandler);
         Destroy(handler.gameObject);
-        if (Handlers.Count == 0)
+        if (selectedIndex >= Handlers.Count)
         {
-            selectedIndex = 0;
-        }
-        else
-        {
-            selectedIndex = selectedIndex % Handlers.Count;
+            selectedIndex = Handlers.Count;
         }
         reloadObjectPos();
     }
