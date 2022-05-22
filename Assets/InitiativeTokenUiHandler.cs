@@ -22,11 +22,21 @@ public class InitiativeTokenUiHandler : MonoBehaviour
             KILLME();
         });
     }
+
+
+    
     System.Action<InitiativeTokenUiHandler> setUiCallback;
     public void setUp(TokenHandler_Script referenceToken, System.Action<InitiativeTokenUiHandler> setUiCallback)
     {
         this.setUiCallback = setUiCallback;
         this.referenceToken = referenceToken;
+        tokenName.text = referenceToken.tokenName;
+    }
+
+
+
+    private void Update()
+    {
         tokenName.text = referenceToken.tokenName;
     }
 

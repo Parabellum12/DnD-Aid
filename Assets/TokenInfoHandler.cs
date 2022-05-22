@@ -192,6 +192,7 @@ public class TokenInfoHandler : MonoBehaviour
             return;
         }
         usedIDs.Remove(ActiveSelectedToken.tokenId);
+        initiativeListHandler.removeUiTokenElement(ActiveSelectedToken);
         ActiveSelectedToken.KILLME();
     }
 

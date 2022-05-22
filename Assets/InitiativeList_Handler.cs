@@ -31,8 +31,10 @@ public class InitiativeList_Handler : MonoBehaviour
 
     public void clearList()
     {
-        foreach (InitiativeTokenUiHandler scr in Handlers)
+
+        for (int i = Handlers.Count-1; i >= 0; i-- )
         {
+            InitiativeTokenUiHandler scr = Handlers[i];
             removeUiTokenElement(scr);
         }
     }
