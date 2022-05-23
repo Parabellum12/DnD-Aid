@@ -10,7 +10,7 @@ public class InitiativeList_Handler : MonoBehaviour
 
     [SerializeField] List<GameObject> persistantChildObjects = new List<GameObject>();
 
-    List<InitiativeTokenUiHandler> Handlers = new List<InitiativeTokenUiHandler>();
+    [SerializeField] List<InitiativeTokenUiHandler> Handlers = new List<InitiativeTokenUiHandler>();
 
     [SerializeField] General_UI_DropDown_Handler_Script dropdownScript;
 
@@ -154,9 +154,26 @@ public class InitiativeList_Handler : MonoBehaviour
 
     public void SortInitiativeList()
     {
-
-
-
+        Debug.Log("SortList");
+        int lowestNum = 100;
+        int lowestNumIndex = 0;
+        List<InitiativeTokenUiHandler> HandlersTemp = new List<InitiativeTokenUiHandler>();
+        while (Handlers.Count > 0)
+        { 
+            for (int j = 0; j < Handlers.Count; j++)
+            {
+                int tempInt = Handlers[j].getInitiativeValue();
+                if (tempInt < lowestNum)
+                {
+                    lowestNum = tempInt;
+                    lowestNumIndex = j;
+                }
+            }
+            HandlersTemp.Add(Handlers[lowestNumIndex]);
+            Handlers.RemoveAt(lowestNumIndex);
+        }
+        HandlersTemp.Reverse();
+        Handlers = HandlersTemp;
 
 
         reloadObjectPos();

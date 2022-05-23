@@ -13,6 +13,8 @@ public class General_2D_Camera_Handler_Script : MonoBehaviour
 
     public bool MousePan = true;
     public int MouseButtonToPanWith = 2;
+    public bool AllowSecondaryMouseButtonPan = true;
+    public int SecondaryMouseButonTOPanWith = 1;
 
     public bool WASDPan = true;
     public bool ArrowKeyPan = true;
@@ -128,11 +130,11 @@ public class General_2D_Camera_Handler_Script : MonoBehaviour
             return;
         }
 
-        if (Input.GetMouseButtonDown(MouseButtonToPanWith))
+        if (Input.GetMouseButtonDown(MouseButtonToPanWith) || Input.GetMouseButtonDown(SecondaryMouseButonTOPanWith))
         {
             originalMousePos = UtilClass.getMouseWorldPosition();
         }
-        else if (Input.GetMouseButton(MouseButtonToPanWith))
+        else if (Input.GetMouseButton(MouseButtonToPanWith) || Input.GetMouseButton(SecondaryMouseButonTOPanWith))
         {
             Vector2 newMousePos = UtilClass.getMouseWorldPosition();
             float horizotalDist = newMousePos.x - originalMousePos.x;

@@ -61,4 +61,15 @@ public class InitiativeTokenUiHandler : MonoBehaviour
         setUiCallback.Invoke(this);
         Destroy(gameObject);
     }
+
+    public int getInitiativeValue()
+    {
+        if (InitianiveInput.text.Length == 0)
+        {
+            return 0;
+        }
+        return int.Parse(InitianiveInput.text);
+
+
+    }
 }

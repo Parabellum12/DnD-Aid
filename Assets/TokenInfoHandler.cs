@@ -21,8 +21,9 @@ public class TokenInfoHandler : MonoBehaviour
 
     private void Start()
     {
-        SetUIToInactive();
+        SetUIToActive();
         tokenInfoDropDownHandler.setUiPositions();
+        SetUIToInactive();
     }
 
     [SerializeField] General_2D_Camera_Handler_Script camMoveHandle;

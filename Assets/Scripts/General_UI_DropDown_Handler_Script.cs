@@ -41,7 +41,12 @@ public class General_UI_DropDown_Handler_Script : MonoBehaviour
             dropDownBackGroundImage?.SetActive(false);
 
             if (childrenHolder != null)
+            {
                 childrenHolder?.SetActive(false);
+                dropDownBackGroundImage.SetActive(false);
+                buttonRectTransform.rotation = Quaternion.Euler(0, 0, 0);
+                childrenHolder?.SetActive(false);
+            }
 
             if (InteractButton != null)
                 InteractButton?.onClick.AddListener(() => { HandleClick(); });
