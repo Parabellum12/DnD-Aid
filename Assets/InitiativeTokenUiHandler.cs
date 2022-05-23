@@ -26,14 +26,20 @@ public class InitiativeTokenUiHandler : MonoBehaviour
 
     
     System.Action<InitiativeTokenUiHandler> setUiCallback;
-    public void setUp(TokenHandler_Script referenceToken, System.Action<InitiativeTokenUiHandler> setUiCallback)
+    System.Action InitiativeChangedCallback;
+    public void setUp(TokenHandler_Script referenceToken, System.Action<InitiativeTokenUiHandler> setUiCallback, System.Action InitiativeChangedCallback)
     {
+        this.InitiativeChangedCallback = InitiativeChangedCallback;
         this.setUiCallback = setUiCallback;
         this.referenceToken = referenceToken;
         tokenName.text = referenceToken.tokenName;
+        InitianiveInput.text = "0";
     }
 
-
+    public void initiativeValueChanged()
+    {
+        InitiativeChangedCallback.Invoke();
+    }
 
     private void Update()
     {

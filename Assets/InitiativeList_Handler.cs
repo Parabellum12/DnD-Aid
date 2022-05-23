@@ -51,6 +51,10 @@ public class InitiativeList_Handler : MonoBehaviour
         {
             removeUiTokenElement(uiHandler);
             reloadObjectPos();
+        }, () =>
+        {
+            //organize list
+            SortInitiativeList();
         });
         reloadObjectPos();
     }
@@ -108,6 +112,31 @@ public class InitiativeList_Handler : MonoBehaviour
         }
     }
 
+    void decreaseSelectedIndex()
+    {
+        selectedIndex--;
+        if (selectedIndex < 0)
+        {
+            selectedIndex = Handlers.Count-1;
+        }
+    }
+
+
+    public void nextSelected()
+    {
+        increaseSelectedIndex();
+        selectOnIndex();
+
+    }
+
+    public void previousSelected()
+    {
+        decreaseSelectedIndex();
+        selectOnIndex();
+    }
+
+
+
     public void deSelectAll()
     {
         foreach (InitiativeTokenUiHandler scr in Handlers)
@@ -120,5 +149,16 @@ public class InitiativeList_Handler : MonoBehaviour
     {
         deSelectAll();
         Handlers[selectedIndex].Select();
+    }
+
+
+    public void SortInitiativeList()
+    {
+
+
+
+
+
+        reloadObjectPos();
     }
 }
