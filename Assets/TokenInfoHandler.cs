@@ -4,8 +4,9 @@ using UnityEngine;
 using UnityEngine.UI;
 using Photon.Pun;
 using TMPro;
+using Photon.Realtime;
 
-public class TokenInfoHandler : MonoBehaviour
+public class TokenInfoHandler : MonoBehaviourPunCallbacks
 {
     [SerializeField] List<GameObject> ActiveTokenUi;
     [SerializeField] List<GameObject> InactiveTokenUI;
@@ -41,9 +42,6 @@ public class TokenInfoHandler : MonoBehaviour
         camMoveHandle.WASDPan = true;
         camMoveHandle.ArrowKeyPan = true;
     }
-
-
-
 
 
 

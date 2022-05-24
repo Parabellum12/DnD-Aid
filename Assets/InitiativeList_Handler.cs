@@ -2,8 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
+using Photon.Realtime;
 
-public class InitiativeList_Handler : MonoBehaviour
+public class InitiativeList_Handler : MonoBehaviourPunCallbacks
 {
     [SerializeField] GameObject InitiativeListUiInteractPrefab;
 
@@ -24,15 +25,33 @@ public class InitiativeList_Handler : MonoBehaviour
     {
         if (!PhotonNetwork.IsMasterClient)
         {
+            localView.RPC("syncList", RpcTarget.MasterClient);
             return;
         }
         reloadObjectPos(false);
     }
 
-    // Update is called once per frame
-    void Update()
+
+    [PunRPC]
+    public void syncList()
     {
-        
+        foreach (InitiativeTokenUiHandler scr in Handlers)
+        {
+            scr.referenceToken.addMeToInitiativeList(false);
+        }
+    }
+
+
+    public override void OnPlayerEnteredRoom(Player newPlayer)
+    {
+        if (!PhotonNetwork.IsMasterClient)
+        {
+            return;
+        }
+        foreach (InitiativeTokenUiHandler scr in Handlers)
+        {
+            scr.referenceToken.addMeToInitiativeList(false);
+        }
     }
 
 
@@ -42,7 +61,7 @@ public class InitiativeList_Handler : MonoBehaviour
         for (int i = Handlers.Count-1; i >= 0; i-- )
         {
             InitiativeTokenUiHandler scr = Handlers[i];
-            removeUiTokenElement(scr);
+            scr.referenceToken.removeMeFromInitiativeList(false);
         }
     }
 
@@ -50,6 +69,14 @@ public class InitiativeList_Handler : MonoBehaviour
 
     public void addTokenUiElement(TokenHandler_Script scr)
     {
+        foreach (InitiativeTokenUiHandler scr2 in Handlers)
+        {
+            if (scr2.referenceToken.Equals(scr))
+            {
+                return;
+            }
+        }
+
         GameObject go = Instantiate(InitiativeListUiInteractPrefab, Children.transform);
         InitiativeTokenUiHandler scrHandler = go.GetComponent<InitiativeTokenUiHandler>();
 
@@ -167,24 +194,25 @@ public class InitiativeList_Handler : MonoBehaviour
     [PunRPC]
     public void nextSelected(bool networkCall)
     {
-        increaseSelectedIndex(false);
-        if (!networkCall)
+        if (!PhotonNetwork.IsMasterClient)
         {
-            localView.RPC("nextSelected", RpcTarget.Others, true);
+            localView.RPC("nextSelected", RpcTarget.MasterClient, false);
+            return;
         }
-        selectOnIndex(false);
-
+        increaseSelectedIndex(false);
+        selectOnIndex(false, 0);
     }
 
     [PunRPC]
     public void previousSelected(bool networkCall)
     {
-        decreaseSelectedIndex(false);
-        if (!networkCall)
+        if (!PhotonNetwork.IsMasterClient)
         {
-            localView.RPC("previousSelected", RpcTarget.Others, true);
+            localView.RPC("previousSelected", RpcTarget.MasterClient, false);
+            return;
         }
-        selectOnIndex(false);
+        decreaseSelectedIndex(false);
+        selectOnIndex(false, 0);
     }
 
 
@@ -198,17 +226,32 @@ public class InitiativeList_Handler : MonoBehaviour
     }
 
     [PunRPC]
-    public void selectOnIndex(bool networkCall)
+    public void selectOnIndex(bool networkCall, int index)
     {
-        if (selectedIndex < 0 || selectedIndex >= Handlers.Count)
-        {
-            return;
-        }
-        deSelectAll();
-        Handlers[selectedIndex].Select();
         if (!networkCall)
         {
-            localView.RPC("selectOnIndex", RpcTarget.Others, true);
+            if (selectedIndex < 0 || selectedIndex >= Handlers.Count)
+            {
+                return;
+            }
+            deSelectAll();
+            Handlers[selectedIndex].Select();
+        }
+        else
+        {
+            if (index < 0 || index >= Handlers.Count)
+            {
+                return;
+            }
+            deSelectAll();
+            Handlers[index].Select();
+        }
+
+
+
+        if (!networkCall)
+        {
+            localView.RPC("selectOnIndex", RpcTarget.Others, true, selectedIndex);
         }
     }
 

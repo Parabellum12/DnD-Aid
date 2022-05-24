@@ -17,11 +17,15 @@ public class TokenHandler_Script : MonoBehaviourPunCallbacks
     public bool inInitiativeList = false;
     public int initiativeValue = 0;
 
+
     private void Start()
     {
         TokenInfoHandler_Script = GameObject.FindGameObjectWithTag("TokenUIHandler").GetComponent<TokenInfoHandler>();
         InitiativeListHandler_Script = GameObject.FindGameObjectWithTag("TokenInitiativeListHandler").GetComponent<InitiativeList_Handler>();
     }
+
+
+
 
     public void setTokenPFP(Texture2D tex)
     {
@@ -70,6 +74,10 @@ public class TokenHandler_Script : MonoBehaviourPunCallbacks
         localView.RPC("UpdateUiIfSelectedKilled", RpcTarget.All);
     }
 
+
+
+
+
     [PunRPC]
     public void setName(string name, bool NetworkedCall)
     {
@@ -93,8 +101,13 @@ public class TokenHandler_Script : MonoBehaviourPunCallbacks
 
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
+        if (!PhotonNetwork.IsMasterClient)
+        {
+            return;
+        }
         localView.RPC("setName", newPlayer, tokenName, true);
         localView.RPC("setID", newPlayer, tokenId, true);
+        localView.RPC("setInitiativeValue", newPlayer, initiativeValue, true);
     }
 
 
