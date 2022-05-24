@@ -9,15 +9,18 @@ public class TokenHandler_Script : MonoBehaviourPunCallbacks
 {
     [SerializeField] Image TokenPfp;
     public TokenInfoHandler TokenInfoHandler_Script;
+    public InitiativeList_Handler InitiativeListHandler_Script;
     [SerializeField] PhotonView localView;
     List<Photon.Realtime.Player> MoveAllowedPlayers = new List<Photon.Realtime.Player>();
     public string tokenName;
     public long tokenId;
     public bool inInitiativeList = false;
+    public int initiativeValue = 0;
 
     private void Start()
     {
         TokenInfoHandler_Script = GameObject.FindGameObjectWithTag("TokenUIHandler").GetComponent<TokenInfoHandler>();
+        InitiativeListHandler_Script = GameObject.FindGameObjectWithTag("TokenInitiativeListHandler").GetComponent<InitiativeList_Handler>();
     }
 
     public void setTokenPFP(Texture2D tex)
@@ -28,6 +31,38 @@ public class TokenHandler_Script : MonoBehaviourPunCallbacks
     public void setInfoToThis()
     {
         TokenInfoHandler_Script.setActiveSelected(this);
+    }
+
+    [PunRPC]
+    public void setInitiativeValue(int value, bool networkCall)
+    {
+        initiativeValue = value;
+        if (!networkCall)
+        {
+            localView.RPC("setInitiativeValue", RpcTarget.Others, value, true);
+        }
+    }
+
+    [PunRPC]
+    public void addMeToInitiativeList(bool networkCall)
+    {
+        InitiativeListHandler_Script.addTokenUiElement(this);
+        inInitiativeList = true;
+        if (!networkCall)
+        {
+            localView.RPC("addMeToInitiativeList", RpcTarget.Others, true);
+        }
+    }
+
+    [PunRPC]
+    public void removeMeFromInitiativeList(bool networkCall)
+    {
+        InitiativeListHandler_Script.removeUiTokenElementCallFromToken(this);
+        inInitiativeList = false;
+        if (!networkCall)
+        {
+            localView.RPC("removeMeFromInitiativeList", RpcTarget.Others, true);
+        }
     }
 
     public void KILLME()
@@ -63,7 +98,14 @@ public class TokenHandler_Script : MonoBehaviourPunCallbacks
     }
 
 
-
+    [PunRPC]
+    public void UpdateInitiativeList()
+    {
+        TokenHandler_Script temp = TokenInfoHandler_Script.ActiveSelectedToken;
+        TokenInfoHandler_Script.updateTokenInitiativeList();
+        TokenInfoHandler_Script.ActiveSelectedToken = temp;
+        localView.RPC("UpdateInitiativeList", RpcTarget.Others);
+    }
 
 
     public void addPlayerToMoveListPush()

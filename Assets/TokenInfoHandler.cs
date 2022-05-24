@@ -146,16 +146,23 @@ public class TokenInfoHandler : MonoBehaviour
 
     [SerializeField] InitiativeList_Handler initiativeListHandler;
     [SerializeField] TMP_Text initiativeListButtonText;
-    public void addTokenToInitiativeList()
+    public void updateTokenInitiativeList()
     {
         if (ActiveSelectedToken.inInitiativeList)
         {
-            initiativeListHandler.removeUiTokenElement(ActiveSelectedToken);
+            ActiveSelectedToken.removeMeFromInitiativeList(false);
+            //initiativeListHandler.removeUiTokenElement(ActiveSelectedToken);
         }
         else
         {
-            initiativeListHandler.addTokenUiElement(ActiveSelectedToken);
+            ActiveSelectedToken.addMeToInitiativeList(false);
+            //initiativeListHandler.addTokenUiElement(ActiveSelectedToken);
         }
+    }
+
+    public void handleInitaitveListUpdatePush()
+    {
+        ActiveSelectedToken.UpdateInitiativeList();
     }
 
 

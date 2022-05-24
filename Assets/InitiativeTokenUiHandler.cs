@@ -38,13 +38,34 @@ public class InitiativeTokenUiHandler : MonoBehaviour
 
     public void initiativeValueChanged()
     {
+        referenceToken.initiativeValue = int.Parse(InitianiveInput.text);
         InitiativeChangedCallback.Invoke();
     }
 
     private void Update()
     {
         tokenName.text = referenceToken.tokenName;
+        if (!onEditBool)
+        {
+            InitianiveInput.text = referenceToken.initiativeValue.ToString();
+        }
     }
+
+    bool onEditBool = false;
+
+    public void onEdit()
+    {
+        onEditBool = true;
+    }
+
+    public void offEdit()
+    {
+        onEditBool = false;
+    }
+
+
+
+
 
     public void DeSelect()
     {

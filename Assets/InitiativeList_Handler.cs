@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
 
 public class InitiativeList_Handler : MonoBehaviour
 {
@@ -14,12 +15,18 @@ public class InitiativeList_Handler : MonoBehaviour
 
     [SerializeField] General_UI_DropDown_Handler_Script dropdownScript;
 
+    [SerializeField] PhotonView localView;
+
     int selectedIndex = 0;
          
     // Start is called before the first frame update
     void Start()
     {
-        reloadObjectPos();
+        if (!PhotonNetwork.IsMasterClient)
+        {
+            return;
+        }
+        reloadObjectPos(false);
     }
 
     // Update is called once per frame
@@ -39,24 +46,25 @@ public class InitiativeList_Handler : MonoBehaviour
         }
     }
 
+    
+
     public void addTokenUiElement(TokenHandler_Script scr)
     {
-        scr.inInitiativeList = true;
         GameObject go = Instantiate(InitiativeListUiInteractPrefab, Children.transform);
         InitiativeTokenUiHandler scrHandler = go.GetComponent<InitiativeTokenUiHandler>();
 
         Handlers.Add(scrHandler);
-
+        scr.setInitiativeValue(0, false);
         scrHandler.setUp(scr, (uiHandler) =>
         {
-            removeUiTokenElement(uiHandler);
-            reloadObjectPos();
+            scr.removeMeFromInitiativeList(false);
+            reloadObjectPos(false);
         }, () =>
         {
             //organize list
-            SortInitiativeList();
+            SortInitiativeList(false);
         });
-        reloadObjectPos();
+        reloadObjectPos(false);
     }
 
     public void removeUiTokenElement(TokenHandler_Script scr)
@@ -65,14 +73,47 @@ public class InitiativeList_Handler : MonoBehaviour
         {
             if (scr2.referenceToken.Equals(scr))
             {
-                removeUiTokenElement(scr2);
+                Handlers.Remove(scr2);
                 return;
             }
         }
     }
+    void removeUiTokenElement(InitiativeTokenUiHandler handler)
+    {
+        Handlers.Remove(handler);
+        dropdownScript.RemoveFromChildDropDowns(handler.dropdownHandler);
+        Destroy(handler.gameObject);
+        if (selectedIndex >= Handlers.Count)
+        {
+            selectedIndex = Handlers.Count;
+        }
+        reloadObjectPos(false);
+    }
 
+    public void removeUiTokenElementCallFromToken(TokenHandler_Script scr)
+    {
+        InitiativeTokenUiHandler handler = null;
+        foreach (InitiativeTokenUiHandler scr2 in Handlers)
+        {
+            if (scr2.referenceToken.Equals(scr))
+            {
+                handler = scr2;
+                break;
+            }
+        }
+        Handlers.Remove(handler);
+        removeUiTokenElement(scr);
+        dropdownScript.RemoveFromChildDropDowns(handler.dropdownHandler);
+        Destroy(handler.gameObject);
+        if (selectedIndex >= Handlers.Count)
+        {
+            selectedIndex = Handlers.Count;
+        }
+        reloadObjectPos(false);
+    }
 
-    public void reloadObjectPos()
+    [PunRPC]
+    public void reloadObjectPos(bool networkCAll)
     {
         dropdownScript.clearChildDropDowns();
         foreach (GameObject go in persistantChildObjects)
@@ -84,22 +125,15 @@ public class InitiativeList_Handler : MonoBehaviour
             dropdownScript.addToChildDropDowns(scr.gameObject.GetComponent<General_UI_DropDown_Handler_Script>());
         }
         dropdownScript.setUiPositions();
-    }
-
-    void removeUiTokenElement(InitiativeTokenUiHandler handler)
-    {
-        handler.referenceToken.inInitiativeList = false;
-        Handlers.Remove(handler);
-        dropdownScript.RemoveFromChildDropDowns(handler.dropdownHandler);
-        Destroy(handler.gameObject);
-        if (selectedIndex >= Handlers.Count)
+        if (!networkCAll)
         {
-            selectedIndex = Handlers.Count;
+            localView.RPC("reloadObjectPos", RpcTarget.Others, true);
         }
-        reloadObjectPos();
     }
 
-    void increaseSelectedIndex()
+
+    [PunRPC]
+    void increaseSelectedIndex(bool networkCall)
     {
         selectedIndex++;
         if (Handlers.Count == 0)
@@ -110,29 +144,47 @@ public class InitiativeList_Handler : MonoBehaviour
         {
             selectedIndex = selectedIndex % Handlers.Count;
         }
+        if (!networkCall)
+        {
+            localView.RPC("increaseSelectedIndex", RpcTarget.Others, true);
+        }
     }
 
-    void decreaseSelectedIndex()
+    [PunRPC]
+    void decreaseSelectedIndex(bool networkCall)
     {
         selectedIndex--;
         if (selectedIndex < 0)
         {
-            selectedIndex = Handlers.Count-1;
+            selectedIndex = Handlers.Count - 1;
+        }
+        if (!networkCall)
+        {
+            localView.RPC("decreaseSelectedIndex", RpcTarget.Others, true);
         }
     }
 
-
-    public void nextSelected()
+    [PunRPC]
+    public void nextSelected(bool networkCall)
     {
-        increaseSelectedIndex();
-        selectOnIndex();
+        increaseSelectedIndex(false);
+        if (!networkCall)
+        {
+            localView.RPC("nextSelected", RpcTarget.Others, true);
+        }
+        selectOnIndex(false);
 
     }
 
-    public void previousSelected()
+    [PunRPC]
+    public void previousSelected(bool networkCall)
     {
-        decreaseSelectedIndex();
-        selectOnIndex();
+        decreaseSelectedIndex(false);
+        if (!networkCall)
+        {
+            localView.RPC("previousSelected", RpcTarget.Others, true);
+        }
+        selectOnIndex(false);
     }
 
 
@@ -145,14 +197,23 @@ public class InitiativeList_Handler : MonoBehaviour
         }
     }
 
-    public void selectOnIndex()
+    [PunRPC]
+    public void selectOnIndex(bool networkCall)
     {
+        if (selectedIndex < 0 || selectedIndex >= Handlers.Count)
+        {
+            return;
+        }
         deSelectAll();
         Handlers[selectedIndex].Select();
+        if (!networkCall)
+        {
+            localView.RPC("selectOnIndex", RpcTarget.Others, true);
+        }
     }
 
-
-    public void SortInitiativeList()
+    [PunRPC]
+    public void SortInitiativeList(bool networkCall)
     {
         Debug.Log("SortList");
         int lowestNum = 100;
@@ -162,7 +223,7 @@ public class InitiativeList_Handler : MonoBehaviour
         { 
             for (int j = 0; j < Handlers.Count; j++)
             {
-                int tempInt = Handlers[j].getInitiativeValue();
+                int tempInt = Handlers[j].referenceToken.initiativeValue;
                 if (tempInt < lowestNum)
                 {
                     lowestNum = tempInt;
@@ -176,6 +237,10 @@ public class InitiativeList_Handler : MonoBehaviour
         Handlers = HandlersTemp;
 
 
-        reloadObjectPos();
+        reloadObjectPos(false);
+        if (!networkCall)
+        {
+            localView.RPC("SortInitiativeList", RpcTarget.Others, true);
+        }
     }
 }

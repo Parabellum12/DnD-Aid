@@ -66,6 +66,17 @@ MonoBehaviour:
   - addPlayerToMoveListHandle
   - removePlayerToMoveListHandle
   - changePlayerMovePerm
+  - UpdateInitiativeList
+  - addMeToInitiativeList
+  - decreaseSelectedIndex
+  - increaseSelectedIndex
+  - nextSelected
+  - previousSelected
+  - removeMeFromInitiativeList
+  - selectOnIndex
+  - setInitiativeValue
+  - SortInitiativeList
+  - reloadObjectPos
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 1
