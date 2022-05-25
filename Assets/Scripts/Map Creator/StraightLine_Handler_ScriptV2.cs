@@ -5,6 +5,9 @@ using Unity.Mathematics;
 
 public class StraightLine_Handler_ScriptV2 : MonoBehaviour
 {
+    /*
+     * Creates and handles straight lines for maps
+     */
     List<Point> allPoints = new List<Point>();
     [SerializeField] GameObject LineHolder;
     GameObject guideHolder;

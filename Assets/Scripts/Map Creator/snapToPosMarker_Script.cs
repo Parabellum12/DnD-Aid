@@ -4,7 +4,10 @@ using UnityEngine;
 
 public class snapToPosMarker_Script : MonoBehaviour
 {
-    
+    /*
+     * locks marker on integer poses
+     */
+
 
     // Update is called once per frame
     void Update()
