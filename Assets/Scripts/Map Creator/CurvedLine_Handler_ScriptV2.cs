@@ -7,6 +7,9 @@ using Unity.Mathematics;
 
 public class CurvedLine_Handler_ScriptV2 : MonoBehaviour
 {
+    /*
+     * handles creating, editing, moving, saving and loading curved lines
+     */
     List<CurvedLine> completeLines = new List<CurvedLine>();
     [SerializeField] int maxCurveLines = 3;
     [SerializeField] bool LowOrHighResLine = false;

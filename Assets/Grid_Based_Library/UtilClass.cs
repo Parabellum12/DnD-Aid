@@ -163,7 +163,20 @@ public static class UtilClass
         return tex;
     }
 
+    public static float getPointDist2D(float a, float b)
+    {
+        return Mathf.Abs(a - b);
+    }
 
-    
+    public static bool isDistWithinErrorRange(float a, float b, float errorRange)
+    {
+        return getPointDist2D(a,b) <= errorRange;
+    }
+
+    public static bool isDistWithinErrorRange(Vector2 a, Vector2 b, float ErrorRange)
+    {
+        return Vector2.Distance(a,b) <= ErrorRange;
+    }
+
 }
 
