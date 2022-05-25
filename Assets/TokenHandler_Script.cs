@@ -8,8 +8,8 @@ using Photon.Realtime;
 public class TokenHandler_Script : MonoBehaviourPunCallbacks
 {
     [SerializeField] Image TokenPfp;
-    public TokenInfoHandler TokenInfoHandler_Script;
-    public InitiativeList_Handler InitiativeListHandler_Script;
+    public TokenInfoHandler TokenInfoHandler_Script = null;
+    public InitiativeList_Handler InitiativeListHandler_Script = null;
     [SerializeField] PhotonView localView;
     List<Photon.Realtime.Player> MoveAllowedPlayers = new List<Photon.Realtime.Player>();
     public string tokenName;
@@ -23,8 +23,6 @@ public class TokenHandler_Script : MonoBehaviourPunCallbacks
         TokenInfoHandler_Script = GameObject.FindGameObjectWithTag("TokenUIHandler").GetComponent<TokenInfoHandler>();
         InitiativeListHandler_Script = GameObject.FindGameObjectWithTag("TokenInitiativeListHandler").GetComponent<InitiativeList_Handler>();
     }
-
-
 
 
     public void setTokenPFP(Texture2D tex)
@@ -50,6 +48,10 @@ public class TokenHandler_Script : MonoBehaviourPunCallbacks
     [PunRPC]
     public void addMeToInitiativeList(bool networkCall)
     {
+        if (InitiativeListHandler_Script == null)
+        {
+            TokenInfoHandler_Script = GameObject.FindGameObjectWithTag("TokenUIHandler").GetComponent<TokenInfoHandler>();
+        }
         InitiativeListHandler_Script.addTokenUiElement(this);
         inInitiativeList = true;
         if (!networkCall)
@@ -108,6 +110,10 @@ public class TokenHandler_Script : MonoBehaviourPunCallbacks
         localView.RPC("setName", newPlayer, tokenName, true);
         localView.RPC("setID", newPlayer, tokenId, true);
         localView.RPC("setInitiativeValue", newPlayer, initiativeValue, true);
+        if (PhotonNetwork.LocalPlayer.Equals(newPlayer))
+        {
+            addMeToInitiativeList(false);
+        }
     }
 
 

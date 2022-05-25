@@ -29,6 +29,8 @@ public class InitiativeList_Handler : MonoBehaviourPunCallbacks
             return;
         }
         reloadObjectPos(false);
+        selectOnIndex(false, selectedIndex);
+        
     }
 
 
@@ -47,10 +49,6 @@ public class InitiativeList_Handler : MonoBehaviourPunCallbacks
         if (!PhotonNetwork.IsMasterClient)
         {
             return;
-        }
-        foreach (InitiativeTokenUiHandler scr in Handlers)
-        {
-            scr.referenceToken.addMeToInitiativeList(false);
         }
     }
 
@@ -258,32 +256,34 @@ public class InitiativeList_Handler : MonoBehaviourPunCallbacks
     [PunRPC]
     public void SortInitiativeList(bool networkCall)
     {
-        Debug.Log("SortList");
-        int lowestNum = 100;
-        int lowestNumIndex = 0;
-        List<InitiativeTokenUiHandler> HandlersTemp = new List<InitiativeTokenUiHandler>();
-        while (Handlers.Count > 0)
-        { 
-            for (int j = 0; j < Handlers.Count; j++)
-            {
-                int tempInt = Handlers[j].referenceToken.initiativeValue;
-                if (tempInt < lowestNum)
-                {
-                    lowestNum = tempInt;
-                    lowestNumIndex = j;
-                }
-            }
-            HandlersTemp.Add(Handlers[lowestNumIndex]);
-            Handlers.RemoveAt(lowestNumIndex);
-        }
-        HandlersTemp.Reverse();
-        Handlers = HandlersTemp;
-
-
-        reloadObjectPos(false);
         if (!networkCall)
         {
             localView.RPC("SortInitiativeList", RpcTarget.Others, true);
         }
+        Debug.Log("SortList");
+        int highestNum = 100;
+        int highestNumIndex = 0;
+        List<InitiativeTokenUiHandler> HandlersTemp = new List<InitiativeTokenUiHandler>();
+        while (Handlers.Count > 0)
+        {
+            highestNum = 100;
+            for (int j = Handlers.Count-1; j >= 0; j--)
+            {
+                int tempInt = Handlers[j].referenceToken.initiativeValue;
+                if (tempInt < highestNum)
+                {
+                    highestNum = tempInt;
+                    highestNumIndex = j;
+                }
+            }
+            HandlersTemp.Add(Handlers[highestNumIndex]);
+            Handlers.RemoveAt(highestNumIndex);
+        }
+        HandlersTemp.Reverse();
+        Handlers.Clear();
+        Handlers.AddRange(HandlersTemp);
+
+
+        reloadObjectPos(true);
     }
 }

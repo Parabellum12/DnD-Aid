@@ -14,6 +14,8 @@ public class tokenUiPlayerPerms_Handler : MonoBehaviour
     [SerializeField] GameObject ChildGO;
 
     Dictionary<Photon.Realtime.Player, bool> playToMove = new Dictionary<Photon.Realtime.Player, bool>();
+
+
     public void setPlayerPermUIUp(List<Photon.Realtime.Player> moveplrs, System.Action<Photon.Realtime.Player, bool> callback)
     {
         deleteAnyUI();

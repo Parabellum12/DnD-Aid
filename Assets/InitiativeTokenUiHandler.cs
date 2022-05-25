@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using Photon.Pun;
 
 public class InitiativeTokenUiHandler : MonoBehaviour
 {
@@ -13,7 +14,6 @@ public class InitiativeTokenUiHandler : MonoBehaviour
     public TokenHandler_Script referenceToken;
     bool isMyTurn = false;
     public General_UI_DropDown_Handler_Script dropdownHandler;
-
     private void Start()
     {
         SelectedImage.enabled = false;
@@ -36,10 +36,24 @@ public class InitiativeTokenUiHandler : MonoBehaviour
         InitianiveInput.text = "0";
     }
 
+    bool lockMe = false;
     public void initiativeValueChanged()
     {
-        referenceToken.initiativeValue = int.Parse(InitianiveInput.text);
+        if (lockMe)
+        {
+            return;
+        }
+        if (InitianiveInput.text.Equals(""))
+        {
+            InitianiveInput.text = "0";
+        }
+        lockMe = true;
+        referenceToken.setInitiativeValue(int.Parse(InitianiveInput.text), false);
         InitiativeChangedCallback.Invoke();
+        Debug.Log("offEdit");
+        onEditBool = false;
+        InitianiveInput.ReleaseSelection();
+        lockMe = false;
     }
 
     private void Update()
@@ -47,6 +61,7 @@ public class InitiativeTokenUiHandler : MonoBehaviour
         tokenName.text = referenceToken.tokenName;
         if (!onEditBool)
         {
+            //Debug.Log("updateInitiative:" + referenceToken.initiativeValue.ToString());
             InitianiveInput.text = referenceToken.initiativeValue.ToString();
         }
     }
@@ -55,11 +70,13 @@ public class InitiativeTokenUiHandler : MonoBehaviour
 
     public void onEdit()
     {
+        Debug.Log("onEdit");
         onEditBool = true;
     }
 
     public void offEdit()
     {
+        Debug.Log("offEdit");
         onEditBool = false;
     }
 
