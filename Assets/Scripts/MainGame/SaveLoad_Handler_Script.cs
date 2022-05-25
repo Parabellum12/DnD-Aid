@@ -69,7 +69,6 @@ public class SaveLoad_Handler_Script : MonoBehaviour
         int index = 0;
         foreach (string s in files)
         {
-            bool active = false;
             int startIndex = 0;
             for (int i = s.Length - 1; i >= 0; i--)
             {

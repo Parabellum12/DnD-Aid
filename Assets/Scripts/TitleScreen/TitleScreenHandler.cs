@@ -15,6 +15,7 @@ public class TitleScreenHandler : MonoBehaviourPunCallbacks
     {
         Screen.fullScreenMode = FullScreenMode.Windowed;
         Screen.SetResolution(1920, 1080, FullScreenMode.Windowed);
+        PhotonNetwork.PhotonServerSettings.AppSettings.FixedRegion = "usw";
     }
     public void toMapCreator()
     {
@@ -40,7 +41,6 @@ public class TitleScreenHandler : MonoBehaviourPunCallbacks
         }
     }
 
-
     void createLobby()
     {
         textValue = "Connecting";
@@ -57,6 +57,7 @@ public class TitleScreenHandler : MonoBehaviourPunCallbacks
         Photon.Realtime.TypedLobby lobbyType = new Photon.Realtime.TypedLobby(roomName, Photon.Realtime.LobbyType.Default);
 
         PhotonNetwork.JoinOrCreateRoom(roomName, options, null);
+
     }
 
     string createRandomRoomName()
@@ -87,7 +88,7 @@ public class TitleScreenHandler : MonoBehaviourPunCallbacks
             //PhotonNetwork.IsMessageQueueRunning = false;
             alreadySetPerms = true;
             GlobalPermissionsHandler.setPermsAsHost();
-            Debug.Log("RoomName:" + PhotonNetwork.CurrentRoom.Name);
+            Debug.Log("RoomName:" + PhotonNetwork.CurrentRoom.Name + "|");
             PhotonNetwork.AutomaticallySyncScene = true;
             PhotonNetwork.LoadLevel("MainGame");
         }
