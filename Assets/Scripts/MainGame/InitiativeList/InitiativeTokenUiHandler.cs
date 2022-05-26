@@ -62,7 +62,7 @@ public class InitiativeTokenUiHandler : MonoBehaviour
     private void Update()
     {
         tokenName.text = referenceToken.tokenName;
-        if (!onEditBool)
+        if (!onEditBool && !InitianiveInput.text.Equals(referenceToken.initiativeValue.ToString()))
         {
             //Debug.Log("updateInitiative:" + referenceToken.initiativeValue.ToString());
             InitianiveInput.text = referenceToken.initiativeValue.ToString();
@@ -80,7 +80,10 @@ public class InitiativeTokenUiHandler : MonoBehaviour
     public void offEdit()
     {
         //Debug.Log("offEdit");
-        onEditBool = false;
+        if (!lockMe)
+        {
+            onEditBool = false;
+        }
     }
 
 

@@ -282,8 +282,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1651733902}
   m_HandleRect: {fileID: 1651733901}
   m_Direction: 0
-  m_Value: 0.49996948
-  m_Size: 0.99806225
+  m_Value: 0.48425388
+  m_Size: 0.9980619
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -1751,6 +1751,8 @@ MonoBehaviour:
   CamZoom: 1
   minCameraZoom: 50
   maxCameraZoom: 100
+  lockIfOverUi: 0
+  lockMovement: 0
   yPos: -10
   cam: {fileID: 561091681}
 --- !u!120 &561091684
@@ -2881,8 +2883,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 779074598}
   m_HandleRect: {fileID: 779074597}
   m_Direction: 2
-  m_Value: 1.000016
-  m_Size: 0.9579783
+  m_Value: 1.0000131
+  m_Size: 0.9579734
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -5440,7 +5442,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 477.4994}
+  m_AnchoredPosition: {x: 0.015777588, y: 477.49945}
   m_SizeDelta: {x: 516, y: 996.8911}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &1346101045

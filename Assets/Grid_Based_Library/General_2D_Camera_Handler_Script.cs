@@ -26,6 +26,10 @@ public class General_2D_Camera_Handler_Script : MonoBehaviour
     public float minCameraZoom = 50f;
     public float maxCameraZoom = 100f;
 
+
+    public bool lockIfOverUi = true;
+    public bool lockMovement = false;
+
     [SerializeField] float yPos = -10;
 
     [SerializeField] Camera cam;
@@ -88,7 +92,8 @@ public class General_2D_Camera_Handler_Script : MonoBehaviour
             verticalMove = 0;
         }
 
-
+        verticalMove = Mathf.Clamp(verticalMove, -1, 1);
+        horizontalMove = Mathf.Clamp(horizontalMove, -1, 1);
 
 
 
@@ -101,7 +106,7 @@ public class General_2D_Camera_Handler_Script : MonoBehaviour
 
     void handleScroll()
     {
-        if (!CamZoom)
+        if (lockMovement || !CamZoom || (lockIfOverUi && UtilClass.IsPointerOverUIElement(LayerMask.NameToLayer("UI"))))
         {
             return;
         }
@@ -113,6 +118,10 @@ public class General_2D_Camera_Handler_Script : MonoBehaviour
 
     void handleKeyMove()
     {
+        if (lockMovement || lockIfOverUi && UtilClass.IsPointerOverUIElement(LayerMask.NameToLayer("UI")))
+        {
+            return;
+        }
         horizontalMove = Mathf.Clamp(horizontalMove, -1, 1);
         verticalMove = Mathf.Clamp(verticalMove, -1, 1);
         float moveSpeedMulti = 1;
@@ -128,7 +137,7 @@ public class General_2D_Camera_Handler_Script : MonoBehaviour
     Vector3 originalMousePos;
     void handleCameraPan()
     {
-        if (!MousePan)
+        if (lockMovement || !MousePan || (lockIfOverUi && UtilClass.IsPointerOverUIElement(LayerMask.NameToLayer("UI"))))
         {
             return;
         }
