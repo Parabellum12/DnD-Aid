@@ -25,6 +25,13 @@ public class TitleScreenHandler : MonoBehaviourPunCallbacks
 
     public void toRoomConnect()
     {
+        if (gameCode.text.Length > 0 && gameCode.text.Length < 6)
+        {
+            textValue = "Code Too Short Must Be Left Empty Or 6 Digits";
+            showDots = false;
+            showConnectionText = true;
+            return;
+        }
         if (userName.text.Length > 0)
         {
             PhotonNetwork.NickName = userName.text;
@@ -67,7 +74,7 @@ public class TitleScreenHandler : MonoBehaviourPunCallbacks
 
     string createRandomRoomName()
     {
-        string roomNameCharacters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+        string roomNameCharacters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghjkmnopqrstuvwxyz";
         string roomName = "";
 
         for (int i = 0; i < 6; i++)
