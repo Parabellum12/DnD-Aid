@@ -79,6 +79,7 @@ public class General_UI_DropDown_Handler_ScriptV2 : MonoBehaviour
         }
     }
 
+    //called after setup and child or self changed
     public void setUIPositions()
     {
         offsetDist = globalOffsetDist;
@@ -92,9 +93,10 @@ public class General_UI_DropDown_Handler_ScriptV2 : MonoBehaviour
             offsetDist += childDropDowns[i].getSize();
         }
         setPosHelper();
-        updateUICallback.Invoke();
+        updateUICallback?.Invoke();
     }
 
+    //call to setup
     public void setUIPositionsNoCallback()
     {
         offsetDist = globalOffsetDist;
