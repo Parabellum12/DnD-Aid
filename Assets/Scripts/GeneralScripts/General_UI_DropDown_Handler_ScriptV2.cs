@@ -125,7 +125,7 @@ public class General_UI_DropDown_Handler_ScriptV2 : MonoBehaviour
         {
             return;
         }
-        if (isCanvasOrUiItem)
+        if (!isCanvasOrUiItem)
         {
             if (dropDownImageFollowChildSize)
             {
