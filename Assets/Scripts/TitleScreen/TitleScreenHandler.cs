@@ -11,6 +11,7 @@ public class TitleScreenHandler : MonoBehaviourPunCallbacks
      * handles the titlescreen code allows connecting, changing to editor and maingameS
      */
     [SerializeField] TMP_InputField gameCode;
+    [SerializeField] TMP_InputField userName;
     private void Start()
     {
         Screen.fullScreenMode = FullScreenMode.Windowed;
@@ -24,6 +25,10 @@ public class TitleScreenHandler : MonoBehaviourPunCallbacks
 
     public void toRoomConnect()
     {
+        if (userName.text.Length > 0)
+        {
+            PhotonNetwork.NickName = userName.text;
+        }
         if (PhotonNetwork.NickName.Length == 0)
         {
             PhotonNetwork.NickName = "Unknown Player";

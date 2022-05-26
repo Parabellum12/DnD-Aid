@@ -56,6 +56,11 @@ public class InitiativeList_Handler : MonoBehaviourPunCallbacks
                 bu.interactable = false;
             }
         }
+        if (Handlers.Count == 1 && !Handlers[0].isSelected())
+        {
+            Debug.Log("Attempt");
+            nextSelected(false);
+        }
     }
 
     
@@ -152,13 +157,20 @@ public class InitiativeList_Handler : MonoBehaviourPunCallbacks
                 break;
             }
         }
+
+
+
+        if (handler == null)
+        {
+            return;
+        }
         Handlers.Remove(handler);
         removeUiTokenElement(scr);
         dropdownScript.RemoveFromChildDropDowns(handler.dropdownHandler);
         Destroy(handler.gameObject);
         if (selectedIndex >= Handlers.Count)
         {
-            selectedIndex = Handlers.Count;
+            selectedIndex = Handlers.Count-1;
         }
         reloadObjectPos(false);
     }
@@ -176,6 +188,7 @@ public class InitiativeList_Handler : MonoBehaviourPunCallbacks
             dropdownScript.addToChildDropDowns(scr.gameObject.GetComponent<General_UI_DropDown_Handler_Script>());
         }
         dropdownScript.setUiPositions();
+        selectOnIndex(true, selectedIndex);
         if (!networkCAll)
         {
             localView.RPC("reloadObjectPos", RpcTarget.Others, true);
@@ -256,26 +269,22 @@ public class InitiativeList_Handler : MonoBehaviourPunCallbacks
         {
             if (selectedIndex < 0 || selectedIndex >= Handlers.Count)
             {
+                Debug.Log("selectOnIndex Fail: Out Of Range:(0," + (Handlers.Count-1) + ") IndexAttempted To Select:" + selectedIndex);
                 return;
             }
             deSelectAll();
             Handlers[selectedIndex].Select();
+            localView.RPC("selectOnIndex", RpcTarget.Others, true, selectedIndex);
         }
         else
         {
             if (index < 0 || index >= Handlers.Count)
             {
+                Debug.Log("selectOnIndex Fail: Out Of Range:(0," + (Handlers.Count - 1) + ") IndexAttempted To Select:" + index);
                 return;
             }
             deSelectAll();
             Handlers[index].Select();
-        }
-
-
-
-        if (!networkCall)
-        {
-            localView.RPC("selectOnIndex", RpcTarget.Others, true, selectedIndex);
         }
     }
 

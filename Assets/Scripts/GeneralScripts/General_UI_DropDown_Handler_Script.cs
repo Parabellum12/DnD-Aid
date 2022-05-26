@@ -7,6 +7,11 @@ public class General_UI_DropDown_Handler_Script : MonoBehaviour
 {
     /*
      * handles the ui changing for the token info/initiative list
+     * 
+     * 
+     * 
+     * 
+     * it has a lot of issues and limitations but its a v1 script attempt and i dont have the time or will rn to make a v2 so its just going to be like this for now
      */
     [SerializeField] Button InteractButton = null;
     [SerializeField] Image mainImage = null;

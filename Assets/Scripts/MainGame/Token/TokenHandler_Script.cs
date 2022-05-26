@@ -74,10 +74,26 @@ public class TokenHandler_Script : MonoBehaviourPunCallbacks
         }
     }
 
-    public void KILLME()
+    [PunRPC]
+    public void KILLME(bool networkCall)
     {
-        localView.RPC("UpdateUiIfSelectedKilled", RpcTarget.All);
+
+        if (!networkCall)
+        {
+            localView.RPC("KILLME", RpcTarget.All, true);
+        }
+        else
+        {
+            if (inInitiativeList)
+            {
+                removeMeFromInitiativeList(true);
+            }
+            localView.RPC("UpdateUiIfSelectedKilled", RpcTarget.All);
+        }
+
+
     }
+    
 
 
 

@@ -67,6 +67,10 @@ public class InitiativeTokenUiHandler : MonoBehaviour
             //Debug.Log("updateInitiative:" + referenceToken.initiativeValue.ToString());
             InitianiveInput.text = referenceToken.initiativeValue.ToString();
         }
+        if (referenceToken == null)
+        {
+            KILLME();
+        }
     }
 
     bool onEditBool = false;
@@ -87,7 +91,10 @@ public class InitiativeTokenUiHandler : MonoBehaviour
     }
 
 
-
+    public bool isSelected()
+    {
+        return SelectedImage.enabled;
+    }
 
 
     public void DeSelect()

@@ -202,7 +202,7 @@ public class TokenInfoHandler : MonoBehaviourPunCallbacks
         }
         usedIDs.Remove(ActiveSelectedToken.tokenId);
         initiativeListHandler.removeUiTokenElement(ActiveSelectedToken);
-        ActiveSelectedToken.KILLME();
+        ActiveSelectedToken.KILLME(false);
     }
 
     public void setTokenName()
