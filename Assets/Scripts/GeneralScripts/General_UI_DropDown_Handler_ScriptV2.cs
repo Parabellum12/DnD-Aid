@@ -5,6 +5,12 @@ using UnityEngine.UI;
 
 public class General_UI_DropDown_Handler_ScriptV2 : MonoBehaviour
 {
+    /*
+     * 
+     * 
+     * turns out i did have the time and will to create a v2, who would've thought a few hrs would do this to me
+     * 
+     */
     [SerializeField] bool isHolder = false;
     [SerializeField] bool isCanvasOrUiItem = false;
     [SerializeField] bool dropDownImageFollowChildSize = true;
