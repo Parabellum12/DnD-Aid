@@ -16,6 +16,7 @@ public class MainGame_Handler_Script : MonoBehaviourPunCallbacks
     [SerializeField] SaveLoad_Handler_Script SaveLoadHandler;
     [SerializeField] PhotonView localView;
     List<SaveLoad_Handler_Script.saveClass> GlobalCachedMaps = new List<SaveLoad_Handler_Script.saveClass>();
+    [SerializeField] Dictionary<Player, List<SaveLoad_Handler_Script.saveClass>> playerToCachedMaps = new Dictionary<Player, List<SaveLoad_Handler_Script.saveClass>>();
     [SerializeField] General_UI_DropDown_Handler_Script generalUiDropdownMainScr;
     [SerializeField] TMP_Text gameCodeText;
 
@@ -43,12 +44,23 @@ public class MainGame_Handler_Script : MonoBehaviourPunCallbacks
 
 
     bool firstUpdateLoop = true;
+    int updateIndex = 0;
     public void Update()
     {
         if (firstUpdateLoop)
         {
             firstUpdateLoop = false;
             generalUiDropdownMainScr.setUiPositionsNoCallback();
+            generalUiDropdownMainScr.setUiPositions();
+        }
+        //idk why but this fixes Ui Bug
+        if (updateIndex < 0)
+        {
+            updateIndex++;
+        }
+        else
+        {
+            generalUiDropdownMainScr.setUiPositions();
         }
     }
 
@@ -88,13 +100,14 @@ public class MainGame_Handler_Script : MonoBehaviourPunCallbacks
         }
         Debug.Log("add to cache:" + FileName);
         SaveLoad_Handler_Script.saveClass temp = SaveLoadHandler.getMapData(FileName);
-        localView.RPC("addMapToGLobalCacheHandle", RpcTarget.All, UtilClass.ObjectToByteArray(temp));
+        localView.RPC("addMapToGLobalCacheHandle", RpcTarget.All, UtilClass.ObjectToByteArray(temp), PhotonNetwork.LocalPlayer);
     }
 
     [PunRPC]
-    public void addMapToGLobalCacheHandle(byte[] mapData)
+    public void addMapToGLobalCacheHandle(byte[] mapData, Player sendingPlayer)
     {
         GlobalCachedMaps.Add(UtilClass.ByteArrayToObject<SaveLoad_Handler_Script.saveClass>(mapData));
+        addToPlayerToCachedMaps(UtilClass.ByteArrayToObject<SaveLoad_Handler_Script.saveClass>(mapData), sendingPlayer);
     }
 
     
@@ -106,11 +119,11 @@ public class MainGame_Handler_Script : MonoBehaviourPunCallbacks
         }
         Debug.Log("remove to cache:" + FileName);
         SaveLoad_Handler_Script.saveClass temp = SaveLoadHandler.getMapData(FileName);
-        localView.RPC("removeMapFromGLobalCacheHandle", RpcTarget.All, UtilClass.ObjectToByteArray(temp));
+        localView.RPC("removeMapFromGLobalCacheHandle", RpcTarget.All, UtilClass.ObjectToByteArray(temp), PhotonNetwork.LocalPlayer);
     }
 
     [PunRPC]
-    public void removeMapFromGLobalCacheHandle(byte[] mapData)
+    public void removeMapFromGLobalCacheHandle(byte[] mapData, Player sendingPlayer)
     {
         SaveLoad_Handler_Script.saveClass test = UtilClass.ByteArrayToObject<SaveLoad_Handler_Script.saveClass>(mapData);
         foreach (SaveLoad_Handler_Script.saveClass sc in GlobalCachedMaps)
@@ -121,7 +134,51 @@ public class MainGame_Handler_Script : MonoBehaviourPunCallbacks
                 break;
             }
         }
+        removeFromPlayerToCachedMaps(UtilClass.ByteArrayToObject<SaveLoad_Handler_Script.saveClass>(mapData), sendingPlayer);
     }
+
+
+
+    void addToPlayerToCachedMaps(SaveLoad_Handler_Script.saveClass sc, Player sendingPlayer)
+    {
+        Debug.Log("AddMapToPlayerToCache:" + sendingPlayer.NickName + " Map:" + sc.MapName);
+        if (!playerToCachedMaps.ContainsKey(sendingPlayer))
+        {
+            List<SaveLoad_Handler_Script.saveClass> temp = new List<SaveLoad_Handler_Script.saveClass>();
+            temp.Add(sc);
+            playerToCachedMaps.Add(sendingPlayer, temp);
+        }
+        else
+        {
+            List<SaveLoad_Handler_Script.saveClass> temp = new List<SaveLoad_Handler_Script.saveClass>();
+            playerToCachedMaps.TryGetValue(sendingPlayer, out List<SaveLoad_Handler_Script.saveClass> data);
+            playerToCachedMaps.Remove(sendingPlayer);
+            playerToCachedMaps.Add(sendingPlayer, temp);
+        }
+    }
+
+    void removeFromPlayerToCachedMaps(SaveLoad_Handler_Script.saveClass sc, Player sendingPlayer)
+    {
+        if (!playerToCachedMaps.ContainsKey(sendingPlayer))
+        {
+            return;
+        }
+
+        Debug.Log("removeFromPlayerToCachedMaps:" + sendingPlayer.NickName + " Map:" + sc.MapName);
+        playerToCachedMaps.TryGetValue(sendingPlayer, out List<SaveLoad_Handler_Script.saveClass> tempData);
+        foreach (SaveLoad_Handler_Script.saveClass scMap in tempData)
+        {
+            if (scMap.Equals(sc))
+            {
+                tempData.Remove(scMap);
+                break;
+            }
+        }
+        playerToCachedMaps.Remove(sendingPlayer);
+        playerToCachedMaps.Add(sendingPlayer, tempData);
+    }
+
+
 
     public void CallRequestMapDataSyncPush()
     {

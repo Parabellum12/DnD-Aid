@@ -270,7 +270,6 @@ public class SaveLoad_Handler_Script : MonoBehaviour
         public float3[][] CurvedLines = new float3[0][];
         public float2[][] StraightLinePoints = new float2[0][];
         public string MapName = "";
-
         public saveClass(string fileName, float3[][] CurvedLines, float2[][] StraightLinePoints)
         {
             this.CurvedLines = CurvedLines;

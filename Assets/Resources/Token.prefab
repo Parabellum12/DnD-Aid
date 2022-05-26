@@ -188,7 +188,7 @@ GameObject:
   - component: {fileID: 5016321766409821345}
   - component: {fileID: 1737651004188969795}
   - component: {fileID: 5774355383931057848}
-  - component: {fileID: 7280033392466084733}
+  - component: {fileID: 4671561608904141611}
   - component: {fileID: -4264656782451450952}
   - component: {fileID: 7776261567853496163}
   m_Layer: 0
@@ -281,12 +281,12 @@ MonoBehaviour:
   TokenPfp: {fileID: 7369888810246304128}
   TokenInfoHandler_Script: {fileID: 0}
   InitiativeListHandler_Script: {fileID: 0}
-  localView: {fileID: 7280033392466084733}
+  localView: {fileID: 4671561608904141611}
   tokenName: 
   tokenId: 0
   inInitiativeList: 0
   initiativeValue: 0
---- !u!114 &7280033392466084733
+--- !u!114 &4671561608904141611
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
