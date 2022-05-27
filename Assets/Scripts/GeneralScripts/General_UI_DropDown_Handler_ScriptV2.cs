@@ -8,7 +8,9 @@ public class General_UI_DropDown_Handler_ScriptV2 : MonoBehaviour
     /*
      * 
      * 
-     * turns out i did have the time and will to create a v2, who would've thought a few hrs would do this to me
+     * turns out i did have the time and will to create a v2, who would've thought a few hrs of bordem would do this to me
+     * 
+     * also it turns out its only minor improvements over v1 but i use v1 and have calculated stuff for v1 in too many places for me to care enough to change it all right now
      * 
      */
     [SerializeField] bool isHolder = false;
@@ -20,18 +22,18 @@ public class General_UI_DropDown_Handler_ScriptV2 : MonoBehaviour
     [SerializeField] Image mainImage = null;
     [SerializeField] GameObject dropDownBackgroundImage = null;
     [SerializeField] Button InteractionButton = null;
+    RectTransform buttonRectTransform;
     [SerializeField] RectTransform contentRectTransform;
 
     [SerializeField] List<General_UI_DropDown_Handler_ScriptV2> childDropDowns = new List<General_UI_DropDown_Handler_ScriptV2>();
 
     public System.Action updateUICallback = null;
 
-    [SerializeField] RectTransform buttonRectTransform;
     [SerializeField] GameObject ChildrenObjectHolder;
 
     [SerializeField] float globalOffsetDist = 0;
 
-    [SerializeField] float offsetDist = 0;
+    float offsetDist = 0;
 
 
 
@@ -39,6 +41,10 @@ public class General_UI_DropDown_Handler_ScriptV2 : MonoBehaviour
 
     private void Start()
     {
+        if (InteractionButton != null)
+        {
+            buttonRectTransform = InteractionButton.GetComponent<RectTransform>();
+        }
         if (isCanvasOrUiItem)
         {
             engaged = false;
