@@ -254,6 +254,35 @@ public class SaveLoad_Handler_Script : MonoBehaviour
         loadFromFile(test.MapID);
     }
 
+    public void saveToFile(saveClass test)
+    {
+         
+        BinaryFormatter bf = new BinaryFormatter();
+        string persistentDataPath = Application.persistentDataPath + "/" + test.MapID + "." + fileType;
+        FileStream fs;
+        //Debug.Log("FilePath:" + persistentDataPath);
+        if (File.Exists(persistentDataPath))
+        {
+            //Debug.Log("replace F");
+            fs = new FileStream(persistentDataPath, FileMode.Truncate);
+        }
+        else
+        {
+            //Debug.Log("new F");
+            fs = new FileStream(persistentDataPath, FileMode.CreateNew);
+        }
+        if (test == null)
+        {
+            bf.Serialize(fs, test);
+        }
+        else
+        {
+            bf.Serialize(fs, test);
+        }
+        fs.Close();
+        loadFromFile(test.MapID);
+    }
+
     public void loadFromObjectCache(string fileName)
     {
         Debug.Log("CachedSaveData:" + CachedSaveData.Count + " loadFromObjectCache:" + fileName);

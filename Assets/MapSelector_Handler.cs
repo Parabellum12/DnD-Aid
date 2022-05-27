@@ -54,7 +54,7 @@ public class MapSelector_Handler : MonoBehaviour
         localFilesDropDown.setUIPositions();
     }
 
-    public void loadCachedFiles()
+    public void loadSharedFiles()
     {
         
     }
