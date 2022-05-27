@@ -7,6 +7,12 @@ using TMPro;
 public class MapSelectorBackground_Script : MonoBehaviour
 {
     /*
+     * DEPRECATED
+     */
+
+
+
+    /*
      * handles the map selection ui
      */
     [SerializeField] RectTransform ScrollViewTransform;
