@@ -9,6 +9,7 @@ public class MapSelectorBackground_Script : MonoBehaviour
     /*
      * handles the map selection ui
      */
+    /*
     [SerializeField] RectTransform ScrollViewTransform;
     [SerializeField] RectTransform ContentTransform;
     [SerializeField] GameObject GameHandler;
@@ -31,7 +32,12 @@ public class MapSelectorBackground_Script : MonoBehaviour
             go.transform.localPosition = new Vector2(0, (-102 * i) - 55);
             General_ViewportContentItemMapSelector_Script scr = go.GetComponent<General_ViewportContentItemMapSelector_Script>();
             mapSelectors.Add(scr);
-            scr.setup(fileNames[i], false, () => { mainHandler.LoadMapDataPush(scr.mapName); scr.isCached = true; scr.reflectCachedValueValue(); }, () => { handleCacheButtonUpdate(scr); });
+            SaveLoad_Handler_Script sc = go.GetComponent<SaveLoad_Handler_Script>();
+            SaveLoad_Handler_Script.saveClass data = sc.getMapData(fileNames[i]);
+
+
+
+            scr.setup(data.MapName, fileNames[i], false, () => { mainHandler.LoadMapDataPush(scr.mapName); scr.isCached = true; scr.reflectCachedValueValue(); }, () => { handleCacheButtonUpdate(scr); });
         }
     }
 
@@ -40,12 +46,14 @@ public class MapSelectorBackground_Script : MonoBehaviour
     {
         if (scr.isCached)
         {
-            mainHandler.addMapToGlobalCachePush(scr.mapName);
+            mainHandler.addMapToGlobalCachePush(scr.mapID);
         }
         else
         {
-            mainHandler.removeMapFromGlobalCachePush(scr.mapName);
+            mainHandler.removeMapFromGlobalCachePush(scr.mapID);
         }
     }
+
+    */
 
 }

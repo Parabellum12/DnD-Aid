@@ -36,9 +36,14 @@ public class MapSelector_Handler : MonoBehaviour
             localFilesDropDown.addToChildDropDowns(tempDropDown);
             General_ViewportContentItemMapSelector_Script scr = go.GetComponent<General_ViewportContentItemMapSelector_Script>();
             mapSelectors.Add(scr);
-            scr.setup(fileNames[i], false, () =>
+
+            SaveLoad_Handler_Script sc = GameObject.FindGameObjectWithTag("GameController").GetComponent<SaveLoad_Handler_Script>();
+            SaveLoad_Handler_Script.saveClass data = sc.getMapData(fileNames[i]);
+
+
+            scr.setup(data.MapName, fileNames[i], false, () =>
             {
-                mainHandler_Script.LoadMapDataPush(scr.mapName); 
+                mainHandler_Script.LoadMapDataPush(scr.mapID); 
                 scr.isCached = true; 
                 scr.reflectCachedValueValue();
             }, () =>
@@ -61,11 +66,11 @@ public class MapSelector_Handler : MonoBehaviour
     {
         if (scr.isCached)
         {
-            mainHandler_Script.addMapToGlobalCachePush(scr.mapName);
+            mainHandler_Script.addMapToGlobalCachePush(scr.mapID);
         }
         else
         {
-            mainHandler_Script.removeMapFromGlobalCachePush(scr.mapName);
+            mainHandler_Script.removeMapFromGlobalCachePush(scr.mapID);
         }
     }
 }

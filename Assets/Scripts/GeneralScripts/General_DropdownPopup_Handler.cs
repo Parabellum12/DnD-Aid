@@ -20,9 +20,9 @@ public class General_DropdownPopup_Handler : MonoBehaviour
 
 
 
-    private System.Action<string> Funccallback;
+    private System.Action<string, int> Funccallback;
 
-    public void setupPopup(string promptText, string[] optionsArray, string AcceptButtonText, string CancelButtonText, System.Action<string> AcceptCallback)
+    public void setupPopup(string promptText, string[] optionsArray, string AcceptButtonText, string CancelButtonText, System.Action<string, int> AcceptCallback)
     {
         setPromptTemp(promptText);
         setOptions(optionsArray);
@@ -43,7 +43,7 @@ public class General_DropdownPopup_Handler : MonoBehaviour
     {
         if (!inputGiven)
         {
-            Funccallback.Invoke(Dropdown.options[Dropdown.value].text);
+            Funccallback.Invoke(Dropdown.options[Dropdown.value].text, Dropdown.value);
         }
         inputGiven = true;
     }

@@ -62,6 +62,45 @@ public class SaveLoad_Handler_Script : MonoBehaviour
         return returner;
     }
 
+    public string[] getSaveFileMapDataNames()
+    {
+        string[] files = System.IO.Directory.GetFiles(Application.persistentDataPath, "*." + fileType);
+        string[] returner = new string[files.Length];
+        int index = 0;
+        foreach (string s in files)
+        {
+            int startIndex = 0;
+            for (int i = s.Length - 1; i >= 0; i--)
+            {
+                if (s.ToCharArray()[i] == '/' || s.ToCharArray()[i] == '\\')
+                {
+                    startIndex = i;
+                    break;
+                }
+            }
+            string mapName = "";
+            for (int i = startIndex + 1; i < s.Length; i++)
+            {
+                if (s.ToCharArray()[i] == '.')
+                {
+                    break;
+                }
+                mapName += s.ToCharArray()[i];
+            }
+            returner[index] = mapName;
+            //Debug.Log(returner[index]);
+            index++;
+        }
+
+        string[] nameReturner = new string[returner.Length];
+        for (int i = 0; i < returner.Length; i++)
+        {
+            nameReturner[i] = getMapData(returner[i]).MapName;
+        }
+        return nameReturner;
+    }
+
+
     public string[] getSaveFiles()
     {
         string[] files = System.IO.Directory.GetFiles(Application.persistentDataPath, "*." + fileType);
@@ -97,8 +136,8 @@ public class SaveLoad_Handler_Script : MonoBehaviour
 
     public void loadFromFile(string fileName)
     {
-        //Debug.Log(fileName);
-        if (doesCacheContainFile(fileName) != null)
+        Debug.Log("loadFromFile:"+fileName);
+        if (doesCacheContainFileViaId(fileName) != null)
         {
             Debug.Log("loadFromFile Cache");
             loadFromObjectCache(fileName);
@@ -115,18 +154,22 @@ public class SaveLoad_Handler_Script : MonoBehaviour
 
     public void addToCache(string fileName)
     {
+        Debug.Log("Open FIleStream:" + fileName);
         string persistentDataPath = Application.persistentDataPath + "/" + fileName + "." + fileType;
         BinaryFormatter bf = new BinaryFormatter();
         FileStream sr = new FileStream(persistentDataPath, FileMode.Open);
         saveClass temp = bf.Deserialize(sr) as saveClass;
         CachedSaveData.Add(temp);
+        sr.Close();
+
+        Debug.Log("close FIleStream:" + fileName);
     }
 
-    public void removeFromCache(string fileName)
+    public void removeFromCache(string mapId)
     {
         foreach (saveClass sc in CachedSaveData)
         {
-            if (sc.MapName.Equals(fileName))
+            if (sc.MapID.Equals(mapId))
             {
                 CachedSaveData.Remove(sc);
                 return;
@@ -134,11 +177,15 @@ public class SaveLoad_Handler_Script : MonoBehaviour
         }
     }
 
-    public saveClass getMapData(string mapName)
+    public saveClass getMapData(string mapId)
     {
         foreach (saveClass sc in CachedSaveData)
         {
-            if (sc.MapName.Equals(mapName))
+            if (sc == null)
+            {
+                Debug.LogError("saveclass is null");
+            }
+            if (sc.MapID.Equals(mapId))
             {
                 return sc;
             }
@@ -146,7 +193,7 @@ public class SaveLoad_Handler_Script : MonoBehaviour
         bool avalible = false;
         foreach (string s in getSaveFileNames())
         {
-            if (s.Equals(mapName))
+            if (s.Equals(mapId))
             {
                 avalible = true;
             }
@@ -155,23 +202,34 @@ public class SaveLoad_Handler_Script : MonoBehaviour
         {
             return null;
         }
-        addToCache(mapName);
-        return getMapData(mapName);
+        addToCache(mapId);
+        return getMapData(mapId);
     }
 
 
     public void saveToFile(string fileName)
     {
-        saveClass test = doesCacheContainFile(fileName);
+        saveClass test = doesCacheContainFileViaName(fileName);
         if (test != null)
         {
             CachedSaveData.Remove(test);
+            if (test.MapID.Length == 0)
+            {
+                test.MapID = createMapId(fileName);
+            }
+
+        }
+        else
+        {
+
+            test = getSaveData(fileName);
         }
 
 
-        //Debug.Log("Save To File: " + fileName);
+
+        Debug.Log("Save To File: " + fileName);
         BinaryFormatter bf = new BinaryFormatter();
-        string persistentDataPath = Application.persistentDataPath + "/" + fileName + "." + fileType;
+        string persistentDataPath = Application.persistentDataPath + "/" + test.MapID + "." + fileType;
         FileStream fs;
         //Debug.Log("FilePath:" + persistentDataPath);
         if (File.Exists(persistentDataPath))
@@ -184,18 +242,25 @@ public class SaveLoad_Handler_Script : MonoBehaviour
             //Debug.Log("new F");
             fs = new FileStream(persistentDataPath, FileMode.CreateNew);
         }
-        bf.Serialize(fs, getSaveData(fileName));
+        if (test == null)
+        {
+            bf.Serialize(fs, test);
+        }
+        else
+        {
+            bf.Serialize(fs, test);
+        }
         fs.Close();
-        loadFromFile(fileName);
+        loadFromFile(test.MapID);
     }
 
     public void loadFromObjectCache(string fileName)
     {
-        //Debug.Log("CachedSaveData:" + CachedSaveData.Count + " loadFromObjectCache:" + fileName);
+        Debug.Log("CachedSaveData:" + CachedSaveData.Count + " loadFromObjectCache:" + fileName);
         foreach (saveClass sc in CachedSaveData)
         {
             Debug.Log("AAA:"+sc.MapName);
-            if (sc != null && sc.MapName.Equals(fileName))
+            if (sc != null && sc.MapID.Equals(fileName))
             {
                 CurrentlyLoadedSaveData = sc;
                 LoadCurrentObjectCache();
@@ -248,11 +313,23 @@ public class SaveLoad_Handler_Script : MonoBehaviour
         }
     }
 
-    saveClass doesCacheContainFile(string fileName)
+    saveClass doesCacheContainFileViaId(string mapId)
     {
         foreach (saveClass data in CachedSaveData)
         {
-            if (data.MapName.Equals(fileName))
+            if (data.MapID.Equals(mapId))
+            {
+                return data;
+            }
+        }
+        return null;
+    }
+
+    saveClass doesCacheContainFileViaName(string mapName)
+    {
+        foreach (saveClass data in CachedSaveData)
+        {
+            if (data.MapName.Equals(mapName))
             {
                 return data;
             }
@@ -265,8 +342,14 @@ public class SaveLoad_Handler_Script : MonoBehaviour
 
     private saveClass getSaveData(string fileName)
     {
-        return new saveClass(fileName, curvedLineHandler.getCurvedLinesAsSaveData(), straightLineHandler.getLinePoints());
+        return new saveClass(fileName, createMapId(fileName), curvedLineHandler.getCurvedLinesAsSaveData(), straightLineHandler.getLinePoints());
     }
+
+    string createMapId(string mapName)
+    {
+        return UnityEngine.Random.Range(int.MinValue, int.MaxValue).ToString() + mapName.GetHashCode();
+    }
+
 
 
     [System.Serializable]
@@ -275,8 +358,10 @@ public class SaveLoad_Handler_Script : MonoBehaviour
         public float3[][] CurvedLines = new float3[0][];
         public float2[][] StraightLinePoints = new float2[0][];
         public string MapName = "";
-        public saveClass(string fileName, float3[][] CurvedLines, float2[][] StraightLinePoints)
+        public string MapID = "";
+        public saveClass(string fileName, string MapID, float3[][] CurvedLines, float2[][] StraightLinePoints)
         {
+            this.MapID = MapID;
             this.CurvedLines = CurvedLines;
             this.StraightLinePoints = StraightLinePoints;
             this.MapName = fileName;
