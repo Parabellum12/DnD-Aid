@@ -29,6 +29,7 @@ public class SaveLoad_Handler_Script : MonoBehaviour
     
 
     public string fileNamePathSeperator = ":_|-|_:";
+    public string fileNameIDSeperator = "HFIEJQH45734857294ADFSDfewf";
     public string fileType = "SaveData";
     public string[] getSaveFileNames()
     {
@@ -166,6 +167,10 @@ public class SaveLoad_Handler_Script : MonoBehaviour
         if (test != null)
         {
             CachedSaveData.Remove(test);
+            if (test.mapID.Length == 0)
+            {
+                test.mapID = createMapId() + fileName.GetHashCode();
+            }
         }
 
 
@@ -265,7 +270,12 @@ public class SaveLoad_Handler_Script : MonoBehaviour
 
     private saveClass getSaveData(string fileName)
     {
-        return new saveClass(fileName, curvedLineHandler.getCurvedLinesAsSaveData(), straightLineHandler.getLinePoints());
+        return new saveClass(fileName, curvedLineHandler.getCurvedLinesAsSaveData(), straightLineHandler.getLinePoints(), createMapId() + fileName.GetHashCode());
+    }
+
+    public string createMapId()
+    {
+        return UnityEngine.Random.Range(0, int.MaxValue).ToString();
     }
 
 
@@ -275,8 +285,10 @@ public class SaveLoad_Handler_Script : MonoBehaviour
         public float3[][] CurvedLines = new float3[0][];
         public float2[][] StraightLinePoints = new float2[0][];
         public string MapName = "";
-        public saveClass(string fileName, float3[][] CurvedLines, float2[][] StraightLinePoints)
+        public string mapID = "";
+        public saveClass(string fileName, float3[][] CurvedLines, float2[][] StraightLinePoints, string mapID)
         {
+            this.mapID = mapID;
             this.CurvedLines = CurvedLines;
             this.StraightLinePoints = StraightLinePoints;
             this.MapName = fileName;
