@@ -29,7 +29,7 @@ public class MapSelector_Handler : MonoBehaviour
         localFilesDropDown.clearChildDropDowns();
         for (int i = 0; i < fileNames.Length; i++)
         {
-            GameObject go = Instantiate(MapSelectorPrefab, localFilesDropDown.transform);
+            GameObject go = Instantiate(MapSelectorPrefab, localFilesDropDown.ChildrenObjectHolder.transform);
             go.transform.localScale = Vector3.one;
             go.transform.localPosition = Vector3.zero;
             General_UI_DropDown_Handler_ScriptV2 tempDropDown = go.GetComponent<General_UI_DropDown_Handler_ScriptV2>();
@@ -46,6 +46,7 @@ public class MapSelector_Handler : MonoBehaviour
                 handleCacheButtonUpdate(scr);
             });
         }
+        localFilesDropDown.setUIPositions();
     }
 
     public void loadCachedFiles()

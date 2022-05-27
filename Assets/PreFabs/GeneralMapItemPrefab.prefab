@@ -904,6 +904,7 @@ GameObject:
   - component: {fileID: 7757641142457187662}
   - component: {fileID: 7757641142457187661}
   - component: {fileID: 1581485584800382220}
+  - component: {fileID: 8106560664443376830}
   m_Layer: 5
   m_Name: GeneralMapItemPrefab
   m_TagString: Untagged
@@ -990,3 +991,26 @@ MonoBehaviour:
   CachedSelector: {fileID: 7757641141557941475}
   isCached: 0
   mapName: 
+--- !u!114 &8106560664443376830
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7757641142457187667}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f84fc7eb33fdd548b5399a5b7169587, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isHolder: 1
+  isCanvasOrUiItem: 0
+  dropDownImageFollowChildSize: 0
+  engaged: 0
+  mainImage: {fileID: 7757641142457187661}
+  dropDownBackgroundImage: {fileID: 0}
+  InteractionButton: {fileID: 0}
+  contentRectTransform: {fileID: 0}
+  childDropDowns: []
+  ChildrenObjectHolder: {fileID: 0}
+  globalOffsetDist: 0

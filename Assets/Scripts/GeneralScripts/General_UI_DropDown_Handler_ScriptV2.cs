@@ -29,11 +29,12 @@ public class General_UI_DropDown_Handler_ScriptV2 : MonoBehaviour
 
     public System.Action updateUICallback = null;
 
-    [SerializeField] GameObject ChildrenObjectHolder;
+    public GameObject ChildrenObjectHolder;
 
     [SerializeField] float globalOffsetDist = 0;
+    [SerializeField] float itemSeperationDist = 0;
 
-    float offsetDist = 0;
+    [SerializeField] float offsetDist = 0;
 
 
 
@@ -44,8 +45,12 @@ public class General_UI_DropDown_Handler_ScriptV2 : MonoBehaviour
         if (InteractionButton != null)
         {
             buttonRectTransform = InteractionButton.GetComponent<RectTransform>();
+            InteractionButton.onClick.AddListener(() =>
+            {
+                handleClick();
+            });
         }
-        if (isCanvasOrUiItem)
+        if (!isCanvasOrUiItem)
         {
             engaged = false;
 
@@ -59,14 +64,6 @@ public class General_UI_DropDown_Handler_ScriptV2 : MonoBehaviour
                 ChildrenObjectHolder.SetActive(false);
                 dropDownBackgroundImage.SetActive(false);
                 buttonRectTransform.transform.rotation = Quaternion.identity;
-            }
-
-            if (InteractionButton != null)
-            {
-                InteractionButton.onClick.AddListener(() =>
-                {
-                    handleClick();
-                });
             }
         }
         
@@ -91,18 +88,32 @@ public class General_UI_DropDown_Handler_ScriptV2 : MonoBehaviour
         }
     }
 
+    public float getMainImageSize()
+    {
+        if (mainImage != null)
+        {
+            return mainImage.rectTransform.rect.height;
+        }
+        return 0;
+    }
+
     //called after setup and child or self changed
     public void setUIPositions()
     {
-        offsetDist = globalOffsetDist;
+        float mainImageHeight = 0;
+        if (mainImage != null)
+        {
+            mainImageHeight = (mainImage.rectTransform.rect.height / 2);
+        }
+        offsetDist = globalOffsetDist + mainImageHeight + itemSeperationDist;
         for (int i = 0; i < childDropDowns.Count; i++)
         {
             if (!childDropDowns[i].gameObject.activeSelf)
             {
                 continue;
             }
-            childDropDowns[i].transform.localPosition = new Vector3(0, -offsetDist - (childDropDowns[i].getSize() / 2), 0);
-            offsetDist += childDropDowns[i].getSize();
+            childDropDowns[i].transform.localPosition = new Vector3(0, -offsetDist - (childDropDowns[i].getMainImageSize() / 2), 0);
+            offsetDist += childDropDowns[i].getSize() + itemSeperationDist;
         }
         setPosHelper();
         updateUICallback?.Invoke();
@@ -111,7 +122,12 @@ public class General_UI_DropDown_Handler_ScriptV2 : MonoBehaviour
     //call to setup
     public void setUIPositionsNoCallback()
     {
-        offsetDist = globalOffsetDist;
+        float mainImageHeight = 0;
+        if (mainImage != null)
+        {
+            mainImageHeight = (mainImage.rectTransform.rect.height / 2);
+        }
+        offsetDist = globalOffsetDist + mainImageHeight + itemSeperationDist;
         for (int i = 0; i < childDropDowns.Count; i++)
         {
             if (!childDropDowns[i].gameObject.activeSelf)
@@ -120,7 +136,7 @@ public class General_UI_DropDown_Handler_ScriptV2 : MonoBehaviour
             }
             childDropDowns[i].setUIPositionsNoCallback();
             childDropDowns[i].transform.localPosition = new Vector3(0, -offsetDist - (childDropDowns[i].getSize()/2), 0);
-            offsetDist += childDropDowns[i].getSize();
+            offsetDist += childDropDowns[i].getSize() + itemSeperationDist;
         }
         setPosHelper();
     }
@@ -138,7 +154,7 @@ public class General_UI_DropDown_Handler_ScriptV2 : MonoBehaviour
                 RectTransform temp = dropDownBackgroundImage.GetComponent<RectTransform>();
                 //Debug.Log(gameObject.name + ":rectFollowSize");
                 //temp.rect.Set(temp.rect.x, temp.rect.y, temp.rect.width, offsetDist - globalOffset);
-                temp.sizeDelta = new Vector2(temp.rect.width, offsetDist - globalOffsetDist);
+                temp.sizeDelta = new Vector2(temp.rect.width, offsetDist - globalOffsetDist - (childDropDowns.Count * itemSeperationDist));
                 //Debug.Log(gameObject.name + ":TempHeight5:" + ((temp.rect.size.y / 2f) - globalOffset));
                 //temp.localPosition = Vector2.zero;
                 temp.localPosition = new Vector2(0, -(temp.rect.size.y / 2) - (gameObject.GetComponent<RectTransform>().rect.height / 2));
