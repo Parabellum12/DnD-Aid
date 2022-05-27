@@ -224,14 +224,14 @@ public class MainGame_Handler_Script : MonoBehaviourPunCallbacks
         SaveLoadHandler.loadMap(temp);
     }
     [PunRPC]
-    public void LoadMapDataHandle(string mapName)
+    public void LoadMapDataHandle(string MapId)
     {
         Debug.Log("load map from cache");
         foreach (SaveLoad_Handler_Script.saveClass sc in GlobalCachedMaps)
         {
-            if (sc.MapName.Equals(mapName))
+            if (sc.MapID.Equals(MapId))
             {
-                loadedMapText.text = loadedMapTextValue + mapName;
+                loadedMapText.text = loadedMapTextValue + sc.MapName;
                 SaveLoadHandler.loadMap(sc);
                 return;
             }
@@ -239,11 +239,11 @@ public class MainGame_Handler_Script : MonoBehaviourPunCallbacks
         Debug.Log("No Map Found To Load");
     }
 
-    bool doesGlobalCacheContain(string  mapName)
+    bool doesGlobalCacheContain(string  MapId)
     {
         foreach (SaveLoad_Handler_Script.saveClass sc in GlobalCachedMaps)
         {
-            if (sc.MapName.Equals(mapName))
+            if (sc.MapID.Equals(MapId))
             {
                 return true;
             }

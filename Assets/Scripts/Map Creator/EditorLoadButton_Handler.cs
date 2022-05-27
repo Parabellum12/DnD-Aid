@@ -30,10 +30,10 @@ public class EditorLoadButton_Handler : MonoBehaviour
         go.transform.parent = Canvas.transform;
         go.transform.localPosition = Vector3.zero;
         General_DropdownPopup_Handler DropHandler = go.GetComponent<General_DropdownPopup_Handler>();
-        DropHandler.setupPopup("Select File To Load", saveLoad.getSaveFileNames(), "Load", "Cancel", (text) =>
+        DropHandler.setupPopup("Select File To Load", saveLoad.getSaveFileMapDataNames(), "Load", "Cancel", (text, index) =>
         {
             alreadyActive = false;
-            saveLoad.loadFromFile(text);
+            saveLoad.loadFromFile(saveLoad.getSaveFileNames()[index]);
         });
         DropHandler.addListenerToBothButtons(() =>
         {

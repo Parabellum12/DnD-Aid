@@ -820,11 +820,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ef1bd4f18380754b87820b3f4756f99, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ScrollViewTransform: {fileID: 1571356254}
-  ContentTransform: {fileID: 260001446}
-  GameHandler: {fileID: 1251303677}
-  prefab: {fileID: 7757641142457187667, guid: 56a50b8f2f00810489ffca354f175395, type: 3}
-  mainHandler: {fileID: 1251303682}
 --- !u!114 &199119148
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1017,7 +1012,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 255.99998, y: 0.0007675205}
+  m_AnchoredPosition: {x: 0, y: 0.00012336213}
   m_SizeDelta: {x: 512, y: 207.6694}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &260001447
@@ -5234,7 +5229,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 926182640}
   m_HandleRect: {fileID: 926182639}
   m_Direction: 0
-  m_Value: 0
+  m_Value: 1
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -9038,7 +9033,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 307463374}
   m_Direction: 2
   m_Value: 0
-  m_Size: 0.9999964
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:

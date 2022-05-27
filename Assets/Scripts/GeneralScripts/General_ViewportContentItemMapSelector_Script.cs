@@ -15,10 +15,12 @@ public class General_ViewportContentItemMapSelector_Script : MonoBehaviour
     public bool isCached;
     float selectorMoveDist = 20;
     public string mapName;
+    public string mapID;
 
     System.Action onChangeChacheValue;
-    public void setup(string mapName, bool isChached, System.Action loadMapButtonOnClick, System.Action onChangeChacheValue)
+    public void setup(string mapName, string MapId, bool isChached, System.Action loadMapButtonOnClick, System.Action onChangeChacheValue)
     {
+        this.mapID = MapId;
         this.mapName = mapName;
         mapNameText.text = mapName;
         this.onChangeChacheValue = onChangeChacheValue;
