@@ -209,6 +209,7 @@ public class SaveLoad_Handler_Script : MonoBehaviour
     {
         if (mapToLoad == null)
         {
+            Debug.Log("Map To Load Was Null");
             return;
         }
         CurrentlyLoadedSaveData = mapToLoad;
@@ -240,6 +241,10 @@ public class SaveLoad_Handler_Script : MonoBehaviour
             curvedLineHandler.drawLines();
             straightLineHandler.setDataFromSaveData(CurrentlyLoadedSaveData.StraightLinePoints);
             straightLineHandler.drawLines();
+        }
+        else
+        {
+            Debug.Log("CurrentlyLoadedSaveData is null");
         }
     }
 

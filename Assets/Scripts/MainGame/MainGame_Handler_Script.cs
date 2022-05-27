@@ -19,7 +19,8 @@ public class MainGame_Handler_Script : MonoBehaviourPunCallbacks
     [SerializeField] Dictionary<Player, List<SaveLoad_Handler_Script.saveClass>> playerToCachedMaps = new Dictionary<Player, List<SaveLoad_Handler_Script.saveClass>>();
     [SerializeField] General_UI_DropDown_Handler_Script generalUiDropdownMainScr;
     [SerializeField] TMP_Text gameCodeText;
-
+    [SerializeField] TMP_Text loadedMapText;
+    [SerializeField] string loadedMapTextValue = "Currently Loaded Map:";
     private void Start()
     {
         PhotonNetwork.IsMessageQueueRunning = true;
@@ -218,7 +219,9 @@ public class MainGame_Handler_Script : MonoBehaviourPunCallbacks
     public void LoadMapDataHandle(byte[] mapData)
     {
         Debug.Log("load Map from data");
-        SaveLoadHandler.loadMap(UtilClass.ByteArrayToObject<SaveLoad_Handler_Script.saveClass>(mapData));
+        SaveLoad_Handler_Script.saveClass temp = UtilClass.ByteArrayToObject<SaveLoad_Handler_Script.saveClass>(mapData);
+        loadedMapText.text = loadedMapTextValue + temp.MapName;
+        SaveLoadHandler.loadMap(temp);
     }
     [PunRPC]
     public void LoadMapDataHandle(string mapName)
@@ -228,9 +231,12 @@ public class MainGame_Handler_Script : MonoBehaviourPunCallbacks
         {
             if (sc.MapName.Equals(mapName))
             {
+                loadedMapText.text = loadedMapTextValue + mapName;
                 SaveLoadHandler.loadMap(sc);
+                return;
             }
         }
+        Debug.Log("No Map Found To Load");
     }
 
     bool doesGlobalCacheContain(string  mapName)
