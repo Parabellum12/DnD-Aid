@@ -1,18 +1,35 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
 
 public class sharedMapSelector_Handler : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    [SerializeField] TMP_Text mapName;
+    [SerializeField] Button saveButton;
+
+    SaveLoad_Handler_Script.saveClass referenceMap;
+    System.Action<SaveLoad_Handler_Script.saveClass> callback;
+    public void setup(SaveLoad_Handler_Script.saveClass referenceMap, System.Action<SaveLoad_Handler_Script.saveClass> callback)
     {
-        
+        this.callback = callback;
+        this.referenceMap = referenceMap;
+        saveButton.onClick.AddListener(() =>
+        {
+            handleSave();
+        });
     }
 
-    // Update is called once per frame
-    void Update()
+    public void handleSave()
     {
-        
+        SaveLoad_Handler_Script scr = GameObject.FindGameObjectWithTag("GameController").GetComponent<SaveLoad_Handler_Script>();
+        scr.saveToFile(referenceMap);
+        callback.Invoke(referenceMap);
+    }
+
+    public void KILLME()
+    {
+        Destroy(gameObject);
     }
 }

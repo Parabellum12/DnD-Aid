@@ -16,7 +16,7 @@ public class MainGame_Handler_Script : MonoBehaviourPunCallbacks
     [SerializeField] SaveLoad_Handler_Script SaveLoadHandler;
     [SerializeField] PhotonView localView;
     List<SaveLoad_Handler_Script.saveClass> GlobalCachedMaps = new List<SaveLoad_Handler_Script.saveClass>();
-    List<SaveLoad_Handler_Script.saveClass> SharedMaps = new List<SaveLoad_Handler_Script.saveClass>();
+    public List<SaveLoad_Handler_Script.saveClass> SharedMaps = new List<SaveLoad_Handler_Script.saveClass>();
     [SerializeField] Dictionary<Player, List<SaveLoad_Handler_Script.saveClass>> playerToCachedMaps = new Dictionary<Player, List<SaveLoad_Handler_Script.saveClass>>();
     [SerializeField] General_UI_DropDown_Handler_Script generalUiDropdownMainScr;
     [SerializeField] TMP_Text gameCodeText;
@@ -161,7 +161,7 @@ public class MainGame_Handler_Script : MonoBehaviourPunCallbacks
 
 
 
-
+    [SerializeField] MapSelector_Handler mapSelectorHandler_Script;
 
     [PunRPC]
     public void addToSharedMaps(byte[] sc, bool networkedCall)
@@ -172,6 +172,7 @@ public class MainGame_Handler_Script : MonoBehaviourPunCallbacks
         {
             localView.RPC("addToSharedMaps", RpcTarget.Others, sc, true);
         }
+        mapSelectorHandler_Script.loadSharedFiles();
     }
 
     [PunRPC]
@@ -183,6 +184,7 @@ public class MainGame_Handler_Script : MonoBehaviourPunCallbacks
         {
             localView.RPC("removeFromSharedMaps", RpcTarget.Others, sc, true);
         }
+        mapSelectorHandler_Script.loadSharedFiles();
     }
 
 
