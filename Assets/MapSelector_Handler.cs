@@ -9,6 +9,7 @@ public class MapSelector_Handler : MonoBehaviour
     [SerializeField] SaveLoad_Handler_Script saveLoadHandler_Script;
     [SerializeField] General_UI_DropDown_Handler_ScriptV2 contentDropDownHandler_Script;
     List<General_ViewportContentItemMapSelector_Script> mapSelectors = new List<General_ViewportContentItemMapSelector_Script>();
+    List<General_ViewportContentItemMapSelector_Script> SharedMapSelectors = new List<General_ViewportContentItemMapSelector_Script>();
     private void Start()
     {
         contentDropDownHandler_Script.setUIPositionsNoCallback();
@@ -25,6 +26,10 @@ public class MapSelector_Handler : MonoBehaviour
 
     public void loadLocalFiles()
     {
+        foreach (General_ViewportContentItemMapSelector_Script ms in mapSelectors)
+        {
+            ms.KILLME();        
+        }
         string[] fileNames = saveLoadHandler_Script.getSaveFileNames();
         localFilesDropDown.clearChildDropDowns();
         for (int i = 0; i < fileNames.Length; i++)
@@ -44,11 +49,9 @@ public class MapSelector_Handler : MonoBehaviour
             scr.setup(data.MapName, fileNames[i], false, () =>
             {
                 mainHandler_Script.LoadMapDataPush(scr.mapID); 
-                scr.isCached = true; 
-                scr.reflectCachedValueValue();
             }, () =>
             {
-                handleCacheButtonUpdate(scr);
+                handleShareButtonUpdate(scr);
             });
         }
         localFilesDropDown.setUIPositions();
@@ -62,15 +65,15 @@ public class MapSelector_Handler : MonoBehaviour
 
 
 
-    void handleCacheButtonUpdate(General_ViewportContentItemMapSelector_Script scr)
+    void handleShareButtonUpdate(General_ViewportContentItemMapSelector_Script scr)
     {
         if (scr.isCached)
         {
-            mainHandler_Script.addMapToGlobalCachePush(scr.mapID);
+            mainHandler_Script.addToSharedMaps(UtilClass.ObjectToByteArray(saveLoadHandler_Script.getMapData(scr.mapID)), false);
         }
         else
         {
-            mainHandler_Script.removeMapFromGlobalCachePush(scr.mapID);
+            mainHandler_Script.removeFromSharedMaps(UtilClass.ObjectToByteArray(saveLoadHandler_Script.getMapData(scr.mapID)), false);
         }
     }
 }

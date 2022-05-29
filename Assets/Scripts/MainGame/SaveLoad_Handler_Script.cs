@@ -212,7 +212,12 @@ public class SaveLoad_Handler_Script : MonoBehaviour
         saveClass test = doesCacheContainFileViaName(fileName);
         if (test != null)
         {
-            CachedSaveData.Remove(test);
+            string tempName = test.MapName;
+            string tempID = test.MapID;
+            Debug.Log("get New MapData");
+            test = getSaveData(fileName);
+            test.MapName = tempName;
+            test.MapID = tempID;
             if (test.MapID.Length == 0)
             {
                 test.MapID = createMapId(fileName);
@@ -251,6 +256,7 @@ public class SaveLoad_Handler_Script : MonoBehaviour
             bf.Serialize(fs, test);
         }
         fs.Close();
+        removeFromCache(test.MapID);
         loadFromFile(test.MapID);
     }
 
@@ -326,6 +332,19 @@ public class SaveLoad_Handler_Script : MonoBehaviour
             return CurrentlyLoadedSaveData.MapName;
         }
     }
+
+    public string getCurrentlyLoadedMapID()
+    {
+        if (CurrentlyLoadedSaveData == null)
+        {
+            return "";
+        }
+        else
+        {
+            return CurrentlyLoadedSaveData.MapID;
+        }
+    }
+
 
     private void LoadCurrentObjectCache()
     {

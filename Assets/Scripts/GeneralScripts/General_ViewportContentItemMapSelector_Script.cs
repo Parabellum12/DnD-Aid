@@ -60,4 +60,9 @@ public class General_ViewportContentItemMapSelector_Script : MonoBehaviour
         }
         onChangeChacheValue.Invoke();
     }
+
+    public void KILLME()
+    {
+        Destroy(gameObject);
+    }
 }

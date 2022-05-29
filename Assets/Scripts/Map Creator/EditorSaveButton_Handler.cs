@@ -29,7 +29,17 @@ public class EditorSaveButton_Handler : MonoBehaviour
         alreadyActive = true;
         GameObject go = Instantiate(promptPrefab);
         General_InputPopup_Handler popupHandler = go.GetComponent<General_InputPopup_Handler>();
-        popupHandler.setupPopup("Save File As", "Accept", "Cancel", (text) => saveLoad.saveToFile(text));
+        popupHandler.setupPopup("Save File As", "Accept", "Cancel", (text) =>
+        {
+            if (text.Equals(saveLoad.getCurrentlyLoadedMapName()))
+            {
+                saveLoad.saveToFile(saveLoad.getCurrentlyLoadedMapName());
+            }
+            else
+            {
+                saveLoad.saveToFile(text);
+            }
+        });
         popupHandler.setInputText(saveLoad.getCurrentlyLoadedMapName());
         go.transform.parent = Canvas.transform;
         go.transform.localPosition = Vector2.zero;

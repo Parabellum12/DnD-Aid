@@ -159,6 +159,39 @@ public class MainGame_Handler_Script : MonoBehaviourPunCallbacks
         }
     }
 
+
+
+
+
+    [PunRPC]
+    public void addToSharedMaps(byte[] sc, bool networkedCall)
+    {
+        Debug.Log("ShareMap");
+        SharedMaps.Add(UtilClass.ByteArrayToObject<SaveLoad_Handler_Script.saveClass>(sc));
+        if (!networkedCall)
+        {
+            localView.RPC("addToSharedMaps", RpcTarget.Others, sc, true);
+        }
+    }
+
+    [PunRPC]
+    public void removeFromSharedMaps(byte[] sc, bool networkedCall)
+    {
+        Debug.Log("UnShareMap");
+        SharedMaps.Remove(UtilClass.ByteArrayToObject<SaveLoad_Handler_Script.saveClass>(sc));
+        if (!networkedCall)
+        {
+            localView.RPC("removeFromSharedMaps", RpcTarget.Others, sc, true);
+        }
+    }
+
+
+
+
+
+
+
+
     void removeFromPlayerToCachedMaps(SaveLoad_Handler_Script.saveClass sc, Player sendingPlayer)
     {
         if (!playerToCachedMaps.ContainsKey(sendingPlayer))

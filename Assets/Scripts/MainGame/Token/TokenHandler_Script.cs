@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Photon.Pun;
 using Photon.Realtime;
+using TMPro;
 
 public class TokenHandler_Script : MonoBehaviourPunCallbacks
 {
@@ -11,6 +12,7 @@ public class TokenHandler_Script : MonoBehaviourPunCallbacks
      * handles the code for the tokens
      */
     [SerializeField] Image TokenPfp;
+    [SerializeField] TMP_Text tokenNameText;
     public TokenInfoHandler TokenInfoHandler_Script = null;
     public InitiativeList_Handler InitiativeListHandler_Script = null;
     [SerializeField] PhotonView localView;
@@ -103,6 +105,7 @@ public class TokenHandler_Script : MonoBehaviourPunCallbacks
     public void setName(string name, bool NetworkedCall)
     {
         tokenName = name;
+        tokenNameText.text = name;
         if (!NetworkedCall)
         {
             localView.RPC("setName", RpcTarget.Others, name, true);

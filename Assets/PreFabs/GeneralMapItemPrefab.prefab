@@ -701,7 +701,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Cached
+  m_text: Shared
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -991,6 +991,7 @@ MonoBehaviour:
   CachedSelector: {fileID: 7757641141557941475}
   isCached: 0
   mapName: 
+  mapID: 
 --- !u!114 &8106560664443376830
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1014,3 +1015,5 @@ MonoBehaviour:
   childDropDowns: []
   ChildrenObjectHolder: {fileID: 0}
   globalOffsetDist: 0
+  itemSeperationDist: 0
+  offsetDist: 0
