@@ -63,6 +63,8 @@ public class CurvedLine_Handler_ScriptV2 : MonoBehaviour
             endCurve();
         }
     }
+
+    CurvedLine selectedLine = null;
     
     public bool HandleIfSelected(Vector2 Pos)
     {
@@ -78,9 +80,28 @@ public class CurvedLine_Handler_ScriptV2 : MonoBehaviour
         if (temp != null)
         {
             temp.CreateHandles();
+            selectedLine = temp;
             return true;
         }
+        selectedLine = null;
         return false;
+    }
+
+    public bool deleteIfSelected()
+    {
+        Debug.Log("deleteIfSelected:"+ selectedLine == null);
+        if (selectedLine == null)
+        {
+            return false;
+        }
+        deleteAnyHandles();
+        selectedLine.killMe();
+        completeLines.Remove(selectedLine);
+        Debug.Log("WHY:"+completeLines.Contains(selectedLine));
+        Destroy(selectedLine.lr.gameObject);
+        selectedLine = null;
+        drawLines();
+        return true;
     }
 
     public void deleteAnyHandles()
@@ -218,7 +239,7 @@ public class CurvedLine_Handler_ScriptV2 : MonoBehaviour
         public List<Vector3> allPoints = new List<Vector3>();
         bool LowOrHighResLine;
         GameObject holder;
-        LineRenderer lr;
+        public LineRenderer lr;
         GameObject handlePreFab;
 
 
@@ -230,6 +251,11 @@ public class CurvedLine_Handler_ScriptV2 : MonoBehaviour
                 returner[i] = new float3(allPoints[i].x, allPoints[i].y, allPoints[i].z);
             }
             return returner;
+        }
+
+        public void killME()
+        {
+            removeAllHandles();
         }
 
 

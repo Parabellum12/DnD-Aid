@@ -22,6 +22,14 @@ public class Main_Handler_Script : MonoBehaviour
     void Start()
     {
         quitToMainMenuButton.onClick.AddListener(() => { quitToMainMenu(); });
+        foreach (selectButton_Handler scr in buttonHandlers)
+        {
+            scr.setup((tool) =>
+            {
+                setActiveTool(tool);
+            });
+        }
+        buttonHandlers[1].select();
     }
 
     public enum tools
@@ -42,16 +50,18 @@ public class Main_Handler_Script : MonoBehaviour
         //change selected tools 1:select 2:move 3:straight line 4:curve
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
-            ActiveTool = tools.select;
+            setActiveTool(tools.select);
         }
         else if (Input.GetKeyDown(KeyCode.Alpha2))
         {
-            ActiveTool = tools.DrawStraightLine;
+            setActiveTool(tools.DrawStraightLine);
         }
         else if (Input.GetKeyDown(KeyCode.Alpha3))
         {
-            ActiveTool = tools.curve;
+            setActiveTool(tools.curve);
         }
+
+
         if (ActiveTool != tools.select)
         {
             straightLine_Handler.deleteAnyHandles();
@@ -86,6 +96,11 @@ public class Main_Handler_Script : MonoBehaviour
 
                 }
             }
+        }
+
+        if (Input.GetKeyDown(KeyCode.Backspace))
+        {
+            splineLineHandler.deleteIfSelected();
         }
 
 
@@ -144,6 +159,39 @@ public class Main_Handler_Script : MonoBehaviour
             straightLine_Handler.endGuideLine();
         }
 
+    }
+
+
+    [SerializeField] List<selectButton_Handler> buttonHandlers = new List<selectButton_Handler>();
+
+    void deselectAll()
+    {
+        foreach (selectButton_Handler scr in buttonHandlers)
+        {
+            scr.deSelect();
+        }
+    }
+
+    public void setActiveTool(tools tool)
+    {
+        switch(tool)
+        {
+            case tools.select:
+                deselectAll();
+                ActiveTool = tool;
+                buttonHandlers[0].select();
+                break;
+            case tools.DrawStraightLine:
+                deselectAll();
+                buttonHandlers[1].select();
+                ActiveTool = tool;
+                break;
+            case tools.curve:
+                deselectAll();
+                buttonHandlers[2].select();
+                ActiveTool = tool;
+                break;
+        }
     }
 
     //camera stuff
