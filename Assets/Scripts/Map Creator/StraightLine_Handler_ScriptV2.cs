@@ -91,7 +91,24 @@ public class StraightLine_Handler_ScriptV2 : MonoBehaviour
     }
 
     [SerializeField] GameObject HandlerPrefab;
-    
+
+    Point pointIn = null;
+    Point pointOut = null;
+
+    public bool deleteLine()
+    {
+        if (pointIn != null)
+        {
+            deleteAnyHandles();
+            pointIn.NextPoints.Remove(pointOut);
+            drawLines();
+            pointIn = null;
+            pointOut = null;
+            return true;
+        }
+        return false;
+    }
+
     public bool HandleIfSelected(Vector2 mousePos)
     {
         Point point1 = null;
@@ -108,6 +125,8 @@ public class StraightLine_Handler_ScriptV2 : MonoBehaviour
         }
         if (point1 != null)
         {
+            pointIn = point1;
+            pointOut = point2;
             point1.createHandle(HandlerPrefab, () =>
             {
                 drawLines();
@@ -118,6 +137,8 @@ public class StraightLine_Handler_ScriptV2 : MonoBehaviour
             });
             return true;
         }
+        pointIn = null;
+        pointOut = null;
         return false;
     }
 

@@ -43,7 +43,22 @@ public class Main_Handler_Script : MonoBehaviour
     public tools ActiveTool = tools.DrawStraightLine;
     bool Moveing = false;
 
-    public HandleMarker_Handler_Script selectedHandle = null;
+    HandleMarker_Handler_Script selectedHandle = null;
+    public bool lockInCurrentSelectedHandle = false;
+
+    public void setSelectedHandle(HandleMarker_Handler_Script scr)
+    {
+        if (lockInCurrentSelectedHandle)
+        {
+            return;
+        }
+        selectedHandle = scr;
+    }
+
+    public HandleMarker_Handler_Script getSelectedHandle()
+    {
+        return selectedHandle;
+    }
     // Update is called once per frame
     void Update()
     {
@@ -101,6 +116,7 @@ public class Main_Handler_Script : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Backspace))
         {
             splineLineHandler.deleteIfSelected();
+            straightLine_Handler.deleteLine();
         }
 
 

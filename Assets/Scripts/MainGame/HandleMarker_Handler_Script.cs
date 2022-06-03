@@ -16,9 +16,9 @@ public class HandleMarker_Handler_Script : MonoBehaviour
     public void KILLME()
     {
         //Debug.Log("KILL ME!!!!");
-        if (mainHandleSCR.selectedHandle == this)
+        if (mainHandleSCR.getSelectedHandle() == this)
         {
-            mainHandleSCR.selectedHandle = null;
+            mainHandleSCR.setSelectedHandle(null);
         }
         Destroy(gameObject);
     }
@@ -41,17 +41,30 @@ public class HandleMarker_Handler_Script : MonoBehaviour
         }
     }
 
+    bool mouseOver = false;
 
     private void OnMouseEnter()
     {
-        mainHandleSCR.selectedHandle = this;
+        mainHandleSCR.setSelectedHandle(this);
+        mainHandleSCR.lockInCurrentSelectedHandle = true;
+        mouseOver = true;
     }
 
     private void OnMouseExit()
     {
-        if (mainHandleSCR.selectedHandle == this && !Input.GetMouseButton(0))
+        mouseOver = false;
+        if (mainHandleSCR.getSelectedHandle() == this && !Input.GetMouseButton(0))
         {
-            mainHandleSCR.selectedHandle = null;
+            mainHandleSCR.setSelectedHandle(null);
+        }
+    }
+
+    private void Update()
+    {
+        if (!mouseOver && mainHandleSCR.getSelectedHandle() == this && !Input.GetMouseButton(0))
+        {
+            mainHandleSCR.lockInCurrentSelectedHandle = false;
+            mainHandleSCR.setSelectedHandle(null);
         }
     }
 }
