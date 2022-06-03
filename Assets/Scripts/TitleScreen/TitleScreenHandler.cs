@@ -27,7 +27,7 @@ public class TitleScreenHandler : MonoBehaviourPunCallbacks
     {
         if (gameCode.text.Length > 0 && gameCode.text.Length < 6)
         {
-            textValue = "Code Too Short Must Be Left Empty Or 6 Digits";
+            textValue = "Code Too Short: Must Be Left Empty Or Have 6 Digits";
             showDots = false;
             showConnectionText = true;
             return;
@@ -74,7 +74,7 @@ public class TitleScreenHandler : MonoBehaviourPunCallbacks
 
     string createRandomRoomName()
     {
-        string roomNameCharacters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghjkmnopqrstuvwxyz";
+        string roomNameCharacters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghjkmnopqrstuvwxyz1234567890";
         string roomName = "";
 
         for (int i = 0; i < 6; i++)
