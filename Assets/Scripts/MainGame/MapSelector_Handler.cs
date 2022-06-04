@@ -88,6 +88,7 @@ public class MapSelector_Handler : MonoBehaviour
         }
         SharedMapSelectors.Clear();
         string[] arr = saveLoadHandler_Script.getSaveFileNames();
+        cachedFilesDropdown.clearChildDropDowns();
         foreach (SaveLoad_Handler_Script.saveClass sc in mainHandler_Script.SharedMaps)
         {
             bool alreadySaved = false;
