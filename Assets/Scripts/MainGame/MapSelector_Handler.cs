@@ -86,6 +86,7 @@ public class MapSelector_Handler : MonoBehaviour
         {
             scr.KILLME();
         }
+        SharedMapSelectors.Clear();
         string[] arr = saveLoadHandler_Script.getSaveFileNames();
         foreach (SaveLoad_Handler_Script.saveClass sc in mainHandler_Script.SharedMaps)
         {
