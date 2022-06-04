@@ -25,7 +25,7 @@ public class General_ViewportContentItemMapSelector_Script : MonoBehaviour
         mapNameText.text = mapName;
         this.onChangeChacheValue = onChangeChacheValue;
         this.isCached = isChached;
-        reflectCachedValueValue();
+        setCachedSelectorToFalse();
         loadMapButton.onClick.AddListener(() =>
         {
             loadMapButtonOnClick.Invoke();
