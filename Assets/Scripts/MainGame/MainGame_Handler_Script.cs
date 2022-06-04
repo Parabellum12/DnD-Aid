@@ -130,7 +130,7 @@ public class MainGame_Handler_Script : MonoBehaviourPunCallbacks
         SaveLoad_Handler_Script.saveClass test = UtilClass.ByteArrayToObject<SaveLoad_Handler_Script.saveClass>(mapData);
         foreach (SaveLoad_Handler_Script.saveClass sc in GlobalCachedMaps)
         {
-            if (sc.MapName.Equals(test.MapName))
+            if (sc.MapID.Equals(test.MapID))
             {
                 GlobalCachedMaps.Remove(sc);
                 break;
@@ -180,6 +180,14 @@ public class MainGame_Handler_Script : MonoBehaviourPunCallbacks
     {
         Debug.Log("UnShareMap");
         SharedMaps.Remove(UtilClass.ByteArrayToObject<SaveLoad_Handler_Script.saveClass>(sc));
+        foreach (SaveLoad_Handler_Script.saveClass why in SharedMaps)
+        {
+            if (why.MapID.Equals(UtilClass.ByteArrayToObject<SaveLoad_Handler_Script.saveClass>(sc).MapID))
+            {
+                SharedMaps.Remove(why);
+                break;
+            }
+        }
         if (!networkedCall)
         {
             localView.RPC("removeFromSharedMaps", RpcTarget.Others, sc, true);
