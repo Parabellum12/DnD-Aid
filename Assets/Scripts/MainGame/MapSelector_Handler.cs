@@ -112,6 +112,7 @@ public class MapSelector_Handler : MonoBehaviour
                 scr.KILLME();
             });
         }
+        cachedFilesDropdown.setUIPositions();
     }
 
 
