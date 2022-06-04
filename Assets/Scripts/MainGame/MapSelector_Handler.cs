@@ -108,6 +108,7 @@ public class MapSelector_Handler : MonoBehaviour
             go.transform.localScale = Vector3.one;
             go.transform.localPosition = Vector3.zero;
             sharedMapSelector_Handler scr = go.GetComponent<sharedMapSelector_Handler>();
+            SharedMapSelectors.Add(scr);
             General_UI_DropDown_Handler_ScriptV2 dropScr = go.GetComponent<General_UI_DropDown_Handler_ScriptV2>();
             cachedFilesDropdown.addToChildDropDowns(dropScr);
             scr.setup(sc, (mapToAdd) =>
