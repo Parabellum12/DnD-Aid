@@ -30,11 +30,6 @@ public class HandleRightPanelButtons : MonoBehaviour
 
     public void toMapSelector()
     {
-        if (!GlobalPermissionsHandler.getPermValue(GlobalPermissionsHandler.PermisionNameToValue.LoadMaps))
-        {
-            Debug.Log("No Map Perm");
-            return;
-        }
         disableAll();
         MapSelector.SetActive(true);
     }

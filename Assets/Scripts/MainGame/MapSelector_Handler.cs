@@ -116,6 +116,7 @@ public class MapSelector_Handler : MonoBehaviour
                 addToLoadLocalFiles(mapToAdd);
                 cachedFilesDropdown.removeFromChildDropDowns(dropScr);
                 SharedMapSelectors.Remove(scr);
+                cachedFilesDropdown.setUIPositions();
                 scr.KILLME();
             });
         }

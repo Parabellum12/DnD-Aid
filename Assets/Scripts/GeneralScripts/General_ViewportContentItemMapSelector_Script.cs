@@ -65,4 +65,9 @@ public class General_ViewportContentItemMapSelector_Script : MonoBehaviour
     {
         Destroy(gameObject);
     }
+
+    private void Update()
+    {
+        loadMapButton.interactable = GlobalPermissionsHandler.getPermValue(GlobalPermissionsHandler.PermisionNameToValue.LoadMaps);
+    }
 }
