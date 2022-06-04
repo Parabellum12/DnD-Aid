@@ -102,7 +102,7 @@ public class MapSelector_Handler : MonoBehaviour
             {
                 continue;
             }
-            GameObject go = Instantiate(SharedMapSelectorPrefab, localFilesDropDown.ChildrenObjectHolder.transform);
+            GameObject go = Instantiate(SharedMapSelectorPrefab, cachedFilesDropdown.ChildrenObjectHolder.transform);
             go.transform.localScale = Vector3.one;
             go.transform.localPosition = Vector3.zero;
             sharedMapSelector_Handler scr = go.GetComponent<sharedMapSelector_Handler>();
