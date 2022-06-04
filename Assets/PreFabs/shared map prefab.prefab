@@ -348,8 +348,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: abfab649f15c79f489982aa98ddd2215, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mapName: {fileID: 0}
-  saveButton: {fileID: 0}
+  mapName: {fileID: 7308912280633024301}
+  saveButton: {fileID: 7308912280362700532}
 --- !u!1 &7308912280829706030
 GameObject:
   m_ObjectHideFlags: 0
