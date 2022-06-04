@@ -25,7 +25,7 @@ public class sharedMapSelector_Handler : MonoBehaviour
     public void handleSave()
     {
         SaveLoad_Handler_Script scr = GameObject.FindGameObjectWithTag("GameController").GetComponent<SaveLoad_Handler_Script>();
-        scr.saveToFile(referenceMap);
+        scr.saveToFile(referenceMap, false);
         callback.Invoke(referenceMap);
     }
 

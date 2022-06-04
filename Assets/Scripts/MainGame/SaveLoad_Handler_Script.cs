@@ -260,7 +260,7 @@ public class SaveLoad_Handler_Script : MonoBehaviour
         loadFromFile(test.MapID);
     }
 
-    public void saveToFile(saveClass test)
+    public void saveToFile(saveClass test, bool loadToFileAlso)
     {
          
         BinaryFormatter bf = new BinaryFormatter();
@@ -286,7 +286,10 @@ public class SaveLoad_Handler_Script : MonoBehaviour
             bf.Serialize(fs, test);
         }
         fs.Close();
-        loadFromFile(test.MapID);
+        if (loadToFileAlso)
+        {
+            loadFromFile(test.MapID);
+        }
     }
 
     public void loadFromObjectCache(string fileName)
