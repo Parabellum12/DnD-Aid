@@ -15,6 +15,7 @@ public class sharedMapSelector_Handler : MonoBehaviour
     {
         this.callback = callback;
         this.referenceMap = referenceMap;
+        mapName.text = referenceMap.MapName;
         saveButton.onClick.AddListener(() =>
         {
             handleSave();
