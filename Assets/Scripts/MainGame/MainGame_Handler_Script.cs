@@ -244,7 +244,7 @@ public class MainGame_Handler_Script : MonoBehaviourPunCallbacks
         GlobalCachedMaps.AddRange(returnGlobalCacheByte2DArrayToList(allData));
         SharedMaps.Clear();
         SharedMaps.AddRange(returnSharedByte2DArrayToList(allData));
-        SaveLoadHandler.loadMap(UtilClass.ByteArrayToObject<SaveLoad_Handler_Script.saveClass>(currentlyLoadedMap));
+        LoadMapDataHandle(currentlyLoadedMap);
         mapSelectorHandler_Script.loadSharedFiles();
     }
 

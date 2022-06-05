@@ -265,7 +265,7 @@ public class TokenHandler_Script : MonoBehaviourPunCallbacks
         }
     }
 
-    bool mouseOver = false;
+    public bool mouseOver = false;
     bool moving = false;
     private void OnMouseEnter()
     {
@@ -294,6 +294,7 @@ public class TokenHandler_Script : MonoBehaviourPunCallbacks
         {
             return;
         }
+
         if (Input.GetMouseButton(0) && mouseOver && TokenInfoHandler_Script.ActiveSelectedToken != this)
         {
             TokenInfoHandler_Script.setActiveSelected(this);
@@ -311,10 +312,6 @@ public class TokenHandler_Script : MonoBehaviourPunCallbacks
         if (Input.GetMouseButtonUp(0))
         {
             clickedOn = false;
-            if (mouseOver)
-            {
-                mouseOver = false;
-            }
         }
 
         if (Input.GetMouseButton(0) && mouseOver && TokenInfoHandler_Script.ActiveSelectedToken == this && (GlobalPermissionsHandler.getPermValue(GlobalPermissionsHandler.PermisionNameToValue.GlobalMoveTokens) || MoveAllowedPlayers.Contains(PhotonNetwork.LocalPlayer)))

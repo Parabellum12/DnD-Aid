@@ -129,6 +129,7 @@ public class TokenInfoHandler : MonoBehaviourPunCallbacks
     public void setActiveSelected(TokenHandler_Script scr)
     {
         ActiveSelectedToken = scr;
+        Debug.Log("setActiveSelected:" + (scr != null));
         if (scr != null)
         {
             tokenNameInput.text = scr.tokenName;
