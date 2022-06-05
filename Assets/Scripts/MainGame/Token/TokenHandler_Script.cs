@@ -267,13 +267,9 @@ public class TokenHandler_Script : MonoBehaviourPunCallbacks
     bool allowed = false;
     bool clickedOn = false;
 
-    int frameToUpdatePosOn = 1;
-    int frameCount = 0;
 
     private void Update()
     {
-        frameCount++;
-        frameCount = frameCount % frameToUpdatePosOn;
         setupMe();
         if (UtilClass.IsPointerOverUIElement(LayerMask.NameToLayer("UI")))
         {
@@ -298,7 +294,6 @@ public class TokenHandler_Script : MonoBehaviourPunCallbacks
             clickedOn = false;
             if (mouseOver)
             {
-                syncPosState(transform.position, false);
                 mouseOver = false;
             }
         }
@@ -336,25 +331,9 @@ public class TokenHandler_Script : MonoBehaviourPunCallbacks
             moving = false;
         }
 
-        if (moving && frameCount == 0)
-        {
-            syncPosState(transform.position, false);
-        }
     }
 
 
-    [PunRPC]
-    public void syncPosState(Vector2 Pos, bool networkCall)
-    {
-        if (!networkCall)
-        {
-            localView.RPC("syncPosState", RpcTarget.Others, Pos, true);
-        }
-        else
-        {
-            transform.position = Pos;
-        }
-    }
 
     public List<Photon.Realtime.Player> getMoveAllowedPlayers()
     {
