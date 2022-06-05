@@ -266,9 +266,15 @@ public class TokenHandler_Script : MonoBehaviourPunCallbacks
     bool firstClick = true;
     bool allowed = false;
     bool clickedOn = false;
+
+    int frameToUpdatePosOn = 5;
+    int frameCount = 0;
+
     private void Update()
     {
-        setupMe(); ;
+        frameCount++;
+        frameCount = frameCount % frameToUpdatePosOn;
+        setupMe();
         if (UtilClass.IsPointerOverUIElement(LayerMask.NameToLayer("UI")))
         {
             return;
@@ -292,6 +298,7 @@ public class TokenHandler_Script : MonoBehaviourPunCallbacks
             clickedOn = false;
             if (mouseOver)
             {
+                syncPosState(transform.position, false);
                 mouseOver = false;
             }
         }
@@ -327,6 +334,25 @@ public class TokenHandler_Script : MonoBehaviourPunCallbacks
             }
             allowed = false;
             moving = false;
+        }
+
+        if (moving && frameCount == 0)
+        {
+            syncPosState(transform.position, false);
+        }
+    }
+
+
+    [PunRPC]
+    public void syncPosState(Vector2 Pos, bool networkCall)
+    {
+        if (!networkCall)
+        {
+            localView.RPC("syncPosState", RpcTarget.Others, Pos, true);
+        }
+        else
+        {
+            transform.position = Pos;
         }
     }
 
