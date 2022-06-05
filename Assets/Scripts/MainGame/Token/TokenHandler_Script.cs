@@ -51,7 +51,26 @@ public class TokenHandler_Script : MonoBehaviourPunCallbacks
     public void setTokenPFP(Texture2D tex)
     {
         setupMe();
+        TokenPfp.sprite = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), new Vector2(tex.width / 2, tex.height / 2));
+        localView.RPC("setTokenPFP", RpcTarget.Others, UtilClass.ObjectToByteArray(new Wrapper(tex)));
+    }
+
+    [PunRPC]
+    public void setTokenPFP(byte[] data)
+    {
+        Texture2D tex = UtilClass.ByteArrayToObject<Wrapper>(data).tex;
+        setupMe();
         TokenPfp.sprite = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), new Vector2(tex.width / 2, tex.height / 2)); ;
+    }
+
+    class Wrapper
+    {
+        public Texture2D tex;
+
+        public Wrapper(Texture2D tex)
+        {
+            this.tex = tex;
+        }
     }
 
     public void setInfoToThis()
