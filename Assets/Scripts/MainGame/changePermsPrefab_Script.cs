@@ -53,6 +53,12 @@ public class changePermsPrefab_Script : MonoBehaviour
         reflectColor();
     }
 
+    public void setActiveToTrue()
+    {
+        isActive = true;
+        reflectColor();
+    }
+
     public void reflectColor()
     {
         if (isActive)

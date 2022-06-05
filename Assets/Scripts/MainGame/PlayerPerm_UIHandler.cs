@@ -97,7 +97,7 @@ public class PlayerPerm_UIHandler : MonoBehaviour
                 if (GlobalPermissionsHandler.getPermFromIndex(index) == GlobalPermissionsHandler.PermisionNameToValue.ChangeOtherPlayerPerms && plr.Equals(PhotonNetwork.LocalPlayer))
                 {
                     scr.setActiveUi();
-                    uiElements[index].setActiveToFalse();
+                    uiElements[index].setActiveToTrue();
                     return;
                 }
                 updatePlayerPermsPush(index, value);
