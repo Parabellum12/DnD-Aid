@@ -242,7 +242,10 @@ public class MainGame_Handler_Script : MonoBehaviourPunCallbacks
         Debug.Log("RequestMapDataSyncHandle");
         GlobalCachedMaps.Clear();
         GlobalCachedMaps.AddRange(returnGlobalCacheByte2DArrayToList(allData));
+        SharedMaps.Clear();
+        SharedMaps.AddRange(returnSharedByte2DArrayToList(allData));
         SaveLoadHandler.loadMap(UtilClass.ByteArrayToObject<SaveLoad_Handler_Script.saveClass>(currentlyLoadedMap));
+        mapSelectorHandler_Script.loadSharedFiles();
     }
 
 
@@ -307,7 +310,7 @@ public class MainGame_Handler_Script : MonoBehaviourPunCallbacks
 
     byte[] returnGlobalCacheAsByteArray()
     {
-        CachedMapsWrapper wrapper = new CachedMapsWrapper(GlobalCachedMaps.ToArray());
+        CachedMapsWrapper wrapper = new CachedMapsWrapper(GlobalCachedMaps.ToArray(), SharedMaps.ToArray());
         return UtilClass.ObjectToByteArray(wrapper);
     }
 
@@ -319,14 +322,23 @@ public class MainGame_Handler_Script : MonoBehaviourPunCallbacks
         return returner;
     }
 
+    List<SaveLoad_Handler_Script.saveClass> returnSharedByte2DArrayToList(byte[] data)
+    {
+        CachedMapsWrapper wrapper = UtilClass.ByteArrayToObject<CachedMapsWrapper>(data);
+        List<SaveLoad_Handler_Script.saveClass> returner = new List<SaveLoad_Handler_Script.saveClass>();
+        returner.AddRange(wrapper.SharedMaps);
+        return returner;
+    }
+
     [System.Serializable]
     public class CachedMapsWrapper
     {
         public SaveLoad_Handler_Script.saveClass[] CachedMaps;
-
-        public CachedMapsWrapper(SaveLoad_Handler_Script.saveClass[] dat)
+        public SaveLoad_Handler_Script.saveClass[] SharedMaps;
+        public CachedMapsWrapper(SaveLoad_Handler_Script.saveClass[] dat, SaveLoad_Handler_Script.saveClass[] sharedMaps)
         {
             CachedMaps = dat;
+            SharedMaps = sharedMaps;
         }
     }
 

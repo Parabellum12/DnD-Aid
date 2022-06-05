@@ -135,12 +135,35 @@ public class TokenInfoHandler : MonoBehaviourPunCallbacks
             tokenUiPermsHandler.setPlayerPermUIUp(ActiveSelectedToken.getMoveAllowedPlayers(), (plr, value) =>
             {
                 ActiveSelectedToken.changePlayerMovePerm(plr, value, false);
+                updateUI(false);
             });
             SetUIToActive();
         }
         else
         {
             SetUIToInactive();
+        }
+    }
+
+    [PunRPC]
+    public void updateUI(bool networkedCall)
+    {
+        if (ActiveSelectedToken != null)
+        {
+            tokenUiPermsHandler.setPlayerPermUIUp(ActiveSelectedToken.getMoveAllowedPlayers(), (plr, value) =>
+            {
+                ActiveSelectedToken.changePlayerMovePerm(plr, value, false);
+
+            });
+            SetUIToActive();
+        }
+        else
+        {
+            SetUIToInactive();
+        }
+        if (!networkedCall)
+        {
+            gameView.RPC("updateUI", RpcTarget.Others, true);
         }
     }
 

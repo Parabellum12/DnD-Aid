@@ -91,11 +91,13 @@ public class PlayerPerm_UIHandler : MonoBehaviour
             //Debug.Log("whatHappened:" + i);
             //Debug.Log(uiElements.Count);
             //Debug.Log(perms.Length);
+            int index = i;
             uiElements[i].setup(GlobalPermissionsHandler.getPermFromIndex(i).ToString(), perms[i], i, (index, value, scr) =>
             {
-                if (GlobalPermissionsHandler.getPermFromIndex(index) == GlobalPermissionsHandler.PermisionNameToValue.ChangeOtherPlayerPerms)
+                if (GlobalPermissionsHandler.getPermFromIndex(index) == GlobalPermissionsHandler.PermisionNameToValue.ChangeOtherPlayerPerms && plr.Equals(PhotonNetwork.LocalPlayer))
                 {
                     scr.setActiveUi();
+                    uiElements[index].setActiveToFalse();
                     return;
                 }
                 updatePlayerPermsPush(index, value);
@@ -115,6 +117,7 @@ public class PlayerPerm_UIHandler : MonoBehaviour
 
     void updatePlayerPermsPush(int index, bool value)
     {
+        Debug.Log("Update Player Perms:" + GlobalPermissionsHandler.getPermFromIndex(index) + " To:" + value);
         OnPermChangeCallback.Invoke(plr, index, value);
     }
 

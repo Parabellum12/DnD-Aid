@@ -37,8 +37,9 @@ public class PermissionsHandleBackground_Script : MonoBehaviour
                 //Debug.Log("CHangePerm: "+ i  + ":" + index + ":" + value);
                 if (plr.Equals(PhotonNetwork.LocalPlayer))
                 {
-                    if (GlobalPermissionsHandler.getPermFromIndex(index) == GlobalPermissionsHandler.PermisionNameToValue.ChangeOtherPlayerPerms)
+                    if (GlobalPermissionsHandler.getPermFromIndex(index).Equals(GlobalPermissionsHandler.PermisionNameToValue.ChangeOtherPlayerPerms))
                     {
+                        Debug.Log("Player Tried To Change Own ChangeOtherPlayerPerms Permission");
                         return;
                     }
                 }

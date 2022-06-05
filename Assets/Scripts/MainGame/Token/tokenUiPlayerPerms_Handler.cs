@@ -6,7 +6,7 @@ using Photon.Pun;
 public class tokenUiPlayerPerms_Handler : MonoBehaviour
 {
     /*
-     * handles the ui for the token move perms
+     * handles the ui for the single token move perms
      */
     [SerializeField] GameObject tokenPermChangeUIPrefab;
 

@@ -47,6 +47,12 @@ public class changePermsPrefab_Script : MonoBehaviour
         imageColor.color= Color.green;
     }
 
+    public void setActiveToFalse()
+    {
+        isActive = false;
+        reflectColor();
+    }
+
     public void reflectColor()
     {
         if (isActive)
@@ -59,12 +65,14 @@ public class changePermsPrefab_Script : MonoBehaviour
         }
     }
 
+
     public void HandleButtonClick()
     {
         //Debug.Log("Click!:" + isActive);
         isActive = !isActive;
         //Debug.Log("Click! 2:" + isActive);
         reflectColor();
+        Debug.Log(nameText.text + " Perm Is Clicked To: " + isActive);
         callBack?.Invoke(index, isActive, this);
     }
 

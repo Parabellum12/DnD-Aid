@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using Photon.Pun;
 
 
 public class tokenPlayerPermUiInteraction_Handler : MonoBehaviour
@@ -41,7 +42,7 @@ public class tokenPlayerPermUiInteraction_Handler : MonoBehaviour
 
     private void Update()
     {
-        if (GlobalPermissionsHandler.getPermValue(GlobalPermissionsHandler.PermisionNameToValue.GlobalMoveTokens))
+        if (GlobalPermissionsHandler.getPermValue(GlobalPermissionsHandler.PermisionNameToValue.GlobalMoveTokens) && referencePlayer.Equals(PhotonNetwork.LocalPlayer))
         {
             InteractButton.interactable = false;
             ButtonImage.color = Color.green;
