@@ -290,6 +290,7 @@ MonoBehaviour:
   initiativeValue: 0
   canvas: {fileID: 861743589529605390}
   spriteMask: {fileID: 895595494578251732}
+  mouseOver: 0
 --- !u!114 &4671561608904141611
 MonoBehaviour:
   m_ObjectHideFlags: 0
