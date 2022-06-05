@@ -27,6 +27,7 @@ public class TokenHandler_Script : MonoBehaviourPunCallbacks
 
     private void Start()
     {
+        setupMe();
         TokenInfoHandler_Script.TokenCanvases.Add(canvas);
         TokenInfoHandler_Script.TokenSpriteMasks.Add(spriteMask);
         TokenInfoHandler_Script.setUpMaskingData();
