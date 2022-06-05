@@ -111,3 +111,10 @@ API
 Training
 Blog
 About
+
+
+#Visual Studio Code directory
+.vscode/
+#Editor user settings
+/[Uu]serSettings/EditorUserSettings.asset
+ 
