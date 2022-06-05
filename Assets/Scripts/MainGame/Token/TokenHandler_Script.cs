@@ -267,7 +267,7 @@ public class TokenHandler_Script : MonoBehaviourPunCallbacks
     bool allowed = false;
     bool clickedOn = false;
 
-    int frameToUpdatePosOn = 5;
+    int frameToUpdatePosOn = 1;
     int frameCount = 0;
 
     private void Update()
