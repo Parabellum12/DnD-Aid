@@ -43,3 +43,9 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: token Images
+    uniqueID: 1898151741
+    locked: 0
+  - name: token background
+    uniqueID: 4278957203
+    locked: 0
