@@ -25,18 +25,32 @@ public class TokenHandler_Script : MonoBehaviourPunCallbacks
 
     private void Start()
     {
+    }
+
+    bool alreadySetup = false;
+
+    void setupMe()
+    {
+        if (alreadySetup)
+        {
+            return;
+        }
+
         TokenInfoHandler_Script = GameObject.FindGameObjectWithTag("TokenUIHandler").GetComponent<TokenInfoHandler>();
         InitiativeListHandler_Script = GameObject.FindGameObjectWithTag("TokenInitiativeListHandler").GetComponent<InitiativeList_Handler>();
+        alreadySetup = true;
     }
 
 
     public void setTokenPFP(Texture2D tex)
     {
+        setupMe();
         TokenPfp.sprite = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), new Vector2(tex.width / 2, tex.height / 2)); ;
     }
 
     public void setInfoToThis()
     {
+        setupMe();
         TokenInfoHandler_Script.setActiveSelected(this);
     }
 
@@ -53,6 +67,7 @@ public class TokenHandler_Script : MonoBehaviourPunCallbacks
     [PunRPC]
     public void addMeToInitiativeList(bool networkCall)
     {
+        setupMe();
         if (InitiativeListHandler_Script == null)
         {
             TokenInfoHandler_Script = GameObject.FindGameObjectWithTag("TokenUIHandler").GetComponent<TokenInfoHandler>();
@@ -68,6 +83,7 @@ public class TokenHandler_Script : MonoBehaviourPunCallbacks
     [PunRPC]
     public void removeMeFromInitiativeList(bool networkCall)
     {
+        setupMe();
         InitiativeListHandler_Script.removeUiTokenElementCallFromToken(this);
         inInitiativeList = false;
         if (!networkCall)
@@ -79,7 +95,7 @@ public class TokenHandler_Script : MonoBehaviourPunCallbacks
     [PunRPC]
     public void KILLME(bool networkCall)
     {
-
+        setupMe();
         if (!networkCall)
         {
             localView.RPC("KILLME", RpcTarget.All, true);
@@ -95,7 +111,7 @@ public class TokenHandler_Script : MonoBehaviourPunCallbacks
 
 
     }
-    
+
 
 
 
@@ -104,6 +120,7 @@ public class TokenHandler_Script : MonoBehaviourPunCallbacks
     [PunRPC]
     public void setName(string name, bool NetworkedCall)
     {
+        setupMe();
         tokenName = name;
         tokenNameText.text = name;
         if (!NetworkedCall)
@@ -115,6 +132,7 @@ public class TokenHandler_Script : MonoBehaviourPunCallbacks
     [PunRPC]
     public void setID(long id, bool NetworkedCall)
     {
+        setupMe();
         tokenId = id;
         if (!NetworkedCall)
         {
@@ -125,6 +143,7 @@ public class TokenHandler_Script : MonoBehaviourPunCallbacks
 
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
+        setupMe();
         if (!PhotonNetwork.IsMasterClient)
         {
             return;
@@ -142,6 +161,7 @@ public class TokenHandler_Script : MonoBehaviourPunCallbacks
     [PunRPC]
     public void UpdateInitiativeList()
     {
+        setupMe();
         TokenHandler_Script temp = TokenInfoHandler_Script.ActiveSelectedToken;
         TokenInfoHandler_Script.updateTokenInitiativeList();
         TokenInfoHandler_Script.ActiveSelectedToken = temp;
@@ -157,6 +177,7 @@ public class TokenHandler_Script : MonoBehaviourPunCallbacks
     [PunRPC]
     public void addPlayerToMoveListHandle(Photon.Realtime.Player plr)
     {
+        setupMe();
         MoveAllowedPlayers.Add(plr);
     }
 
@@ -175,6 +196,7 @@ public class TokenHandler_Script : MonoBehaviourPunCallbacks
     [PunRPC]
     public void changePlayerMovePerm(Photon.Realtime.Player plr, bool value, bool networkedCall)
     {
+        setupMe();
         if (value)
         {
             if (!MoveAllowedPlayers.Contains(plr))
@@ -201,6 +223,7 @@ public class TokenHandler_Script : MonoBehaviourPunCallbacks
     [PunRPC]
     public void UpdateUiIfSelectedKilled()
     {
+        setupMe(); ;
         if (TokenInfoHandler_Script != null && this != null && TokenInfoHandler_Script.ActiveSelectedToken == this)
         {
             TokenInfoHandler_Script.ActiveSelectedToken = null;
@@ -234,6 +257,7 @@ public class TokenHandler_Script : MonoBehaviourPunCallbacks
     bool clickedOn = false;
     private void Update()
     {
+        setupMe(); ;
         if (UtilClass.IsPointerOverUIElement(LayerMask.NameToLayer("UI")))
         {
             return;
