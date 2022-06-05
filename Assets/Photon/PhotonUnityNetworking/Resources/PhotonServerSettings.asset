@@ -81,6 +81,7 @@ MonoBehaviour:
   - KILLME
   - addToSharedMaps
   - removeFromSharedMaps
+  - updateUI
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 1

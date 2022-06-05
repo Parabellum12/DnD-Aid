@@ -252,5 +252,27 @@ public class TokenInfoHandler : MonoBehaviourPunCallbacks
         usedIDs.Add(test);
         return test;
     }
+
+
+
+
+    /*
+     * token sprite mask handling
+     */
+    List<Canvas> TokenCanvases = new List<Canvas>();
+    List<SpriteMask> TokenSpriteMasks = new List<SpriteMask>();
+    int tokenSpriteMaskSortingIndex = 0;
+
+    public void setUpMaskingData()
+    {
+        tokenSpriteMaskSortingIndex = 0;
+        for (int i = 0; i < TokenCanvases.Count; i++)
+        {
+            TokenSpriteMasks[i].frontSortingOrder = tokenSpriteMaskSortingIndex;
+            TokenCanvases[i].sortingOrder = tokenSpriteMaskSortingIndex;
+            TokenSpriteMasks[i].backSortingOrder = tokenSpriteMaskSortingIndex+1;
+            tokenSpriteMaskSortingIndex += 2;
+        }
+    }
     
 }

@@ -21,6 +21,8 @@ public class TokenHandler_Script : MonoBehaviourPunCallbacks
     public long tokenId;
     public bool inInitiativeList = false;
     public int initiativeValue = 0;
+    public Canvas canvas;
+    public SpriteMask spriteMask;
 
 
     private void Start()
