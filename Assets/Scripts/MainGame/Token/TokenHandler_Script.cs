@@ -27,6 +27,9 @@ public class TokenHandler_Script : MonoBehaviourPunCallbacks
 
     private void Start()
     {
+        TokenInfoHandler_Script.TokenCanvases.Add(canvas);
+        TokenInfoHandler_Script.TokenSpriteMasks.Add(spriteMask);
+        TokenInfoHandler_Script.setUpMaskingData();
     }
 
     bool alreadySetup = false;
@@ -104,11 +107,16 @@ public class TokenHandler_Script : MonoBehaviourPunCallbacks
         }
         else
         {
+
+            TokenInfoHandler_Script.TokenCanvases.Remove(canvas);
+            TokenInfoHandler_Script.TokenSpriteMasks.Remove(spriteMask);
+            TokenInfoHandler_Script.setUpMaskingData();
             if (inInitiativeList)
             {
                 removeMeFromInitiativeList(true);
             }
             localView.RPC("UpdateUiIfSelectedKilled", RpcTarget.All);
+            TokenInfoHandler_Script.removeTokenHandle(this);
         }
 
 

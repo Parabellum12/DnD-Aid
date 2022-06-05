@@ -214,19 +214,14 @@ public class TokenInfoHandler : MonoBehaviourPunCallbacks
 
     public void removeTokenPush()
     {
-        gameView.RPC("removeTokenHandle", RpcTarget.MasterClient);
+        ActiveSelectedToken.KILLME(false);
     }
 
     [PunRPC]
-    public void removeTokenHandle()
+    public void removeTokenHandle(TokenHandler_Script token)
     {
-        if (ActiveSelectedToken == null)
-        {
-            return;
-        }
-        usedIDs.Remove(ActiveSelectedToken.tokenId);
-        initiativeListHandler.removeUiTokenElement(ActiveSelectedToken);
-        ActiveSelectedToken.KILLME(false);
+        usedIDs.Remove(token.tokenId);
+        initiativeListHandler.removeUiTokenElement(token);
     }
 
     public void setTokenName()
@@ -259,8 +254,8 @@ public class TokenInfoHandler : MonoBehaviourPunCallbacks
     /*
      * token sprite mask handling
      */
-    List<Canvas> TokenCanvases = new List<Canvas>();
-    List<SpriteMask> TokenSpriteMasks = new List<SpriteMask>();
+    public List<Canvas> TokenCanvases = new List<Canvas>();
+    public List<SpriteMask> TokenSpriteMasks = new List<SpriteMask>();
     int tokenSpriteMaskSortingIndex = 0;
 
     public void setUpMaskingData()
