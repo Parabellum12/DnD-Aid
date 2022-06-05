@@ -196,6 +196,10 @@ public class TokenHandler_Script : MonoBehaviourPunCallbacks
     [PunRPC]
     public void changePlayerMovePerm(Photon.Realtime.Player plr, bool value, bool networkedCall)
     {
+        if (!networkedCall)
+        {
+            localView.RPC("changePlayerMovePerm", RpcTarget.Others, plr, value, true);
+        }
         setupMe();
         if (value)
         {
@@ -210,10 +214,6 @@ public class TokenHandler_Script : MonoBehaviourPunCallbacks
             {
                 MoveAllowedPlayers.Remove(plr);
             }
-        }
-        if (!networkedCall)
-        {
-            localView.RPC("changePlayerMovePerm", RpcTarget.Others, plr, value, true);
         }
     }
 
