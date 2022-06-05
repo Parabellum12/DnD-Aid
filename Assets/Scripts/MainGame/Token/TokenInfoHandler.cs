@@ -148,6 +148,7 @@ public class TokenInfoHandler : MonoBehaviourPunCallbacks
     [PunRPC]
     public void updateUI(bool networkedCall)
     {
+        Debug.Log("Handling updateUI");
         if (ActiveSelectedToken != null)
         {
             tokenUiPermsHandler.setPlayerPermUIUp(ActiveSelectedToken.getMoveAllowedPlayers(), (plr, value) =>
