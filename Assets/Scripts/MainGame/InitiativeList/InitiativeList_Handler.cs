@@ -24,6 +24,8 @@ public class InitiativeList_Handler : MonoBehaviourPunCallbacks
 
     [SerializeField] List<Button> ListInteractButtons = new List<Button>();
 
+    [SerializeField] TokenInfoHandler tokenInfoHandler;
+
     int selectedIndex = 0;
          
     // Start is called before the first frame update
@@ -111,7 +113,7 @@ public class InitiativeList_Handler : MonoBehaviourPunCallbacks
 
         Handlers.Add(scrHandler);
         scr.setInitiativeValue(0, false);
-        scrHandler.setUp(scr, (uiHandler) =>
+        scrHandler.setUp(scr, tokenInfoHandler, (uiHandler) =>
         {
             scr.removeMeFromInitiativeList(false);
             reloadObjectPos(false);

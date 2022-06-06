@@ -64,6 +64,7 @@ public class PlayerPerm_UIHandler : MonoBehaviour
         if (!GlobalPermissionsHandler.getPermValue(GlobalPermissionsHandler.PermisionNameToValue.ChangeOtherPlayerPerms))
         {
             showHidePermissionsButton.interactable = false;
+            permsBackgourndGameObject.SetActive(false);
         }
         else
         {

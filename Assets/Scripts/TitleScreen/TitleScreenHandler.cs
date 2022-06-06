@@ -22,7 +22,7 @@ public class TitleScreenHandler : MonoBehaviourPunCallbacks
     {
         SceneManager.LoadScene("MapCreator", LoadSceneMode.Single);
     }
-
+    bool autoConnect = false;
     public void toRoomConnect()
     {
         if (gameCode.text.Length > 0 && gameCode.text.Length < 6)
@@ -65,6 +65,11 @@ public class TitleScreenHandler : MonoBehaviourPunCallbacks
         if (gameCode.text.Length == 6)
         {
             roomName = gameCode.text;
+            autoConnect = false;
+        }
+        else
+        {
+            autoConnect = true;
         }
         Photon.Realtime.TypedLobby lobbyType = new Photon.Realtime.TypedLobby(roomName, Photon.Realtime.LobbyType.Default);
 
@@ -108,6 +113,12 @@ public class TitleScreenHandler : MonoBehaviourPunCallbacks
 
     public override void OnJoinedRoom()
     {
+        if (autoConnect)
+        {
+            //accidentally connected to already created room
+            PhotonNetwork.LeaveRoom();
+            toRoomConnect();
+        }
         Debug.Log("JoinLobby");
         base.OnJoinedRoom();
         if (!alreadySetPerms)

@@ -23,6 +23,11 @@ public class General_2D_Camera_Handler_Script : MonoBehaviour
     public bool ArrowKeyPan = true;
 
     public bool CamZoom = true;
+    public bool CamZoomDoesAccel = true;
+    public float CamZoomAccelRateWaitTime = 3f;
+    public float CamZoomAccelRate = 5f;
+    public float TimeLimitBetweenScrollsForZoomAccel = .1f;
+    float currentZoomChangeSpeed = 1;
     public float minCameraZoom = 50f;
     public float maxCameraZoom = 100f;
 
@@ -39,6 +44,7 @@ public class General_2D_Camera_Handler_Script : MonoBehaviour
     int horizontalMove;
     int verticalMove;
 
+    float TimeSinceLastZoom;
     // Update is called once per frame
     void Update()
     {
@@ -111,8 +117,17 @@ public class General_2D_Camera_Handler_Script : MonoBehaviour
         {
             return;
         }
+        if (Time.realtimeSinceStartup - TimeSinceLastZoom < TimeLimitBetweenScrollsForZoomAccel)
+        {
+            currentZoomChangeSpeed += CamZoomAccelRate * Time.deltaTime;
+        }
+        else
+        {
+            currentZoomChangeSpeed = 1;
+        }
+        TimeSinceLastZoom = Time.realtimeSinceStartup;
         Vector2 mouseScrollDelta = Input.mouseScrollDelta;
-        cam.orthographicSize -= mouseScrollDelta.y;
+        cam.orthographicSize -= mouseScrollDelta.y * currentZoomChangeSpeed;
         cam.orthographicSize = Mathf.Clamp(cam.orthographicSize, minCameraZoom, maxCameraZoom);
     }
 

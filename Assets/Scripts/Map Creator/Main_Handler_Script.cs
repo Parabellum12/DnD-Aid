@@ -82,7 +82,6 @@ public class Main_Handler_Script : MonoBehaviour
             straightLine_Handler.deleteAnyHandles();
             splineLineHandler.deleteAnyHandles();
         }
-        updateBackgroundGrid();
 
         if (Input.GetMouseButtonDown(0) && !UtilClass.IsPointerOverUIElement(LayerMask.NameToLayer("UI")))
         {
@@ -113,7 +112,7 @@ public class Main_Handler_Script : MonoBehaviour
             }
         }
 
-        if (Input.GetKeyDown(KeyCode.Backspace))
+        if (Input.GetKeyDown(KeyCode.Backspace) || Input.GetKeyDown(KeyCode.Delete))
         {
             splineLineHandler.deleteIfSelected();
             straightLine_Handler.deleteLine();
@@ -265,39 +264,7 @@ public class Main_Handler_Script : MonoBehaviour
     }
 
     List<Vector3> pointsList = new List<Vector3>();
-    void updateBackgroundGrid()
-    {
-        pointsList = new List<Vector3>();
-        Vector2Int camPos = new Vector2Int(Mathf.FloorToInt(mainCam.position.x), Mathf.FloorToInt(mainCam.position.y));
-
-        for (int x = camPos.x - 180; x <= camPos.x + 180; x++)
-        {
-            if (x % modValue != 0)
-            {
-                continue;
-            }
-            pointsList.Add(new Vector3(x, camPos.y - 100, 0));
-            pointsList.Add(new Vector3(x, camPos.y + 100, 0));
-            pointsList.Add(new Vector3(x, camPos.y - 100, 0));
-        }
-        for (int y = camPos.y - 100; y < camPos.y+100; y++)
-        {
-            if (y % modValue != 0)
-            {
-                continue;
-            }
-            pointsList.Add(new Vector3(camPos.x - 180, y, 0));
-            pointsList.Add(new Vector3(camPos.x + 180, y, 0));
-            pointsList.Add(new Vector3(camPos.x - 180, y, 0));
-        }
-
-
-
-
-        BackGroundLR.positionCount = pointsList.Count;
-        //Debug.Log("done");
-        BackGroundLR.SetPositions(pointsList.ToArray());
-    }
+    
 
     [SerializeField] Button quitToMainMenuButton;
 

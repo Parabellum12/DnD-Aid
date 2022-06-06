@@ -14,9 +14,11 @@ public class InitiativeTokenUiHandler : MonoBehaviour
     [SerializeField] TMP_InputField InitianiveInput;
     [SerializeField] Button killMeButton;
     [SerializeField] TMP_Text tokenName;
+    [SerializeField] Button SelectMeButton;
     public TokenHandler_Script referenceToken;
     bool isMyTurn = false;
     public General_UI_DropDown_Handler_Script dropdownHandler;
+    TokenInfoHandler infoHandler;
     private void Start()
     {
         SelectedImage.enabled = false;
@@ -24,20 +26,33 @@ public class InitiativeTokenUiHandler : MonoBehaviour
         {
             KILLME();
         });
+        SelectMeButton.onClick.AddListener(() =>
+        {
+            handleSelectMe();
+        });
     }
 
 
     
     System.Action<InitiativeTokenUiHandler> setUiCallback;
     System.Action InitiativeChangedCallback;
-    public void setUp(TokenHandler_Script referenceToken, System.Action<InitiativeTokenUiHandler> setUiCallback, System.Action InitiativeChangedCallback)
+    public void setUp(TokenHandler_Script referenceToken, TokenInfoHandler tokenInfoHande, System.Action<InitiativeTokenUiHandler> setUiCallback, System.Action InitiativeChangedCallback)
     {
+        this.infoHandler = tokenInfoHande;
         this.InitiativeChangedCallback = InitiativeChangedCallback;
         this.setUiCallback = setUiCallback;
         this.referenceToken = referenceToken;
         tokenName.text = referenceToken.tokenName;
         InitianiveInput.text = "0";
     }
+
+
+    public void handleSelectMe()
+    {
+        infoHandler.setActiveSelected(referenceToken);
+    }
+
+
 
     bool lockMe = false;
     public void initiativeValueChanged()

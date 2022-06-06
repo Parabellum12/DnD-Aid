@@ -258,7 +258,7 @@ MonoBehaviour:
   GridSnapMarker: {fileID: 418869178}
   cameraMoveScr: {fileID: 0}
   ActiveTool: 1
-  selectedHandle: {fileID: 0}
+  lockInCurrentSelectedHandle: 0
   buttonHandlers:
   - {fileID: 1810259466}
   - {fileID: 30959143}
@@ -442,9 +442,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 32627900}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6648d906ad8676a4da7934829807883a, type: 3}
+  m_Script: {fileID: 11500000, guid: 506d439a979086344bfd49df1a3b8918, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  BackGroundLR: {fileID: 32627902}
+  modValue: 8
+  mainCam: {fileID: 993399844}
+  cam: {fileID: 0}
 --- !u!1 &54506956
 GameObject:
   m_ObjectHideFlags: 0
@@ -2755,7 +2759,7 @@ MonoBehaviour:
   ArrowKeyPan: 1
   CamZoom: 1
   minCameraZoom: 50
-  maxCameraZoom: 100
+  maxCameraZoom: 500
   lockMoveIfOverUi: 1
   lockZoomIfOverUi: 1
   lockMovement: 0
