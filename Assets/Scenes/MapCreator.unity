@@ -446,7 +446,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   BackGroundLR: {fileID: 32627902}
-  modValue: 8
+  modValue: 12
   mainCam: {fileID: 993399844}
   cam: {fileID: 0}
 --- !u!1 &54506956
@@ -2758,6 +2758,10 @@ MonoBehaviour:
   WASDPan: 1
   ArrowKeyPan: 1
   CamZoom: 1
+  CamZoomDoesAccel: 1
+  CamZoomAccelRateWaitTime: 3
+  CamZoomAccelRate: 1
+  TimeLimitBetweenScrollsForZoomAccel: 0.1
   minCameraZoom: 50
   maxCameraZoom: 500
   lockMoveIfOverUi: 1
