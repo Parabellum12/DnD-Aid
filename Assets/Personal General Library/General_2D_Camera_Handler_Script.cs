@@ -26,8 +26,8 @@ public class General_2D_Camera_Handler_Script : MonoBehaviour
     public bool CamZoomDoesAccel = true;
     public float CamZoomAccelRateWaitTime = 3f;
     public float CamZoomAccelRate = 5f;
+    public float maxZoomRate = 20;
     public float TimeLimitBetweenScrollsForZoomAccel = .1f;
-    float currentZoomChangeSpeed = 1;
     public float minCameraZoom = 50f;
     public float maxCameraZoom = 100f;
 
@@ -44,7 +44,6 @@ public class General_2D_Camera_Handler_Script : MonoBehaviour
     int horizontalMove;
     int verticalMove;
 
-    float TimeSinceLastZoom;
     // Update is called once per frame
     void Update()
     {
@@ -111,21 +110,48 @@ public class General_2D_Camera_Handler_Script : MonoBehaviour
     }
 
 
+    float currentZoomChangeSpeed = 1;
+    bool zooming = false;
+    bool lockZoom = false;
+    float TimeLastZoom = 0;
+    float timeStartZoom = 0;
     void handleScroll()
     {
         if (lockMovement || !CamZoom || (lockZoomIfOverUi && UtilClass.IsPointerOverUIElement(LayerMask.NameToLayer("UI"))))
         {
             return;
         }
-        if (Time.realtimeSinceStartup - TimeSinceLastZoom < TimeLimitBetweenScrollsForZoomAccel)
+        if (Input.mouseScrollDelta.y != 0)
         {
-            currentZoomChangeSpeed += CamZoomAccelRate * Time.deltaTime;
+            lockZoom = false;
+            TimeLastZoom = Time.realtimeSinceStartup;
+        }
+
+        if (Time.realtimeSinceStartup - TimeLastZoom < TimeLimitBetweenScrollsForZoomAccel && !lockZoom)
+        {
+            if (!zooming)
+            {
+                timeStartZoom = Time.realtimeSinceStartup;
+                zooming = true;
+            }
+            if (Time.realtimeSinceStartup - timeStartZoom > CamZoomAccelRateWaitTime && zooming && Input.mouseScrollDelta.y != 0)
+            {
+                //start increasing zoom speed
+                currentZoomChangeSpeed += CamZoomAccelRate * Time.deltaTime;
+            }
         }
         else
         {
+            timeStartZoom = 0;
+            TimeLastZoom = 0;
+            zooming = false;
             currentZoomChangeSpeed = 1;
+            lockZoom = true;
         }
-        TimeSinceLastZoom = Time.realtimeSinceStartup;
+
+
+        currentZoomChangeSpeed = Mathf.Clamp(currentZoomChangeSpeed, 0, maxZoomRate);
+
         Vector2 mouseScrollDelta = Input.mouseScrollDelta;
         cam.orthographicSize -= mouseScrollDelta.y * currentZoomChangeSpeed;
         cam.orthographicSize = Mathf.Clamp(cam.orthographicSize, minCameraZoom, maxCameraZoom);

@@ -449,6 +449,7 @@ MonoBehaviour:
   modValue: 12
   mainCam: {fileID: 993399844}
   cam: {fileID: 0}
+  sizeDivideBy: 101
 --- !u!1 &54506956
 GameObject:
   m_ObjectHideFlags: 0
@@ -2759,9 +2760,10 @@ MonoBehaviour:
   ArrowKeyPan: 1
   CamZoom: 1
   CamZoomDoesAccel: 1
-  CamZoomAccelRateWaitTime: 3
-  CamZoomAccelRate: 1
-  TimeLimitBetweenScrollsForZoomAccel: 0.1
+  CamZoomAccelRateWaitTime: 1.5
+  CamZoomAccelRate: 10
+  maxZoomRate: 10
+  TimeLimitBetweenScrollsForZoomAccel: 0.3
   minCameraZoom: 50
   maxCameraZoom: 500
   lockMoveIfOverUi: 1
