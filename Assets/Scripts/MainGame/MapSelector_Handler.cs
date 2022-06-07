@@ -100,10 +100,6 @@ public class MapSelector_Handler : MonoBehaviour
                     break;
                 }
             }
-            if (alreadySaved)
-            {
-                continue;
-            }
             GameObject go = Instantiate(SharedMapSelectorPrefab, cachedFilesDropdown.ChildrenObjectHolder.transform);
             go.transform.localScale = Vector3.one;
             go.transform.localPosition = Vector3.zero;
@@ -111,13 +107,15 @@ public class MapSelector_Handler : MonoBehaviour
             SharedMapSelectors.Add(scr);
             General_UI_DropDown_Handler_ScriptV2 dropScr = go.GetComponent<General_UI_DropDown_Handler_ScriptV2>();
             cachedFilesDropdown.addToChildDropDowns(dropScr);
-            scr.setup(sc, (mapToAdd) =>
+            scr.setup(sc, alreadySaved, (mapToAdd, newOrUpdate) =>
             {
-                addToLoadLocalFiles(mapToAdd);
                 cachedFilesDropdown.removeFromChildDropDowns(dropScr);
                 SharedMapSelectors.Remove(scr);
+                mainHandler_Script.removeFromSharedMaps(UtilClass.ObjectToByteArray(sc), true);
                 cachedFilesDropdown.setUIPositions();
+                loadLocalFiles();
                 scr.KILLME();
+
             });
         }
         cachedFilesDropdown.setUIPositions();

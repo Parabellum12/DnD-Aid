@@ -351,6 +351,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mapName: {fileID: 7308912280633024301}
   saveButton: {fileID: 7308912280362700532}
+  buttonText: {fileID: 7308912280829706032}
 --- !u!114 &4366417210457419295
 MonoBehaviour:
   m_ObjectHideFlags: 0

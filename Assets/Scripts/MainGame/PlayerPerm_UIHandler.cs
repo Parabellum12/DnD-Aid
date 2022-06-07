@@ -50,6 +50,10 @@ public class PlayerPerm_UIHandler : MonoBehaviour
         this.OnPermChangeCallback = OnPermChangeCallback;
         gameHandler = GameObject.FindGameObjectWithTag("GameController").GetComponent<MainGame_Handler_Script>();
         playerName.text = plr.NickName;
+        if (plr.Equals(PhotonNetwork.LocalPlayer))
+        {
+            playerName.text = plr.NickName + "-You";
+        }
         this.plr = plr;
         setValues(permValues);
         KickPlayerButton.onClick.AddListener(() => { kickPlayerCallback.Invoke(this.plr); });
@@ -95,7 +99,7 @@ public class PlayerPerm_UIHandler : MonoBehaviour
             int index = i;
             uiElements[i].setup(GlobalPermissionsHandler.getPermFromIndex(i).ToString(), perms[i], i, (index, value, scr) =>
             {
-                if (GlobalPermissionsHandler.getPermFromIndex(index) == GlobalPermissionsHandler.PermisionNameToValue.ChangeOtherPlayerPerms && plr.Equals(PhotonNetwork.LocalPlayer))
+                if (GlobalPermissionsHandler.getPermFromIndex(index) == GlobalPermissionsHandler.PermisionNameToValue.ChangeOtherPlayerPerms && plr.Equals(PhotonNetwork.LocalPlayer) || plr.Equals(PhotonNetwork.MasterClient))
                 {
                     scr.setActiveUi();
                     uiElements[index].setActiveToTrue();

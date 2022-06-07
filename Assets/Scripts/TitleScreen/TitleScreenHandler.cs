@@ -12,11 +12,18 @@ public class TitleScreenHandler : MonoBehaviourPunCallbacks
      */
     [SerializeField] TMP_InputField gameCode;
     [SerializeField] TMP_InputField userName;
+
+    static bool alreadySetup = false;
     private void Start()
     {
-        Screen.fullScreenMode = FullScreenMode.Windowed;
-        Screen.SetResolution(1920, 1080, FullScreenMode.Windowed);
-        PhotonNetwork.PhotonServerSettings.AppSettings.FixedRegion = "usw";
+        if (!alreadySetup)
+        {
+            Debug.Log("Doing Setup");
+            alreadySetup = true;
+            Screen.fullScreenMode = FullScreenMode.Windowed;
+            Screen.SetResolution(1920, 1080, FullScreenMode.Windowed);
+            PhotonNetwork.PhotonServerSettings.AppSettings.FixedRegion = "usw";
+        }
     }
     public void toMapCreator()
     {
@@ -45,6 +52,7 @@ public class TitleScreenHandler : MonoBehaviourPunCallbacks
             textValue = "Connecting";
             showConnectionText = true;
             showDots = true;
+            PhotonNetwork.Disconnect();
             PhotonNetwork.ConnectUsingSettings();
         }
         else
@@ -96,9 +104,11 @@ public class TitleScreenHandler : MonoBehaviourPunCallbacks
         createLobby();
     }
     bool alreadySetPerms = false;
+    bool connectedAlreadySoBreak = false;
     public override void OnCreatedRoom()
     {
         Debug.Log("CreateLobby");
+        connectedAlreadySoBreak = true;
         if (!alreadySetPerms)
         {
 
@@ -113,11 +123,16 @@ public class TitleScreenHandler : MonoBehaviourPunCallbacks
 
     public override void OnJoinedRoom()
     {
+        if (connectedAlreadySoBreak)
+        {
+            return;
+        }
         if (autoConnect)
         {
             //accidentally connected to already created room
             PhotonNetwork.LeaveRoom();
             toRoomConnect();
+            return;
         }
         Debug.Log("JoinLobby");
         base.OnJoinedRoom();

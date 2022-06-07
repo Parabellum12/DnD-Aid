@@ -71,21 +71,25 @@ public class MainGame_Handler_Script : MonoBehaviourPunCallbacks
     {
         //Debug.Log("testWhy1");
         callAllPlayerPermUpdate();
+        if (PhotonNetwork.IsMasterClient)
+        { 
+            RequestMapDataSyncPush(newPlayer); 
+        }
         //Debug.Log("testWhy2");
     }
 
     public override void OnPlayerLeftRoom(Player otherPlayer)
     {
-        //Debug.Log("testWhy1");
+        Debug.Log("testWhy1");
         callAllPlayerPermUpdate();
-        //Debug.Log("testWhy2");
+        Debug.Log("testWhy2");
     }
 
 
     public override void OnMasterClientSwitched(Player newMasterClient)
     {
         Debug.Log("OnMasterClientSwitched");
-        PhotonNetwork.AutomaticallySyncScene = false;
+        PhotonNetwork.AutomaticallySyncScene = true;
         PhotonNetwork.LeaveRoom();
         PhotonNetwork.Disconnect();
         SceneManager.LoadScene("TitleScreen");
@@ -167,11 +171,12 @@ public class MainGame_Handler_Script : MonoBehaviourPunCallbacks
     public void addToSharedMaps(byte[] sc, bool networkedCall)
     {
         Debug.Log("ShareMap");
-        SharedMaps.Add(UtilClass.ByteArrayToObject<SaveLoad_Handler_Script.saveClass>(sc));
         if (!networkedCall)
         {
             localView.RPC("addToSharedMaps", RpcTarget.Others, sc, true);
+            return;
         }
+        SharedMaps.Add(UtilClass.ByteArrayToObject<SaveLoad_Handler_Script.saveClass>(sc));
         mapSelectorHandler_Script.loadSharedFiles();
     }
 
@@ -179,6 +184,12 @@ public class MainGame_Handler_Script : MonoBehaviourPunCallbacks
     public void removeFromSharedMaps(byte[] sc, bool networkedCall)
     {
         Debug.Log("UnShareMap");
+
+        if (!networkedCall)
+        {
+            localView.RPC("removeFromSharedMaps", RpcTarget.Others, sc, true);
+            return;
+        }
         SharedMaps.Remove(UtilClass.ByteArrayToObject<SaveLoad_Handler_Script.saveClass>(sc));
         foreach (SaveLoad_Handler_Script.saveClass why in SharedMaps)
         {
@@ -187,10 +198,6 @@ public class MainGame_Handler_Script : MonoBehaviourPunCallbacks
                 SharedMaps.Remove(why);
                 break;
             }
-        }
-        if (!networkedCall)
-        {
-            localView.RPC("removeFromSharedMaps", RpcTarget.Others, sc, true);
         }
         mapSelectorHandler_Script.loadSharedFiles();
     }
@@ -420,7 +427,8 @@ public class MainGame_Handler_Script : MonoBehaviourPunCallbacks
         Debug.Log("kick Player Handle");
         PhotonNetwork.LeaveRoom();
         PhotonNetwork.Disconnect();
-        PhotonNetwork.AutomaticallySyncScene = false;
+        PhotonNetwork.AutomaticallySyncScene = true;
+        Debug.Log("kick Player Handle2");
         SceneManager.LoadScene("TitleScreen");
     }
 
