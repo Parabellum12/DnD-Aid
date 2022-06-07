@@ -12,6 +12,7 @@ public class MainGame_Handler_Script : MonoBehaviourPunCallbacks
 {
     /*
      * handles the game code for he main game
+     * 5,703 lines of used code in this project
      */
     [SerializeField] SaveLoad_Handler_Script SaveLoadHandler;
     [SerializeField] PhotonView localView;
