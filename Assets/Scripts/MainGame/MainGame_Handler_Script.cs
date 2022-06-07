@@ -240,7 +240,7 @@ public class MainGame_Handler_Script : MonoBehaviourPunCallbacks
     [PunRPC]
     public void RequestMapDataSyncPush(Photon.Realtime.Player plr)
     {
-        localView.RPC("RequestMapDataSyncHandle", plr, returnGlobalCacheAsByteArray(), UtilClass.ObjectToByteArray(SaveLoadHandler.getMapData(SaveLoadHandler.getCurrentlyLoadedMapName())));
+        localView.RPC("RequestMapDataSyncHandle", plr, returnGlobalCacheAsByteArray(), UtilClass.ObjectToByteArray(SaveLoadHandler.getMapData(SaveLoadHandler.getCurrentlyLoadedMapID())));
     }
 
     [PunRPC]
