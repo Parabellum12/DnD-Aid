@@ -6005,6 +6005,8 @@ MonoBehaviour:
   gameCodeText: {fileID: 1971671653}
   loadedMapText: {fileID: 842953766}
   loadedMapTextValue: 'Currently Loaded Map:'
+  tokenInfoHandler: {fileID: 1085442348}
+  InitiativeList_Handler: {fileID: 1005055482}
   mapSelectorHandler_Script: {fileID: 260001449}
   permUIHandler: {fileID: 1448121609}
 --- !u!114 &1251303683
@@ -6555,7 +6557,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 16059403, y: 472.62442}
+  m_AnchoredPosition: {x: -512, y: 472.62442}
   m_SizeDelta: {x: 508, y: 100}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &1448121607
@@ -8956,8 +8958,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 166266541}
   m_HandleRect: {fileID: 166266540}
   m_Direction: 0
-  m_Value: -16840584
-  m_Size: 0.9981228
+  m_Value: 537.3708
+  m_Size: 0.9981227
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:

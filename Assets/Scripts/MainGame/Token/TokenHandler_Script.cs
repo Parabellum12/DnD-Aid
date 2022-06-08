@@ -41,10 +41,13 @@ public class TokenHandler_Script : MonoBehaviourPunCallbacks
         {
             return;
         }
-
-        TokenInfoHandler_Script = GameObject.FindGameObjectWithTag("TokenUIHandler").GetComponent<TokenInfoHandler>();
-        InitiativeListHandler_Script = GameObject.FindGameObjectWithTag("TokenInitiativeListHandler").GetComponent<InitiativeList_Handler>();
-        alreadySetup = true;
+        MainGame_Handler_Script mainscr= GameObject.FindGameObjectWithTag("GameController").GetComponent<MainGame_Handler_Script>();
+        TokenInfoHandler_Script = mainscr.GetTokenInfoHandler();
+        InitiativeListHandler_Script = mainscr.GetInitiativeList_Handler();
+        if (InitiativeListHandler_Script != null && TokenInfoHandler_Script != null)
+        {
+            alreadySetup = true;
+        }
     }
 
 
@@ -295,7 +298,7 @@ public class TokenHandler_Script : MonoBehaviourPunCallbacks
             return;
         }
 
-        if (Input.GetMouseButton(0) && mouseOver && TokenInfoHandler_Script.ActiveSelectedToken != this)
+        if (Input.GetMouseButton(0) && mouseOver && TokenInfoHandler_Script.ActiveSelectedToken != this && !moving)
         {
             TokenInfoHandler_Script.setActiveSelected(this);
         }

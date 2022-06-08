@@ -40,6 +40,16 @@ public class General_UI_DropDown_Handler_ScriptV2 : MonoBehaviour
 
     private void Awake()
     {
+        setup();
+    }
+    bool alreadySetup = false;
+    void setup()
+    {
+        if (alreadySetup)
+        {
+            return;
+        }
+        alreadySetup = true;
         if (InteractionButton != null)
         {
             buttonRectTransform = InteractionButton.GetComponent<RectTransform>();
@@ -191,6 +201,7 @@ public class General_UI_DropDown_Handler_ScriptV2 : MonoBehaviour
 
     public void setDropDownToActive()
     {
+        setup();
         dropDownBackgroundImage.SetActive(true);
         buttonRectTransform.rotation = Quaternion.Euler(0, 0, 180);
         ChildrenObjectHolder.SetActive(true);
@@ -199,6 +210,7 @@ public class General_UI_DropDown_Handler_ScriptV2 : MonoBehaviour
 
     public void setDropDownToInactive()
     {
+        setup();
         dropDownBackgroundImage.SetActive(false);
         buttonRectTransform.rotation = Quaternion.Euler(0, 0, 0);
         ChildrenObjectHolder.SetActive(false);

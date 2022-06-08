@@ -26,6 +26,7 @@ public class MainGame_Handler_Script : MonoBehaviourPunCallbacks
     private void Start()
     {
         PhotonNetwork.IsMessageQueueRunning = true;
+        PhotonNetwork.AutomaticallySyncScene = true;
         gameCodeText.text = "Game Code:"+PhotonNetwork.CurrentRoom.Name;
         if (!PhotonNetwork.IsMasterClient)
         {
@@ -40,8 +41,17 @@ public class MainGame_Handler_Script : MonoBehaviourPunCallbacks
         }
     }
 
+    [SerializeField] TokenInfoHandler tokenInfoHandler;
+    [SerializeField] InitiativeList_Handler InitiativeList_Handler;
+    public TokenInfoHandler GetTokenInfoHandler()
+    {
+        return tokenInfoHandler;
+    }
 
-
+    public InitiativeList_Handler GetInitiativeList_Handler()
+    {
+        return InitiativeList_Handler;
+    }
 
 
 
