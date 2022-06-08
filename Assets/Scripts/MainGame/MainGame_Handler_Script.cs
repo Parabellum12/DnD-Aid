@@ -275,6 +275,10 @@ public class MainGame_Handler_Script : MonoBehaviourPunCallbacks
     {
         Debug.Log("load Map from data");
         SaveLoad_Handler_Script.saveClass temp = UtilClass.ByteArrayToObject<SaveLoad_Handler_Script.saveClass>(mapData);
+        if (temp == null)
+        {
+            return;
+        }
         loadedMapText.text = loadedMapTextValue + temp.MapName;
         SaveLoadHandler.loadMap(temp);
     }
@@ -352,7 +356,7 @@ public class MainGame_Handler_Script : MonoBehaviourPunCallbacks
 
 
 
-    [SerializeField]PermissionsHandleBackground_Script permUIHandler;
+    [SerializeField] permissionsUiHandler permUIHandler;
     Dictionary<Photon.Realtime.Player, bool[]> playerToPerms = new Dictionary<Player, bool[]>();
 
     public bool[] returnPlayerPerms(Photon.Realtime.Player plr)
@@ -386,7 +390,7 @@ public class MainGame_Handler_Script : MonoBehaviourPunCallbacks
     {
         //Debug.Log("returned player perms");
         playerToPerms.Add(plr, perms);
-        permUIHandler.CreateUi();
+        permUIHandler.createUI();
     }
 
     public void changePlayersPerms(Player plrToChangePermsOn, int index, bool value)

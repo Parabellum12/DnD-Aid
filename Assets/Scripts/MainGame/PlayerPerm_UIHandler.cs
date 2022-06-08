@@ -10,25 +10,20 @@ public class PlayerPerm_UIHandler : MonoBehaviour
     /*
      * handles changing player perms ui
      */
-    [SerializeField] Image backgorund;
-    [SerializeField] Image permsBackgournd;
-    [SerializeField] GameObject permsBackgourndGameObject;
-    [SerializeField] GameObject PermsGameobject;
     [SerializeField] TMP_Text playerName;
     [SerializeField] List<changePermsPrefab_Script> uiElements;
     Photon.Realtime.Player plr;
     MainGame_Handler_Script gameHandler;
 
-    System.Action updateUiPositions;
 
     System.Action<Photon.Realtime.Player, int, bool> OnPermChangeCallback;
 
     [SerializeField] Button showHidePermissionsButton;
     [SerializeField] Button KickPlayerButton;
+    [SerializeField] General_UI_DropDown_Handler_ScriptV2 permissionsUIDropDownHandler;
 
     public void Start()
     {
-        openClosePermissions();
         if (!GlobalPermissionsHandler.getPermValue(GlobalPermissionsHandler.PermisionNameToValue.ChangeOtherPlayerPerms))
         {
             showHidePermissionsButton.interactable = false;
@@ -43,9 +38,9 @@ public class PlayerPerm_UIHandler : MonoBehaviour
 
 
 
-    public void setup(ref Photon.Realtime.Player plr, bool[] permValues, System.Action<Photon.Realtime.Player, int, bool> OnPermChangeCallback, System.Action updateUiPositions, System.Action<Photon.Realtime.Player> kickPlayerCallback)
+    public void setup(ref Photon.Realtime.Player plr, bool[] permValues, System.Action<Photon.Realtime.Player, int, bool> OnPermChangeCallback, System.Action<Photon.Realtime.Player> kickPlayerCallback)
     {
-        this.updateUiPositions = updateUiPositions;
+        //this.updateUiPositions = updateUiPositions;
         //Debug.Log("DDDDDDDDDDDDDDDDDDD:" + (OnPermChangeCallback == null));
         this.OnPermChangeCallback = OnPermChangeCallback;
         gameHandler = GameObject.FindGameObjectWithTag("GameController").GetComponent<MainGame_Handler_Script>();
@@ -68,7 +63,8 @@ public class PlayerPerm_UIHandler : MonoBehaviour
         if (!GlobalPermissionsHandler.getPermValue(GlobalPermissionsHandler.PermisionNameToValue.ChangeOtherPlayerPerms))
         {
             showHidePermissionsButton.interactable = false;
-            permsBackgourndGameObject.SetActive(false);
+            permissionsUIDropDownHandler.setDropDownToInactive();
+            permissionsUIDropDownHandler.setUIPositions();
         }
         else
         {
@@ -110,34 +106,10 @@ public class PlayerPerm_UIHandler : MonoBehaviour
         }
     }
 
-    public float getSize()
-    {
-        float size = backgorund.rectTransform.rect.height;
-        if (PermsGameobject.activeSelf)
-        {
-            size += permsBackgournd.rectTransform.rect.height;
-        }
-        return size;
-    }
-
     void updatePlayerPermsPush(int index, bool value)
     {
         Debug.Log("Update Player Perms:" + GlobalPermissionsHandler.getPermFromIndex(index) + " To:" + value);
         OnPermChangeCallback.Invoke(plr, index, value);
-    }
-
-
-    public void openClosePermissions()
-    {
-        if (permsBackgourndGameObject.activeSelf)
-        {
-            permsBackgourndGameObject.SetActive(false);
-        }
-        else if (GlobalPermissionsHandler.getPermValue(GlobalPermissionsHandler.PermisionNameToValue.ChangeOtherPlayerPerms) && !permsBackgourndGameObject.activeSelf)
-        {
-            permsBackgourndGameObject.SetActive(true);
-        }
-        updateUiPositions.Invoke();
     }
 
 

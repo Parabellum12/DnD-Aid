@@ -7,13 +7,17 @@ using Photon.Pun;
 public class PermissionsHandleBackground_Script : MonoBehaviour
 {
     /*
+     * REPLACED
      * handles permission changing ui
      */
+    /*
     [SerializeField] GameObject permissionsHandlerPrefab;
-    [SerializeField] RectTransform contentViewPort;
+    //[SerializeField] RectTransform contentViewPort;
     [SerializeField] PhotonView photonview;
     List<PlayerPerm_UIHandler> playerPermUiList = new List<PlayerPerm_UIHandler>();
     MainGame_Handler_Script mainHandler;
+
+    [SerializeField] General_UI_DropDown_Handler_ScriptV2 contentUiHandler;
 
     public void Start()
     {
@@ -23,14 +27,14 @@ public class PermissionsHandleBackground_Script : MonoBehaviour
     public void CreateUi()
     {
         destroyAnyUi();
-        Photon.Realtime.Player[] allPlayers =  PhotonNetwork.PlayerList;
-        float VerticalOffset = 0;
+        Photon.Realtime.Player[] allPlayers = PhotonNetwork.PlayerList;
         for (int i = 0; i < allPlayers.Length; i++)
         {
-            GameObject go = Instantiate(permissionsHandlerPrefab, contentViewPort);
-            go.transform.localPosition = new Vector2(0, -VerticalOffset - 75);
+            GameObject go = Instantiate(permissionsHandlerPrefab, contentUiHandler.transform);
             PlayerPerm_UIHandler scr = go.GetComponent<PlayerPerm_UIHandler>();
+            General_UI_DropDown_Handler_ScriptV2 Uiscr = go.GetComponent<General_UI_DropDown_Handler_ScriptV2>();
             playerPermUiList.Add(scr);
+            contentUiHandler.addToChildDropDowns(Uiscr);
             //Debug.Log("hello world pain:" + i);
             scr.setup(ref allPlayers[i], mainHandler.returnPlayerPerms(allPlayers[i]), (plr, index, value) =>
             {
@@ -44,30 +48,25 @@ public class PermissionsHandleBackground_Script : MonoBehaviour
                     }
                 }
                 mainHandler.changePlayersPerms(plr, index, value);
-            }, () => 
-            { 
-                updateUiPos(); 
+            }, () =>
+            {
+                updateUiPos();
             }, (plrToKick) =>
             {
                 mainHandler.kickPlayerPush(plrToKick);
             });
-            VerticalOffset += scr.getSize();
         }
+        contentUiHandler.setUIPositions();
     }
 
     void updateUiPos()
     {
-        float VerticalOffset = 0;
-        for (int i = 0; i < playerPermUiList.Count; i++)
-        {
-            playerPermUiList[i].gameObject.transform.localPosition = new Vector2(0, -VerticalOffset - 75);
-            VerticalOffset += playerPermUiList[i].getSize();
-        }
+        contentUiHandler.setUIPositions();
     }
 
     public void updateUi(Photon.Realtime.Player plr, bool[] perms)
     {
-        foreach(PlayerPerm_UIHandler scr in playerPermUiList)
+        foreach (PlayerPerm_UIHandler scr in playerPermUiList)
         {
             scr.setValues(plr, perms);
         }
@@ -77,9 +76,11 @@ public class PermissionsHandleBackground_Script : MonoBehaviour
     {
         foreach (PlayerPerm_UIHandler scr in playerPermUiList)
         {
+            contentUiHandler.removeFromChildDropDowns(scr.gameObject.GetComponent<General_UI_DropDown_Handler_ScriptV2>());
             Destroy(scr.gameObject);
         }
 
         playerPermUiList.Clear();
     }
+    */
 }

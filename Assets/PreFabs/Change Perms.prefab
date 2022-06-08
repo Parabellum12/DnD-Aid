@@ -343,6 +343,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4597872585179947591}
   - component: {fileID: 7813652284912483167}
+  - component: {fileID: 1945224311598096332}
   m_Layer: 5
   m_Name: Change Perms
   m_TagString: Untagged
@@ -387,3 +388,28 @@ MonoBehaviour:
   nameText: {fileID: 4597872584474686348}
   editPermsButton: {fileID: 8521647723421322723}
   imageColor: {fileID: 4597872584394230145}
+--- !u!114 &1945224311598096332
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4597872585179947588}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f84fc7eb33fdd548b5399a5b7169587, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isHolder: 1
+  isCanvasOrUiItem: 0
+  dropDownImageFollowChildSize: 1
+  engaged: 0
+  mainImage: {fileID: 4597872583277459197}
+  dropDownBackgroundImage: {fileID: 0}
+  InteractionButton: {fileID: 0}
+  contentRectTransform: {fileID: 0}
+  childDropDowns: []
+  ChildrenObjectHolder: {fileID: 0}
+  globalOffsetDist: 0
+  itemSeperationDist: 0
+  offsetDist: 0

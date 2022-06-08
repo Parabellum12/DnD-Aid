@@ -36,11 +36,9 @@ public class General_UI_DropDown_Handler_ScriptV2 : MonoBehaviour
 
     [SerializeField] float offsetDist = 0;
 
+    float lastOffsetSize = 0;
 
-
-
-
-    private void Start()
+    private void Awake()
     {
         if (InteractionButton != null)
         {
@@ -66,7 +64,7 @@ public class General_UI_DropDown_Handler_ScriptV2 : MonoBehaviour
                 buttonRectTransform.transform.rotation = Quaternion.identity;
             }
         }
-        
+
         foreach (General_UI_DropDown_Handler_ScriptV2 scr in childDropDowns)
         {
             scr.updateUICallback = () =>
@@ -75,6 +73,8 @@ public class General_UI_DropDown_Handler_ScriptV2 : MonoBehaviour
             };
         }
     }
+
+
 
     public float getSize()
     {
@@ -114,6 +114,7 @@ public class General_UI_DropDown_Handler_ScriptV2 : MonoBehaviour
             }
             childDropDowns[i].transform.localPosition = new Vector3(0, -offsetDist - (childDropDowns[i].getMainImageSize() / 2), 0);
             offsetDist += childDropDowns[i].getSize() + itemSeperationDist;
+            lastOffsetSize = childDropDowns[i].getSize() + itemSeperationDist;
         }
         setPosHelper();
         updateUICallback?.Invoke();
@@ -137,6 +138,7 @@ public class General_UI_DropDown_Handler_ScriptV2 : MonoBehaviour
             childDropDowns[i].setUIPositionsNoCallback();
             childDropDowns[i].transform.localPosition = new Vector3(0, -offsetDist - (childDropDowns[i].getSize()/2), 0);
             offsetDist += childDropDowns[i].getSize() + itemSeperationDist;
+            lastOffsetSize = childDropDowns[i].getSize() + itemSeperationDist;
         }
         setPosHelper();
     }
@@ -176,24 +178,43 @@ public class General_UI_DropDown_Handler_ScriptV2 : MonoBehaviour
 
         if (!engaged)
         {
-            dropDownBackgroundImage.SetActive(true);
-            buttonRectTransform.rotation = Quaternion.Euler(0,0,180);
-            ChildrenObjectHolder.SetActive(true);
+            setDropDownToActive();
         }
         else
         {
-            dropDownBackgroundImage.SetActive(false);
-            buttonRectTransform.rotation = Quaternion.Euler(0, 0, 0);
-            ChildrenObjectHolder.SetActive(false);
+            setDropDownToInactive();
         }
 
         engaged = !engaged;
         setUIPositions();
     }
 
+    public void setDropDownToActive()
+    {
+        dropDownBackgroundImage.SetActive(true);
+        buttonRectTransform.rotation = Quaternion.Euler(0, 0, 180);
+        ChildrenObjectHolder.SetActive(true);
+        setUIPositions();
+    }
+
+    public void setDropDownToInactive()
+    {
+        dropDownBackgroundImage.SetActive(false);
+        buttonRectTransform.rotation = Quaternion.Euler(0, 0, 0);
+        ChildrenObjectHolder.SetActive(false);
+        setUIPositions();
+    }
+
+
+
     public void addToChildDropDowns(General_UI_DropDown_Handler_ScriptV2 childToAdd)
     {
         childDropDowns.Add(childToAdd);
+        childToAdd.updateUICallback = () =>
+        {
+            setUIPositions();
+        };
+
     }
 
     public void removeFromChildDropDowns(General_UI_DropDown_Handler_ScriptV2 childToRemove)
