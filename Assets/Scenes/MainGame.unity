@@ -1635,8 +1635,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 12691486}
   m_HandleRect: {fileID: 12691485}
   m_Direction: 2
-  m_Value: 0
-  m_Size: 0.9999315
+  m_Value: 1
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -2099,7 +2099,7 @@ MonoBehaviour:
   CamZoomAccelRateWaitTime: 1.5
   CamZoomAccelRate: 10
   maxZoomRate: 10
-  TimeLimitBetweenScrollsForZoomAccel: 0.3
+  TimeLimitBetweenScrollsForZoomAccel: 0.75
   minCameraZoom: 50
   maxCameraZoom: 500
   lockMoveIfOverUi: 0
@@ -4443,7 +4443,7 @@ MonoBehaviour:
   m_Elasticity: 0.1
   m_Inertia: 1
   m_DecelerationRate: 0.135
-  m_ScrollSensitivity: 1
+  m_ScrollSensitivity: 10
   m_Viewport: {fileID: 399314235}
   m_HorizontalScrollbar: {fileID: 2026785973}
   m_VerticalScrollbar: {fileID: 457621211}
@@ -6555,7 +6555,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 56.352158, y: 472.62445}
+  m_AnchoredPosition: {x: 16059403, y: 472.62442}
   m_SizeDelta: {x: 508, y: 100}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &1448121607
@@ -8956,8 +8956,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 166266541}
   m_HandleRect: {fileID: 166266540}
   m_Direction: 0
-  m_Value: -58.601013
-  m_Size: 0.99812305
+  m_Value: -16840584
+  m_Size: 0.9981228
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:

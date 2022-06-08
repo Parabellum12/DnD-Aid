@@ -36,7 +36,7 @@ public class MainGame_Handler_Script : MonoBehaviourPunCallbacks
         else
         {
             //master client
-            callForPlayerPermsUpdate();
+            CallUpdatePlayerToPerms(false);
         }
     }
 
@@ -71,7 +71,7 @@ public class MainGame_Handler_Script : MonoBehaviourPunCallbacks
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
         //Debug.Log("testWhy1");
-        callAllPlayerPermUpdate();
+        CallUpdatePlayerToPerms(false);
         if (PhotonNetwork.IsMasterClient)
         { 
             RequestMapDataSyncPush(newPlayer); 
@@ -81,8 +81,9 @@ public class MainGame_Handler_Script : MonoBehaviourPunCallbacks
 
     public override void OnPlayerLeftRoom(Player otherPlayer)
     {
-        Debug.Log("testWhy1");
-        callAllPlayerPermUpdate();
+        Debug.Log("testWhy1"); 
+        CallUpdatePlayerToPerms(false);
+        playerToPerms.Remove(otherPlayer);
         Debug.Log("testWhy2");
     }
 
@@ -361,37 +362,52 @@ public class MainGame_Handler_Script : MonoBehaviourPunCallbacks
 
     public bool[] returnPlayerPerms(Photon.Realtime.Player plr)
     {
+        Debug.Log("returnPlayerPermsCall");
         return playerToPerms.GetValueOrDefault(plr);
     }
 
-    public void callAllPlayerPermUpdate()
-    {
-        localView.RPC("callForPlayerPermsUpdate", RpcTarget.All);
-    }
-
     [PunRPC]
-    public void callForPlayerPermsUpdate()
+    public void CallUpdatePlayerToPerms(bool NetworkedCall)
     {
+        if (!NetworkedCall)
+        {
+            localView.RPC("CallUpdatePlayerToPerms", RpcTarget.Others, true);
+        }
+        Debug.Log("CallUpdatePlayerToPerms");
         playerToPerms.Clear();
-        //Debug.Log("reset player perms");
-        //playerToPerms.Add(PhotonNetwork.LocalPlayer, GlobalPermissionsHandler.returnPermissions());
-        //permUIHandler.CreateUi();
-        localView.RPC("RequestPlayerPermsPush", RpcTarget.All, PhotonNetwork.LocalPlayer);
+        localView.RPC("UpdatePlayerToPermsRequest", RpcTarget.All, PhotonNetwork.LocalPlayer);
     }
 
     [PunRPC]
-    public void RequestPlayerPermsPush(Player plrToReturnDataTo)
+    public void UpdatePlayerToPermsRequest(Photon.Realtime.Player playerToReturnTo)
     {
-        localView.RPC("RequestPlayerPermsHandle", plrToReturnDataTo, PhotonNetwork.LocalPlayer, GlobalPermissionsHandler.returnPermissions());
+        Debug.Log("UpdatePlayerToPermsRequest");
+        localView.RPC("UpdatePlayerToPermsHandle", playerToReturnTo, PhotonNetwork.LocalPlayer, GlobalPermissionsHandler.returnPermissions());
     }
 
     [PunRPC]
-    public void RequestPlayerPermsHandle(Player plr, bool[] perms)
+    public void UpdatePlayerToPermsHandle(Photon.Realtime.Player plr, bool[] perms)
     {
-        //Debug.Log("returned player perms");
+        if (playerToPerms.ContainsKey(plr))
+        {
+            Debug.Log("UpdatePlayerToPermsHandle Why Do I Contain");
+            playerToPerms.Remove(plr);
+        }    
         playerToPerms.Add(plr, perms);
-        permUIHandler.createUI();
+        Debug.Log("UpdatePlayerToPermsHandle:" + plr.ToString());
+        if (playerToPerms.Count == PhotonNetwork.PlayerList.Length)
+        {
+            Debug.Log("UpdatePlayerToPermsHandle: CreateUI");
+            Debug.Log("UpdatePlayerToPermsHandle: CreateUI");
+            permUIHandler.createUI();
+        }
     }
+
+
+
+
+
+
 
     public void changePlayersPerms(Player plrToChangePermsOn, int index, bool value)
     {
@@ -429,10 +445,10 @@ public class MainGame_Handler_Script : MonoBehaviourPunCallbacks
     [PunRPC]
     public void kickPlayerHandle()
     {
+        PhotonNetwork.AutomaticallySyncScene = false;
         Debug.Log("kick Player Handle");
         PhotonNetwork.LeaveRoom();
         PhotonNetwork.Disconnect();
-        PhotonNetwork.AutomaticallySyncScene = true;
         Debug.Log("kick Player Handle2");
         SceneManager.LoadScene("TitleScreen");
     }

@@ -2763,7 +2763,7 @@ MonoBehaviour:
   CamZoomAccelRateWaitTime: 1.5
   CamZoomAccelRate: 10
   maxZoomRate: 10
-  TimeLimitBetweenScrollsForZoomAccel: 0.3
+  TimeLimitBetweenScrollsForZoomAccel: 0.75
   minCameraZoom: 50
   maxCameraZoom: 500
   lockMoveIfOverUi: 1

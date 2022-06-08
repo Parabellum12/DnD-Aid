@@ -38,6 +38,7 @@ public class permissionsUiHandler : MonoBehaviour
             });
         }
         contentDropdownHandler.setUIPositions();
+        contentDropdownHandler.setUIPositions();
     }
 
     public void updateUi(Photon.Realtime.Player plr, bool[] values)
@@ -57,5 +58,6 @@ public class permissionsUiHandler : MonoBehaviour
         }
         uiList.Clear();
         contentDropdownHandler.clearChildDropDowns();
+        contentDropdownHandler.setUIPositions();
     }
 }
