@@ -6,6 +6,10 @@ using Photon.Pun;
 
 public class permissionsUiHandler : MonoBehaviour
 {
+    /*
+     * creates the player permissions ui and handles it
+     */
+
     [SerializeField] General_UI_DropDown_Handler_ScriptV2 contentDropdownHandler;
     [SerializeField] GameObject PlayerPermUiPrefab;
     [SerializeField] MainGame_Handler_Script mainHandler;
