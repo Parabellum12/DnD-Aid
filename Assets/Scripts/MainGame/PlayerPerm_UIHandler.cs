@@ -47,7 +47,11 @@ public class PlayerPerm_UIHandler : MonoBehaviour
         playerName.text = plr.NickName;
         if (plr.Equals(PhotonNetwork.LocalPlayer))
         {
-            playerName.text = plr.NickName + "-You";
+            playerName.text = plr.NickName + "-you";
+        }
+        else if (plr.Equals(PhotonNetwork.MasterClient))
+        {
+            playerName.text = plr.NickName + "-host";
         }
         this.plr = plr;
         setValues(permValues);
