@@ -203,7 +203,7 @@ public class TokenInfoHandler : MonoBehaviourPunCallbacks
     {
         Vector3 temp = Camera.main.transform.position;
         temp.z = -5;
-        GameObject go = PhotonNetwork.InstantiateRoomObject("Token", temp, Quaternion.identity);
+        GameObject go = PhotonNetwork.Instantiate("Token", temp, Quaternion.identity);
         TokenHandler_Script scr = go.GetComponent<TokenHandler_Script>();
         scr.TokenInfoHandler_Script = this;
         scr.setID(getID(), false);
