@@ -331,6 +331,7 @@ public class TokenHandler_Script : MonoBehaviourPunCallbacks
             if (firstClick)
             {
                 mouseInitialPos = UtilClass.getMouseWorldPosition();
+                localView.TransferOwnership(PhotonNetwork.LocalPlayer);
                 firstClick = false;
             }
             else if (!mouseInitialPos.AlmostEquals(new Vector2(UtilClass.getMouseWorldPosition().x, UtilClass.getMouseWorldPosition().y), 1) || allowed)
