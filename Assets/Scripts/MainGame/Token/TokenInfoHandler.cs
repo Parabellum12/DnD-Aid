@@ -207,10 +207,7 @@ public class TokenInfoHandler : MonoBehaviourPunCallbacks
         TokenHandler_Script scr = go.GetComponent<TokenHandler_Script>();
         scr.TokenInfoHandler_Script = this;
         scr.setID(getID(), false);
-        if (PhotonNetwork.LocalPlayer.Equals(RequestingPlayer))
-        {
-            scr.setInfoToThis();
-        }
+        scr.setInfoToThis(RequestingPlayer);
     }
 
     public void removeTokenPush()

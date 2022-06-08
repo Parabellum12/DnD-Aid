@@ -81,6 +81,15 @@ public class TokenHandler_Script : MonoBehaviourPunCallbacks
         setupMe();
         TokenInfoHandler_Script.setActiveSelected(this);
     }
+    public void setInfoToThis(Photon.Realtime.Player requestingPlayer)
+    {
+        if (!requestingPlayer.Equals(PhotonNetwork.LocalPlayer))
+        {
+            return;
+        }
+        setupMe();
+        TokenInfoHandler_Script.setActiveSelected(this);
+    }
 
     [PunRPC]
     public void setInitiativeValue(int value, bool networkCall)

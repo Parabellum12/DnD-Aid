@@ -13,6 +13,7 @@ public class HandleRightPanelButtons : MonoBehaviour
 
     private void Start()
     {
+        toPerms();
         toInfo();
     }
 
