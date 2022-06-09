@@ -9,7 +9,7 @@ public class HandleMarker_Handler_Script : MonoBehaviour
      * handles the markers for editing lines
      */
     Main_Handler_Script mainHandleSCR;
-    private void Start()
+    private void Awake()
     {
         mainHandleSCR = GameObject.Find("Handler").GetComponent<Main_Handler_Script>();
     }

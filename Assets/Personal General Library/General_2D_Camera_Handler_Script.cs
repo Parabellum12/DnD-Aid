@@ -117,7 +117,7 @@ public class General_2D_Camera_Handler_Script : MonoBehaviour
     float timeStartZoom = 0;
     void handleScroll()
     {
-        if (lockMovement || !CamZoom || (lockZoomIfOverUi && UtilClass.IsPointerOverUIElement(LayerMask.NameToLayer("UI"))))
+        if (lockMovement || !CamZoom || (lockZoomIfOverUi && UtilClass.IsPointerOverUIElement(LayerMask.NameToLayer("UI"))) || !UtilClass.IsPointerOverUIElement(LayerMask.NameToLayer("mouseOverCanvas")))
         {
             return;
         }
@@ -160,7 +160,7 @@ public class General_2D_Camera_Handler_Script : MonoBehaviour
 
     void handleKeyMove()
     {
-        if (lockMovement || lockMoveIfOverUi && UtilClass.IsPointerOverUIElement(LayerMask.NameToLayer("UI")))
+        if (lockMovement || lockMoveIfOverUi && UtilClass.IsPointerOverUIElement(LayerMask.NameToLayer("UI")) || !UtilClass.IsPointerOverUIElement(LayerMask.NameToLayer("mouseOverCanvas")))
         {
             return;
         }
@@ -179,7 +179,7 @@ public class General_2D_Camera_Handler_Script : MonoBehaviour
     Vector3 originalMousePos;
     void handleCameraPan()
     {
-        if (lockMovement || !MousePan || (lockMoveIfOverUi && UtilClass.IsPointerOverUIElement(LayerMask.NameToLayer("UI"))))
+        if (lockMovement || !MousePan || (lockMoveIfOverUi && UtilClass.IsPointerOverUIElement(LayerMask.NameToLayer("UI"))) || !UtilClass.IsPointerOverUIElement(LayerMask.NameToLayer("mouseOverCanvas")))
         {
             return;
         }

@@ -83,7 +83,7 @@ public class Main_Handler_Script : MonoBehaviour
             splineLineHandler.deleteAnyHandles();
         }
 
-        if (Input.GetMouseButtonDown(0) && !UtilClass.IsPointerOverUIElement(LayerMask.NameToLayer("UI")))
+        if (Input.GetMouseButtonDown(0) && !UtilClass.IsPointerOverUIElement(LayerMask.NameToLayer("UI")) && UtilClass.IsPointerOverUIElement(LayerMask.NameToLayer("mouseOverCanvas")))
         {
             //left click
 
@@ -133,6 +133,9 @@ public class Main_Handler_Script : MonoBehaviour
                 splineLineHandler.handleEndGuideLine();
                 splineLineHandler.endCurve();
             }
+
+
+            
         }
 
 
@@ -192,16 +195,31 @@ public class Main_Handler_Script : MonoBehaviour
         switch(tool)
         {
             case tools.select:
+                needToRemove = false;
+                straightLine_Handler.endGuideLine();
+                startNew = true;
+                pos1 = new Vector2();
+                splineLineHandler.handleEndGuideLine();
+                splineLineHandler.endCurve();
+
                 deselectAll();
                 ActiveTool = tool;
                 buttonHandlers[0].select();
                 break;
             case tools.DrawStraightLine:
+                splineLineHandler.handleEndGuideLine();
+                splineLineHandler.endCurve();
+
                 deselectAll();
                 buttonHandlers[1].select();
                 ActiveTool = tool;
                 break;
             case tools.curve:
+                needToRemove = false;
+                straightLine_Handler.endGuideLine();
+                startNew = true;
+                pos1 = new Vector2();
+
                 deselectAll();
                 buttonHandlers[2].select();
                 ActiveTool = tool;
