@@ -207,7 +207,7 @@ public class TokenInfoHandler : MonoBehaviourPunCallbacks
         TokenHandler_Script scr = go.GetComponent<TokenHandler_Script>();
         scr.TokenInfoHandler_Script = this;
         scr.setID(getID(), false);
-        scr.setInfoToThis(RequestingPlayer);
+        scr.setInfoToThis(RequestingPlayer, false);
     }
 
     public void removeTokenPush()

@@ -81,8 +81,14 @@ public class TokenHandler_Script : MonoBehaviourPunCallbacks
         setupMe();
         TokenInfoHandler_Script.setActiveSelected(this);
     }
-    public void setInfoToThis(Photon.Realtime.Player requestingPlayer)
+
+    [PunRPC]
+    public void setInfoToThis(Photon.Realtime.Player requestingPlayer, bool networkCall)
     {
+        if (!networkCall)
+        {
+            localView.RPC("setInfoToThis", RpcTarget.Others, requestingPlayer, true);
+        }
         if (!requestingPlayer.Equals(PhotonNetwork.LocalPlayer))
         {
             return;
@@ -330,6 +336,7 @@ public class TokenHandler_Script : MonoBehaviourPunCallbacks
         {
             if (firstClick)
             {
+                Debug.LogWarning("Want Ownership");
                 mouseInitialPos = UtilClass.getMouseWorldPosition();
                 localView.TransferOwnership(PhotonNetwork.LocalPlayer);
                 firstClick = false;

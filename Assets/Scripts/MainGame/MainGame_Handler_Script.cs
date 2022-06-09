@@ -25,8 +25,8 @@ public class MainGame_Handler_Script : MonoBehaviourPunCallbacks
     [SerializeField] string loadedMapTextValue = "Currently Loaded Map:";
     private void Start()
     {
-        PhotonNetwork.IsMessageQueueRunning = true;
         PhotonNetwork.AutomaticallySyncScene = true;
+        PhotonNetwork.IsMessageQueueRunning = true;
         gameCodeText.text = "Game Code:"+PhotonNetwork.CurrentRoom.Name;
         if (!PhotonNetwork.IsMasterClient)
         {

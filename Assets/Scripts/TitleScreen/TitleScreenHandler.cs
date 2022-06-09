@@ -80,7 +80,6 @@ public class TitleScreenHandler : MonoBehaviourPunCallbacks
             autoConnect = true;
         }
         Photon.Realtime.TypedLobby lobbyType = new Photon.Realtime.TypedLobby(roomName, Photon.Realtime.LobbyType.Default);
-
         PhotonNetwork.JoinOrCreateRoom(roomName, options, null);
 
     }
@@ -116,6 +115,7 @@ public class TitleScreenHandler : MonoBehaviourPunCallbacks
             alreadySetPerms = true;
             GlobalPermissionsHandler.setPermsAsHost();
             Debug.Log("RoomName:" + PhotonNetwork.CurrentRoom.Name + "|");
+            PhotonNetwork.IsMessageQueueRunning = false;
             PhotonNetwork.AutomaticallySyncScene = true;
             PhotonNetwork.LoadLevel("MainGame");
         }
@@ -134,6 +134,7 @@ public class TitleScreenHandler : MonoBehaviourPunCallbacks
             toRoomConnect();
             return;
         }
+        PhotonNetwork.IsMessageQueueRunning = false;
         Debug.Log("JoinLobby");
         base.OnJoinedRoom();
         if (!alreadySetPerms)
