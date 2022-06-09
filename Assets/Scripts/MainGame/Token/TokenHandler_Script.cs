@@ -27,6 +27,7 @@ public class TokenHandler_Script : MonoBehaviourPunCallbacks
 
     private void Start()
     {
+        Debug.Log("Log For Trace");
         setupMe();
         TokenInfoHandler_Script.TokenCanvases.Add(canvas);
         TokenInfoHandler_Script.TokenSpriteMasks.Add(spriteMask);
@@ -41,6 +42,7 @@ public class TokenHandler_Script : MonoBehaviourPunCallbacks
         {
             return;
         }
+        Debug.Log("Log For Trace");
         MainGame_Handler_Script mainscr= GameObject.FindGameObjectWithTag("GameController").GetComponent<MainGame_Handler_Script>();
         TokenInfoHandler_Script = mainscr.GetTokenInfoHandler();
         InitiativeListHandler_Script = mainscr.GetInitiativeList_Handler();
@@ -53,6 +55,7 @@ public class TokenHandler_Script : MonoBehaviourPunCallbacks
 
     public void setTokenPFP(Texture2D tex)
     {
+        Debug.Log("Log For Trace");
         setupMe();
         TokenPfp.sprite = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), new Vector2(tex.width / 2, tex.height / 2));
         localView.RPC("setTokenPFP", RpcTarget.Others, UtilClass.ObjectToByteArray(new Wrapper(tex)));
@@ -61,6 +64,7 @@ public class TokenHandler_Script : MonoBehaviourPunCallbacks
     [PunRPC]
     public void setTokenPFP(byte[] data)
     {
+        Debug.Log("Log For Trace");
         Texture2D tex = UtilClass.ByteArrayToObject<Wrapper>(data).tex;
         setupMe();
         TokenPfp.sprite = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), new Vector2(tex.width / 2, tex.height / 2)); ;
@@ -78,6 +82,7 @@ public class TokenHandler_Script : MonoBehaviourPunCallbacks
 
     public void setInfoToThis()
     {
+        Debug.Log("Log For Trace");
         setupMe();
         TokenInfoHandler_Script.setActiveSelected(this);
     }
@@ -85,6 +90,7 @@ public class TokenHandler_Script : MonoBehaviourPunCallbacks
     [PunRPC]
     public void setInfoToThis(Photon.Realtime.Player requestingPlayer, bool networkCall)
     {
+        Debug.Log("Log For Trace");
         if (!networkCall)
         {
             localView.RPC("setInfoToThis", RpcTarget.Others, requestingPlayer, true);
@@ -100,6 +106,7 @@ public class TokenHandler_Script : MonoBehaviourPunCallbacks
     [PunRPC]
     public void setInitiativeValue(int value, bool networkCall)
     {
+        Debug.Log("Log For Trace");
         initiativeValue = value;
         if (!networkCall)
         {
@@ -110,6 +117,7 @@ public class TokenHandler_Script : MonoBehaviourPunCallbacks
     [PunRPC]
     public void addMeToInitiativeList(bool networkCall)
     {
+        Debug.Log("Log For Trace");
         setupMe();
         if (InitiativeListHandler_Script == null)
         {
@@ -126,6 +134,7 @@ public class TokenHandler_Script : MonoBehaviourPunCallbacks
     [PunRPC]
     public void removeMeFromInitiativeList(bool networkCall)
     {
+        Debug.Log("Log For Trace");
         setupMe();
         InitiativeListHandler_Script.removeUiTokenElementCallFromToken(this);
         inInitiativeList = false;
@@ -138,6 +147,7 @@ public class TokenHandler_Script : MonoBehaviourPunCallbacks
     [PunRPC]
     public void KILLME(bool networkCall)
     {
+        Debug.Log("Log For Trace");
         setupMe();
         if (!networkCall)
         {
@@ -168,6 +178,7 @@ public class TokenHandler_Script : MonoBehaviourPunCallbacks
     [PunRPC]
     public void setName(string name, bool NetworkedCall)
     {
+        Debug.Log("Log For Trace");
         setupMe();
         tokenName = name;
         tokenNameText.text = name;
@@ -180,6 +191,7 @@ public class TokenHandler_Script : MonoBehaviourPunCallbacks
     [PunRPC]
     public void setID(long id, bool NetworkedCall)
     {
+        Debug.Log("Log For Trace");
         setupMe();
         tokenId = id;
         if (!NetworkedCall)
@@ -191,6 +203,7 @@ public class TokenHandler_Script : MonoBehaviourPunCallbacks
 
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
+        Debug.Log("Log For Trace");
         setupMe();
         if (!PhotonNetwork.IsMasterClient)
         {
@@ -209,6 +222,7 @@ public class TokenHandler_Script : MonoBehaviourPunCallbacks
     [PunRPC]
     public void UpdateInitiativeList()
     {
+        Debug.Log("Log For Trace");
         setupMe();
         TokenHandler_Script temp = TokenInfoHandler_Script.ActiveSelectedToken;
         TokenInfoHandler_Script.updateTokenInitiativeList();
@@ -219,24 +233,28 @@ public class TokenHandler_Script : MonoBehaviourPunCallbacks
 
     public void addPlayerToMoveListPush()
     {
+        Debug.Log("Log For Trace");
         localView.RPC("addPlayerToMoveListHandle", RpcTarget.All, PhotonNetwork.LocalPlayer);
     }
 
     [PunRPC]
     public void addPlayerToMoveListHandle(Photon.Realtime.Player plr)
     {
+        Debug.Log("Log For Trace");
         setupMe();
         MoveAllowedPlayers.Add(plr);
     }
 
     public void removePlayerToMoveListPush()
     {
+        Debug.Log("Log For Trace");
         localView.RPC("removePlayerToMoveListHandle", RpcTarget.All, PhotonNetwork.LocalPlayer);
     }
 
     [PunRPC]
     public void removePlayerToMoveListHandle(Photon.Realtime.Player plr)
     {
+        Debug.Log("Log For Trace");
         MoveAllowedPlayers.Remove(plr);
     }
 
@@ -244,6 +262,7 @@ public class TokenHandler_Script : MonoBehaviourPunCallbacks
     [PunRPC]
     public void changePlayerMovePerm(Photon.Realtime.Player plr, bool value, bool networkedCall)
     {
+        Debug.Log("Log For Trace");
         if (!networkedCall)
         {
             localView.RPC("changePlayerMovePerm", RpcTarget.Others, plr, value, true);
@@ -271,6 +290,7 @@ public class TokenHandler_Script : MonoBehaviourPunCallbacks
     [PunRPC]
     public void UpdateUiIfSelectedKilled()
     {
+        Debug.Log("Log For Trace");
         setupMe(); ;
         if (TokenInfoHandler_Script != null && this != null && TokenInfoHandler_Script.ActiveSelectedToken == this)
         {
@@ -287,11 +307,13 @@ public class TokenHandler_Script : MonoBehaviourPunCallbacks
     bool moving = false;
     private void OnMouseEnter()
     {
+        Debug.Log("Log For Trace");
         mouseOver = true;
     }
 
     private void OnMouseExit()
     {
+        Debug.Log("Log For Trace");
         if (moving || clickedOn)
         {
             return;

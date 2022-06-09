@@ -26,7 +26,6 @@ public class MainGame_Handler_Script : MonoBehaviourPunCallbacks
     private void Start()
     {
         PhotonNetwork.AutomaticallySyncScene = true;
-        PhotonNetwork.IsMessageQueueRunning = true;
         gameCodeText.text = "Game Code:"+PhotonNetwork.CurrentRoom.Name;
         if (!PhotonNetwork.IsMasterClient)
         {
@@ -45,11 +44,13 @@ public class MainGame_Handler_Script : MonoBehaviourPunCallbacks
     [SerializeField] InitiativeList_Handler InitiativeList_Handler;
     public TokenInfoHandler GetTokenInfoHandler()
     {
+        Debug.Log("Log For Trace");
         return tokenInfoHandler;
     }
 
     public InitiativeList_Handler GetInitiativeList_Handler()
     {
+        Debug.Log("Log For Trace");
         return InitiativeList_Handler;
     }
 
@@ -80,6 +81,7 @@ public class MainGame_Handler_Script : MonoBehaviourPunCallbacks
 
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
+        Debug.Log("Log For Trace");
         //Debug.Log("testWhy1");
         CallUpdatePlayerToPerms(false);
         if (PhotonNetwork.IsMasterClient)
@@ -112,6 +114,7 @@ public class MainGame_Handler_Script : MonoBehaviourPunCallbacks
     //map loading and cache sharing
     public void addMapToGlobalCachePush(string FileName)
     {
+        Debug.Log("Log For Trace");
         if (doesGlobalCacheContain(FileName))
         {
             return;
@@ -124,6 +127,7 @@ public class MainGame_Handler_Script : MonoBehaviourPunCallbacks
     [PunRPC]
     public void addMapToGLobalCacheHandle(byte[] mapData, Player sendingPlayer)
     {
+        Debug.Log("Log For Trace");
         GlobalCachedMaps.Add(UtilClass.ByteArrayToObject<SaveLoad_Handler_Script.saveClass>(mapData));
         addToPlayerToCachedMaps(UtilClass.ByteArrayToObject<SaveLoad_Handler_Script.saveClass>(mapData), sendingPlayer);
     }
@@ -131,6 +135,7 @@ public class MainGame_Handler_Script : MonoBehaviourPunCallbacks
     
     public void removeMapFromGlobalCachePush(string FileName)
     {
+        Debug.Log("Log For Trace");
         if (!doesGlobalCacheContain(FileName))
         {
             return;
@@ -143,6 +148,7 @@ public class MainGame_Handler_Script : MonoBehaviourPunCallbacks
     [PunRPC]
     public void removeMapFromGLobalCacheHandle(byte[] mapData, Player sendingPlayer)
     {
+        Debug.Log("Log For Trace");
         SaveLoad_Handler_Script.saveClass test = UtilClass.ByteArrayToObject<SaveLoad_Handler_Script.saveClass>(mapData);
         foreach (SaveLoad_Handler_Script.saveClass sc in GlobalCachedMaps)
         {
@@ -223,6 +229,7 @@ public class MainGame_Handler_Script : MonoBehaviourPunCallbacks
 
     void removeFromPlayerToCachedMaps(SaveLoad_Handler_Script.saveClass sc, Player sendingPlayer)
     {
+        Debug.Log("Log For Trace");
         if (!playerToCachedMaps.ContainsKey(sendingPlayer))
         {
             return;
@@ -246,18 +253,21 @@ public class MainGame_Handler_Script : MonoBehaviourPunCallbacks
 
     public void CallRequestMapDataSyncPush()
     {
+        Debug.Log("Log For Trace");
         localView.RPC("RequestMapDataSyncPush", RpcTarget.MasterClient, PhotonNetwork.LocalPlayer);
     }
 
     [PunRPC]
     public void RequestMapDataSyncPush(Photon.Realtime.Player plr)
     {
+        Debug.Log("Log For Trace");
         localView.RPC("RequestMapDataSyncHandle", plr, returnGlobalCacheAsByteArray(), UtilClass.ObjectToByteArray(SaveLoadHandler.getMapData(SaveLoadHandler.getCurrentlyLoadedMapID())));
     }
 
     [PunRPC]
     public void RequestMapDataSyncHandle(byte[] allData, byte[] currentlyLoadedMap)
     {
+        Debug.Log("Log For Trace");
         Debug.Log("RequestMapDataSyncHandle");
         GlobalCachedMaps.Clear();
         GlobalCachedMaps.AddRange(returnGlobalCacheByte2DArrayToList(allData));
@@ -270,6 +280,7 @@ public class MainGame_Handler_Script : MonoBehaviourPunCallbacks
 
     public void LoadMapDataPush(string map)
     {
+        Debug.Log("Log For Trace");
         if (doesGlobalCacheContain(map))
         {
             localView.RPC("LoadMapDataHandle", RpcTarget.All, map);
@@ -284,6 +295,7 @@ public class MainGame_Handler_Script : MonoBehaviourPunCallbacks
     [PunRPC]
     public void LoadMapDataHandle(byte[] mapData)
     {
+        Debug.Log("Log For Trace");
         Debug.Log("load Map from data");
         SaveLoad_Handler_Script.saveClass temp = UtilClass.ByteArrayToObject<SaveLoad_Handler_Script.saveClass>(mapData);
         if (temp == null)
@@ -296,6 +308,7 @@ public class MainGame_Handler_Script : MonoBehaviourPunCallbacks
     [PunRPC]
     public void LoadMapDataHandle(string MapId)
     {
+        Debug.Log("Log For Trace");
         Debug.Log("load map from cache");
         foreach (SaveLoad_Handler_Script.saveClass sc in GlobalCachedMaps)
         {
@@ -311,6 +324,7 @@ public class MainGame_Handler_Script : MonoBehaviourPunCallbacks
 
     bool doesGlobalCacheContain(string  MapId)
     {
+        Debug.Log("Log For Trace");
         foreach (SaveLoad_Handler_Script.saveClass sc in GlobalCachedMaps)
         {
             if (sc.MapID.Equals(MapId))
@@ -328,17 +342,20 @@ public class MainGame_Handler_Script : MonoBehaviourPunCallbacks
     //network room handling
     public void ToggleRoomJoinable(bool joinable)
     {
+        Debug.Log("Log For Trace");
         PhotonNetwork.CurrentRoom.IsOpen = joinable;
     }
 
     byte[] returnGlobalCacheAsByteArray()
     {
+        Debug.Log("Log For Trace");
         CachedMapsWrapper wrapper = new CachedMapsWrapper(GlobalCachedMaps.ToArray(), SharedMaps.ToArray());
         return UtilClass.ObjectToByteArray(wrapper);
     }
 
     List<SaveLoad_Handler_Script.saveClass> returnGlobalCacheByte2DArrayToList(byte[] data)
     {
+        Debug.Log("Log For Trace");
         CachedMapsWrapper wrapper = UtilClass.ByteArrayToObject<CachedMapsWrapper>(data);
         List<SaveLoad_Handler_Script.saveClass> returner = new List<SaveLoad_Handler_Script.saveClass>();
         returner.AddRange(wrapper.CachedMaps);
@@ -347,6 +364,7 @@ public class MainGame_Handler_Script : MonoBehaviourPunCallbacks
 
     List<SaveLoad_Handler_Script.saveClass> returnSharedByte2DArrayToList(byte[] data)
     {
+        Debug.Log("Log For Trace");
         CachedMapsWrapper wrapper = UtilClass.ByteArrayToObject<CachedMapsWrapper>(data);
         List<SaveLoad_Handler_Script.saveClass> returner = new List<SaveLoad_Handler_Script.saveClass>();
         returner.AddRange(wrapper.SharedMaps);
@@ -410,6 +428,10 @@ public class MainGame_Handler_Script : MonoBehaviourPunCallbacks
             Debug.Log("UpdatePlayerToPermsHandle: CreateUI");
             Debug.Log("UpdatePlayerToPermsHandle: CreateUI");
             permUIHandler.createUI();
+            if (tokenInfoHandler.ActiveSelectedToken != null)
+            {
+                tokenInfoHandler.setActiveSelected(tokenInfoHandler.ActiveSelectedToken);
+            }
         }
     }
 
@@ -421,12 +443,14 @@ public class MainGame_Handler_Script : MonoBehaviourPunCallbacks
 
     public void changePlayersPerms(Player plrToChangePermsOn, int index, bool value)
     {
+        Debug.Log("Log For Trace");
         localView.RPC("changeThisPlayersPerms", plrToChangePermsOn, index, value);
     }
 
     [PunRPC]
     public void changeThisPlayersPerms(int index, bool value)
     {
+        Debug.Log("Log For Trace");
         //Debug.Log("Change Perm:" + GlobalPermissionsHandler.getPermFromIndex(index) + " To: " + value);
         GlobalPermissionsHandler.setPermAs(GlobalPermissionsHandler.getPermFromIndex(index), value);
         localView.RPC("updatePerms", RpcTarget.All, PhotonNetwork.LocalPlayer, GlobalPermissionsHandler.returnPermissions());
@@ -455,6 +479,7 @@ public class MainGame_Handler_Script : MonoBehaviourPunCallbacks
     [PunRPC]
     public void kickPlayerHandle()
     {
+        Debug.Log("Log For Trace");
         PhotonNetwork.AutomaticallySyncScene = false;
         Debug.Log("kick Player Handle");
         PhotonNetwork.LeaveRoom();
@@ -465,6 +490,13 @@ public class MainGame_Handler_Script : MonoBehaviourPunCallbacks
 
 
 
-
+    private void OnLevelWasLoaded(int level)
+    {
+        if (PhotonNetwork.IsMessageQueueRunning)
+        {
+            Debug.LogError("why Is PhotonNetwork.IsMessageQueueRunning Running");
+        }
+        PhotonNetwork.IsMessageQueueRunning = true;
+    }
 
 }
