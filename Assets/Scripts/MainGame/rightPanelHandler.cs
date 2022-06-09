@@ -26,12 +26,16 @@ public class rightPanelHandler : MonoBehaviour
         if (startingOpenOrClosed)
         {
             //starting open
+            openOrClosed = true;
+            openCloseButton.transform.rotation = Quaternion.Euler(0, 0, 0);
             openPos = parentTransform.localPosition.x;
             closePos = openPos + BackgorundImage.rectTransform.sizeDelta.x;
         }
         else
         {
             //starting closed
+            openOrClosed = false;
+            openCloseButton.transform.rotation = Quaternion.Euler(0, 0, 180);
             closePos = parentTransform.localPosition.x;
             openPos = closePos - BackgorundImage.rectTransform.sizeDelta.x;
         }
@@ -73,8 +77,16 @@ public class rightPanelHandler : MonoBehaviour
         yield break;
     }
 
+
+    bool firstClick = true;
+    [SerializeField] HandleRightPanelButtons rightPanelButtonsHandler;
     public void handleClick()
     {
+        if (firstClick)
+        {
+            firstClick = false;
+            rightPanelButtonsHandler.toInfo();
+        }    
         StopAllCoroutines();
         if (openOrClosed)
         {
