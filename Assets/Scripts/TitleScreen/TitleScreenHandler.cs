@@ -179,7 +179,6 @@ public class TitleScreenHandler : MonoBehaviourPunCallbacks
         }
     }
 
-    bool dots = false;
     string textValue = "";
     [SerializeField] TMP_Text connectionText;
     bool showConnectionText = false;

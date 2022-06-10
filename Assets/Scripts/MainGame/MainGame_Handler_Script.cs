@@ -490,8 +490,10 @@ public class MainGame_Handler_Script : MonoBehaviourPunCallbacks
 
 
 
-    private void OnLevelWasLoaded(int level)
+
+    public override void OnEnable()
     {
+        base.OnEnable();
         if (PhotonNetwork.IsMessageQueueRunning)
         {
             Debug.LogError("why Is PhotonNetwork.IsMessageQueueRunning Running");

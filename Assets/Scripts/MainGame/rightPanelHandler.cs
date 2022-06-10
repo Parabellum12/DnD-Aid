@@ -13,7 +13,7 @@ public class rightPanelHandler : MonoBehaviour
     [SerializeField] Image BackgorundImage;
     [SerializeField] float moveSpeed;
     bool openOrClosed = true;
-    bool moving = false;
+   // bool moving = false;
 
 
     [SerializeField] bool startingOpenOrClosed;

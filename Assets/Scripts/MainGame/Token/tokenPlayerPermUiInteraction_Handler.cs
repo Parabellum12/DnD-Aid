@@ -18,6 +18,12 @@ public class tokenPlayerPermUiInteraction_Handler : MonoBehaviour
     Photon.Realtime.Player referencePlayer;
     bool canMove;
     System.Action<Photon.Realtime.Player, bool> OnValueChangedCallback;
+    MainGame_Handler_Script mainHandler;
+
+    private void Awake()
+    {
+        mainHandler = GameObject.FindGameObjectWithTag("GameController").GetComponent<MainGame_Handler_Script>();
+    }
 
     private void Start()
     {
@@ -30,6 +36,15 @@ public class tokenPlayerPermUiInteraction_Handler : MonoBehaviour
         referencePlayer = plr;
         this.canMove = canMove;
         playerName.text = referencePlayer.NickName;
+        if (referencePlayer.Equals(PhotonNetwork.LocalPlayer))
+        {
+            playerName.text += "-you";
+        }
+        else if (referencePlayer.Equals(PhotonNetwork.MasterClient))
+        {
+            playerName.text += "-host";
+        }
+
         if (canMove)
         {
             ButtonImage.color = Color.green;
@@ -42,7 +57,7 @@ public class tokenPlayerPermUiInteraction_Handler : MonoBehaviour
 
     private void Update()
     {
-        if (GlobalPermissionsHandler.getPermValue(GlobalPermissionsHandler.PermisionNameToValue.GlobalMoveTokens) && referencePlayer.Equals(PhotonNetwork.LocalPlayer))
+        if (mainHandler.returnPlayerPerms(referencePlayer)[(int)GlobalPermissionsHandler.PermisionNameToValue.GlobalMoveTokens])
         {
             InteractButton.interactable = false;
             ButtonImage.color = Color.green;

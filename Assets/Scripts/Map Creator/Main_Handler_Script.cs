@@ -11,7 +11,6 @@ public class Main_Handler_Script : MonoBehaviour
      * handles the editor code for adding changing, save and loading maps 
      */
     [SerializeField] LineRenderer BackGroundLR;
-    [SerializeField] int modValue = 8;
     [SerializeField] Transform mainCam;
     [SerializeField] StraightLine_Handler_ScriptV2 straightLine_Handler;
     [SerializeField] CurvedLine_Handler_ScriptV2 splineLineHandler;

@@ -20,6 +20,7 @@ public class TokenInfoHandler : MonoBehaviourPunCallbacks
     [SerializeField] Button InitativeListButton;
     [SerializeField] Button RemoveTokenButton;
     [SerializeField] Button AddTokenButton;
+    [SerializeField] Button AddTokenFromMenuButton;
     [SerializeField] TMP_InputField tokenNameInput;
     public TokenHandler_Script ActiveSelectedToken;
 
@@ -85,10 +86,12 @@ public class TokenInfoHandler : MonoBehaviourPunCallbacks
         if (GlobalPermissionsHandler.getPermValue(GlobalPermissionsHandler.PermisionNameToValue.AddToken))
         {
             AddTokenButton.interactable = true;
+            AddTokenFromMenuButton.interactable = true;
         }
         else
         {
             AddTokenButton.interactable = false;
+            AddTokenFromMenuButton.interactable = false;
         }
 
         if (ActiveSelectedToken != null)
@@ -126,8 +129,14 @@ public class TokenInfoHandler : MonoBehaviourPunCallbacks
 
     }
 
+    public bool IsLocked = false;
+
     public void setActiveSelected(TokenHandler_Script scr)
     {
+        if (IsLocked)
+        {
+            return;
+        }
         ActiveSelectedToken = scr;
         Debug.Log("setActiveSelected:" + (scr != null));
         if (scr != null)

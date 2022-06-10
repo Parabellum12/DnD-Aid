@@ -103,22 +103,14 @@ public class TokenHandler_Script : MonoBehaviourPunCallbacks
         TokenInfoHandler_Script.setActiveSelected(this);
     }
 
-    [PunRPC]
-    public void setInitiativeValue(int value, bool networkCall)
-    {
-         
-        initiativeValue = value;
-        if (!networkCall)
-        {
-            localView.RPC("setInitiativeValue", RpcTarget.Others, value, true);
-        }
-    }
+    
 
     [PunRPC]
     public void addMeToInitiativeList(bool networkCall)
     {
          
         setupMe();
+        initiativeValue = 0;
         if (InitiativeListHandler_Script == null)
         {
             TokenInfoHandler_Script = GameObject.FindGameObjectWithTag("TokenUIHandler").GetComponent<TokenInfoHandler>();
@@ -134,7 +126,10 @@ public class TokenHandler_Script : MonoBehaviourPunCallbacks
     [PunRPC]
     public void removeMeFromInitiativeList(bool networkCall)
     {
-         
+        if (!PhotonNetwork.IsConnected)
+        {
+            return;
+        }
         setupMe();
         InitiativeListHandler_Script.removeUiTokenElementCallFromToken(this);
         inInitiativeList = false;
@@ -143,6 +138,37 @@ public class TokenHandler_Script : MonoBehaviourPunCallbacks
             localView.RPC("removeMeFromInitiativeList", RpcTarget.Others, true);
         }
     }
+
+    public void requestSyncListData(Photon.Realtime.Player plrToReturnDataTo)
+    {
+        localView.RPC("sendSyncData", RpcTarget.MasterClient, plrToReturnDataTo);
+    }
+
+    [PunRPC]
+    public void sendSyncData(Photon.Realtime.Player plrToReturnDataTo)
+    {
+        localView.RPC("recieveSyncData", plrToReturnDataTo, tokenName, tokenId, initiativeValue);
+    }
+
+    [PunRPC]
+    public void recieveSyncData(string tokenName, long tokenId, int initiativeValue)
+    {
+        this.tokenName = tokenName;
+        this.tokenId = tokenId;
+        this.initiativeValue = initiativeValue;
+
+        setupMe();
+        if (InitiativeListHandler_Script == null)
+        {
+            TokenInfoHandler_Script = GameObject.FindGameObjectWithTag("TokenUIHandler").GetComponent<TokenInfoHandler>();
+        }
+        InitiativeListHandler_Script.addTokenUiElement(this);
+        inInitiativeList = true;
+    }
+
+
+
+
 
     [PunRPC]
     public void KILLME(bool networkCall)
@@ -178,7 +204,6 @@ public class TokenHandler_Script : MonoBehaviourPunCallbacks
     [PunRPC]
     public void setName(string name, bool NetworkedCall)
     {
-         
         setupMe();
         tokenName = name;
         tokenNameText.text = name;
@@ -191,7 +216,6 @@ public class TokenHandler_Script : MonoBehaviourPunCallbacks
     [PunRPC]
     public void setID(long id, bool NetworkedCall)
     {
-         
         setupMe();
         tokenId = id;
         if (!NetworkedCall)
@@ -200,22 +224,27 @@ public class TokenHandler_Script : MonoBehaviourPunCallbacks
         }
     }
 
+    [PunRPC]
+    public void setInitiativeValue(int value, bool networkCall)
+    {
+        initiativeValue = value;
+        if (!networkCall)
+        {
+            localView.RPC("setInitiativeValue", RpcTarget.Others, value, true);
+        }
+    }
+
 
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
-         
         setupMe();
         if (!PhotonNetwork.IsMasterClient)
         {
             return;
         }
-        localView.RPC("setName", newPlayer, tokenName, true);
-        localView.RPC("setID", newPlayer, tokenId, true);
-        localView.RPC("setInitiativeValue", newPlayer, initiativeValue, true);
-        if (PhotonNetwork.LocalPlayer.Equals(newPlayer))
-        {
-            addMeToInitiativeList(false);
-        }
+        localView.RPC("setName", newPlayer, tokenName, false);
+        localView.RPC("setID", newPlayer, tokenId, false);
+        localView.RPC("setInitiativeValue", newPlayer, initiativeValue, false);
     }
 
 
@@ -313,7 +342,8 @@ public class TokenHandler_Script : MonoBehaviourPunCallbacks
 
     private void OnMouseExit()
     {
-         
+
+        wantToRemoveMouseOver = true;
         if (moving || clickedOn)
         {
             return;
@@ -325,32 +355,51 @@ public class TokenHandler_Script : MonoBehaviourPunCallbacks
     bool firstClick = true;
     bool allowed = false;
     bool clickedOn = false;
+    bool wantToRemoveMouseOver = false;
 
 
     private void Update()
     {
+
+        handleSelectedFlashing();
+
+
+
+
+
         setupMe();
         if (UtilClass.IsPointerOverUIElement(LayerMask.NameToLayer("UI")))
         {
             return;
         }
 
-        if (Input.GetMouseButton(0) && mouseOver && TokenInfoHandler_Script.ActiveSelectedToken != this && !moving)
+        if (wantToRemoveMouseOver && !(moving || clickedOn))
+        {
+            wantToRemoveMouseOver = false;
+            if (mouseOver)
+            {
+                mouseOver = false;
+            }
+        }
+
+        if (Input.GetMouseButton(0) && mouseOver && TokenInfoHandler_Script.ActiveSelectedToken != this && !moving && !TokenInfoHandler_Script.IsLocked)
         {
             TokenInfoHandler_Script.setActiveSelected(this);
         }
-        else if (Input.GetMouseButton(0) && !mouseOver && TokenInfoHandler_Script.ActiveSelectedToken == this)
+        else if (Input.GetMouseButton(0) && !mouseOver && TokenInfoHandler_Script.ActiveSelectedToken == this && !TokenInfoHandler_Script.IsLocked)
         {
             TokenInfoHandler_Script.setActiveSelected(null);
         }
 
         if (Input.GetMouseButtonDown(0) && mouseOver && TokenInfoHandler_Script.ActiveSelectedToken == this)
         {
+            TokenInfoHandler_Script.IsLocked = true;
             clickedOn = true;
         }
 
         if (Input.GetMouseButtonUp(0))
         {
+            TokenInfoHandler_Script.IsLocked = false;
             clickedOn = false;
         }
 
@@ -358,16 +407,17 @@ public class TokenHandler_Script : MonoBehaviourPunCallbacks
         {
             if (firstClick)
             {
-                Debug.LogWarning("Want Ownership");
                 mouseInitialPos = UtilClass.getMouseWorldPosition();
                 if (!localView.Owner.Equals(PhotonNetwork.LocalPlayer))
                 {
+                    Debug.LogWarning("Want Ownership");
                     localView.TransferOwnership(PhotonNetwork.LocalPlayer);
                 }
                 firstClick = false;
             }
             else if (!mouseInitialPos.AlmostEquals(new Vector2(UtilClass.getMouseWorldPosition().x, UtilClass.getMouseWorldPosition().y), 1) || allowed)
             {
+                TokenInfoHandler_Script.IsLocked = true;
                 moving = true;
                 allowed = true;
                 Vector3 temp = UtilClass.getMouseWorldPosition();
@@ -388,6 +438,12 @@ public class TokenHandler_Script : MonoBehaviourPunCallbacks
             {
                 firstClick = true;
             }
+
+            if (TokenInfoHandler_Script.ActiveSelectedToken == this && TokenInfoHandler_Script.IsLocked)
+            {
+                TokenInfoHandler_Script.IsLocked = false;
+            }
+
             allowed = false;
             moving = false;
         }
@@ -401,5 +457,35 @@ public class TokenHandler_Script : MonoBehaviourPunCallbacks
         return MoveAllowedPlayers;
     }
 
+    float timeToFlash = 0;
+    bool greyToBlack = true;
+    [SerializeField] SpriteRenderer mainBackgroundImage;
+    void handleSelectedFlashing()
+    {
+        if (TokenInfoHandler_Script.ActiveSelectedToken != null && TokenInfoHandler_Script.ActiveSelectedToken.Equals(this))
+        {
+            timeToFlash += Time.deltaTime;
+            if (timeToFlash > .7f)
+            {
+                greyToBlack = !greyToBlack;
+                timeToFlash -= .7f;
+            }
+
+            if (greyToBlack)
+            {
+                mainBackgroundImage.color = Color.Lerp(Color.gray, Color.white, timeToFlash);
+            }
+            else
+            {
+                mainBackgroundImage.color = Color.Lerp(Color.white, Color.gray, timeToFlash + .3f);
+            }
+        }
+        else
+        {
+            timeToFlash = 0;
+            greyToBlack = true;
+            mainBackgroundImage.color = Color.gray;
+        }
+    }
 
 }

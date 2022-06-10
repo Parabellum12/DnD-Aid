@@ -33,7 +33,7 @@ public class InitiativeList_Handler : MonoBehaviourPunCallbacks
     {
         if (!PhotonNetwork.IsMasterClient)
         {
-            localView.RPC("syncList", RpcTarget.MasterClient);
+            localView.RPC("syncList", RpcTarget.MasterClient, PhotonNetwork.LocalPlayer);
             return;
         }
         reloadObjectPos(false);
@@ -65,14 +65,15 @@ public class InitiativeList_Handler : MonoBehaviourPunCallbacks
         }
     }
 
+
     
 
     [PunRPC]
-    public void syncList()
+    public void syncList(Photon.Realtime.Player plrToReturnTo)
     {
         foreach (InitiativeTokenUiHandler scr in Handlers)
         {
-            scr.referenceToken.addMeToInitiativeList(false);
+            scr.referenceToken.requestSyncListData(plrToReturnTo);
         }
     }
 
@@ -83,6 +84,8 @@ public class InitiativeList_Handler : MonoBehaviourPunCallbacks
         {
             return;
         }
+        reloadObjectPos(false);
+
     }
 
 
@@ -112,7 +115,7 @@ public class InitiativeList_Handler : MonoBehaviourPunCallbacks
         InitiativeTokenUiHandler scrHandler = go.GetComponent<InitiativeTokenUiHandler>();
 
         Handlers.Add(scrHandler);
-        scr.setInitiativeValue(0, false);
+        //scr.setInitiativeValue(0, false);
         scrHandler.setUp(scr, tokenInfoHandler, (uiHandler) =>
         {
             scr.removeMeFromInitiativeList(false);
@@ -180,6 +183,10 @@ public class InitiativeList_Handler : MonoBehaviourPunCallbacks
     [PunRPC]
     public void reloadObjectPos(bool networkCAll)
     {
+        if (!PhotonNetwork.IsConnected)
+        {
+            return;
+        }
         dropdownScript.clearChildDropDowns();
         foreach (GameObject go in persistantChildObjects)
         {

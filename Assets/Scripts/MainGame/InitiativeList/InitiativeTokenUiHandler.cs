@@ -16,7 +16,7 @@ public class InitiativeTokenUiHandler : MonoBehaviour
     [SerializeField] TMP_Text tokenName;
     [SerializeField] Button SelectMeButton;
     public TokenHandler_Script referenceToken;
-    bool isMyTurn = false;
+    //bool isMyTurn = false;
     public General_UI_DropDown_Handler_Script dropdownHandler;
     TokenInfoHandler infoHandler;
     private void Start()
@@ -42,14 +42,39 @@ public class InitiativeTokenUiHandler : MonoBehaviour
         this.InitiativeChangedCallback = InitiativeChangedCallback;
         this.setUiCallback = setUiCallback;
         this.referenceToken = referenceToken;
+        onEditBool = false;
         tokenName.text = referenceToken.tokenName;
-        InitianiveInput.text = "0";
+        lockMe = true;
+        InitianiveInput.text = referenceToken.initiativeValue.ToString();
+        lockMe = false;
     }
 
+    [SerializeField] float maxTimeBetweenClicks = .5f;
+    float doubleClickTimer = 0;
+    bool doubleClickCheck = false;
 
     public void handleSelectMe()
     {
         infoHandler.setActiveSelected(referenceToken);
+        if (infoHandler.ActiveSelectedToken != null && infoHandler.ActiveSelectedToken.Equals(referenceToken))
+        {
+            if (!doubleClickCheck)
+            {
+                doubleClickTimer = 0;
+                doubleClickCheck = true;
+            }
+            else if (doubleClickTimer <= maxTimeBetweenClicks && doubleClickCheck)
+            {
+                Camera.main.transform.position = new Vector3(referenceToken.gameObject.transform.position.x, referenceToken.gameObject.transform.position.y, Camera.main.transform.position.z);
+
+                doubleClickCheck = false;
+            }
+            
+        }
+        else
+        {
+            doubleClickCheck = false;
+        }
     }
 
 
@@ -76,6 +101,14 @@ public class InitiativeTokenUiHandler : MonoBehaviour
 
     private void Update()
     {
+        if (doubleClickCheck)
+        {
+            doubleClickTimer += Time.deltaTime;
+            if (doubleClickTimer > maxTimeBetweenClicks)
+            {
+                doubleClickCheck = false;
+            }
+        }
         tokenName.text = referenceToken.tokenName;
         if (!onEditBool && !InitianiveInput.text.Equals(referenceToken.initiativeValue.ToString()))
         {
@@ -86,6 +119,9 @@ public class InitiativeTokenUiHandler : MonoBehaviour
         {
             KILLME();
         }
+        InitianiveInput.interactable = GlobalPermissionsHandler.getPermValue(GlobalPermissionsHandler.PermisionNameToValue.EditInitiativeList);
+        killMeButton.interactable = GlobalPermissionsHandler.getPermValue(GlobalPermissionsHandler.PermisionNameToValue.EditInitiativeList);
+        handleFlash();
     }
 
     bool onEditBool = false;
@@ -111,14 +147,16 @@ public class InitiativeTokenUiHandler : MonoBehaviour
         return SelectedImage.enabled;
     }
 
-
+    bool selected = false;
     public void DeSelect()
     {
+        selected = false;
         SelectedImage.enabled = false;
     }
 
     public void Select()
     {
+        selected = true;
         SelectedImage.enabled = true;
     }
 
@@ -138,4 +176,78 @@ public class InitiativeTokenUiHandler : MonoBehaviour
 
 
     }
+
+
+    bool orangeToWhite = true;
+    float flashTime = 0;
+
+    void handleFlash()
+    {
+        if (selected || infoHandler.ActiveSelectedToken != null && infoHandler.ActiveSelectedToken.Equals(referenceToken))
+        {
+            if (selected)
+            {
+                SelectedImage.enabled = true;
+
+
+                if (infoHandler.ActiveSelectedToken != null && infoHandler.ActiveSelectedToken.Equals(referenceToken))
+                {
+                    flashTime += Time.deltaTime;
+                    if (flashTime > 1)
+                    {
+                        flashTime -= 1;
+                        orangeToWhite = !orangeToWhite;
+                    }
+
+                    if (orangeToWhite)
+                    {
+                        SelectedImage.color = Color.Lerp(Color.green, Color.white, flashTime);
+                    }
+                    else
+                    {
+                        SelectedImage.color = Color.Lerp(Color.white, Color.green, flashTime);
+                    }
+                }
+                else
+                {
+                    SelectedImage.color = Color.green;
+                    orangeToWhite = true;
+                    flashTime = 0;
+                }
+            }
+            else
+            {
+                SelectedImage.enabled = true;
+                if (infoHandler.ActiveSelectedToken != null && infoHandler.ActiveSelectedToken.Equals(referenceToken))
+                {
+                    flashTime += Time.deltaTime;
+                    if (flashTime > 1)
+                    {
+                        flashTime -= 1;
+                        orangeToWhite = !orangeToWhite;
+                    }
+
+                    if (orangeToWhite)
+                    {
+                        SelectedImage.color = Color.Lerp(Color.blue, Color.white, flashTime);
+                    }
+                    else
+                    {
+                        SelectedImage.color = Color.Lerp(Color.white, Color.blue, flashTime);
+                    }
+                }
+                else
+                {
+                    SelectedImage.color = Color.green;
+                    orangeToWhite = true;
+                    flashTime = 0;
+                }
+            }
+        }
+        else if (!selected)
+        {
+            SelectedImage.enabled = false;
+        }
+    }
+
 }
