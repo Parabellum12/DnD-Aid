@@ -23,6 +23,7 @@ public class General_2D_Camera_Handler_Script : MonoBehaviour
     public bool ArrowKeyPan = true;
 
     public bool CamZoom = true;
+    public bool CamZoomViaButtons = true;
     public bool CamZoomDoesAccel = true;
     public float CamZoomAccelRateWaitTime = 3f;
     public float CamZoomAccelRate = 5f;
@@ -110,6 +111,16 @@ public class General_2D_Camera_Handler_Script : MonoBehaviour
     }
 
 
+    bool buttonsHeldForZoomIn()
+    {
+        return (Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl)) && Input.GetKey(KeyCode.Equals);
+    }
+    bool buttonsHeldForZoomOut()
+    {
+        return (Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl)) && Input.GetKey(KeyCode.Minus);
+    }
+
+
     float currentZoomChangeSpeed = 1;
     bool zooming = false;
     bool lockZoom = false;
@@ -121,13 +132,15 @@ public class General_2D_Camera_Handler_Script : MonoBehaviour
         {
             return;
         }
-        if (Input.mouseScrollDelta.y != 0)
+
+
+        if (Input.mouseScrollDelta.y != 0 || buttonsHeldForZoomIn() || buttonsHeldForZoomOut())
         {
             lockZoom = false;
             TimeLastZoom = Time.realtimeSinceStartup;
         }
 
-        if (Time.realtimeSinceStartup - TimeLastZoom < TimeLimitBetweenScrollsForZoomAccel && !lockZoom)
+        if ((Time.realtimeSinceStartup - TimeLastZoom < TimeLimitBetweenScrollsForZoomAccel || buttonsHeldForZoomIn() || buttonsHeldForZoomOut()) && !lockZoom)
         {
             if (!zooming)
             {
@@ -153,6 +166,14 @@ public class General_2D_Camera_Handler_Script : MonoBehaviour
         currentZoomChangeSpeed = Mathf.Clamp(currentZoomChangeSpeed, 0, maxZoomRate);
 
         Vector2 mouseScrollDelta = Input.mouseScrollDelta;
+        if (buttonsHeldForZoomIn())
+        {
+            mouseScrollDelta.y = 1;
+        }
+        if (buttonsHeldForZoomOut())
+        {
+            mouseScrollDelta.y -= 1;
+        }
         cam.orthographicSize -= mouseScrollDelta.y * currentZoomChangeSpeed;
         cam.orthographicSize = Mathf.Clamp(cam.orthographicSize, minCameraZoom, maxCameraZoom);
     }

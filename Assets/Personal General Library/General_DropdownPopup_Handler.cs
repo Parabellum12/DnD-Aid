@@ -24,8 +24,14 @@ public class General_DropdownPopup_Handler : MonoBehaviour
 
     public void setupPopup(string promptText, string[] optionsArray, string AcceptButtonText, string CancelButtonText, System.Action<string, int> AcceptCallback)
     {
+        string[] newoptionsArray = new string[optionsArray.Length+1];
+        for (int i = 0; i < optionsArray.Length; i++)
+        {
+            newoptionsArray[i] = optionsArray[i];
+        }
+        newoptionsArray[newoptionsArray.Length - 1] = "DO Not CLick Me, I shouldn't Be Showing!!!!!";
         setPromptTemp(promptText);
-        setOptions(optionsArray);
+        setOptions(newoptionsArray);
         setAcceptButtonText(AcceptButtonText);
         setCancelButtonText(CancelButtonText);
         Funccallback = AcceptCallback;

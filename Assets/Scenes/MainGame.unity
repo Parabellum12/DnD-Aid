@@ -282,8 +282,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1651733902}
   m_HandleRect: {fileID: 1651733901}
   m_Direction: 0
-  m_Value: 0.49981692
-  m_Size: 0.99806166
+  m_Value: 0.40567017
+  m_Size: 0.998062
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -2096,6 +2096,7 @@ MonoBehaviour:
   WASDPan: 1
   ArrowKeyPan: 1
   CamZoom: 1
+  CamZoomViaButtons: 1
   CamZoomDoesAccel: 1
   CamZoomAccelRateWaitTime: 1.5
   CamZoomAccelRate: 10
@@ -3438,8 +3439,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 779074598}
   m_HandleRect: {fileID: 779074597}
   m_Direction: 2
-  m_Value: 1.0000017
-  m_Size: 0.92819667
+  m_Value: 1.0000103
+  m_Size: 0.9281952
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -6360,7 +6361,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Add Token
+  m_text: Add New Token
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -6610,7 +6611,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 462.6554}
+  m_AnchoredPosition: {x: 0.09448242, y: 462.65485}
   m_SizeDelta: {x: 516, y: 996.8911}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &1346101045
