@@ -136,7 +136,7 @@ public class General_UI_DropDown_Handler_ScriptV2 : MonoBehaviour
         float mainImageHeight = 0;
         if (mainImage != null)
         {
-            mainImageHeight = (mainImage.rectTransform.rect.height / 2);
+            mainImageHeight = (mainImage.rectTransform.rect.height / 2f);
         }
         offsetDist = globalOffsetDist + mainImageHeight + itemSeperationDist;
         for (int i = 0; i < childDropDowns.Count; i++)
@@ -166,7 +166,7 @@ public class General_UI_DropDown_Handler_ScriptV2 : MonoBehaviour
                 RectTransform temp = dropDownBackgroundImage.GetComponent<RectTransform>();
                 //Debug.Log(gameObject.name + ":rectFollowSize");
                 //temp.rect.Set(temp.rect.x, temp.rect.y, temp.rect.width, offsetDist - globalOffset);
-                temp.sizeDelta = new Vector2(temp.rect.width, offsetDist - globalOffsetDist - (childDropDowns.Count * itemSeperationDist));
+                temp.sizeDelta = new Vector2(temp.rect.width, offsetDist- (mainImage.rectTransform.rect.height / 2f));// - globalOffsetDist - (childDropDowns.Count * itemSeperationDist));
                 //Debug.Log(gameObject.name + ":TempHeight5:" + ((temp.rect.size.y / 2f) - globalOffset));
                 //temp.localPosition = Vector2.zero;
                 temp.localPosition = new Vector2(0, -(temp.rect.size.y / 2) - (gameObject.GetComponent<RectTransform>().rect.height / 2));
