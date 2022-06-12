@@ -121,7 +121,7 @@ public class General_UI_DropDown_Handler_ScriptV2 : MonoBehaviour
         {
             mainImageHeight = (mainImage.rectTransform.rect.height / 2);
         }
-        offsetDist = globalOffsetDist + mainImageHeight + itemSeperationDist;
+        offsetDist = globalOffsetDist + mainImageHeight + itemSeperationDist + 2;
         for (int i = 0; i < childDropDowns.Count; i++)
         {
             if (!childDropDowns[i].gameObject.activeSelf)
@@ -144,7 +144,7 @@ public class General_UI_DropDown_Handler_ScriptV2 : MonoBehaviour
         {
             mainImageHeight = (mainImage.rectTransform.rect.height / 2f);
         }
-        offsetDist = globalOffsetDist + mainImageHeight + itemSeperationDist;
+        offsetDist = globalOffsetDist + mainImageHeight + itemSeperationDist + 2;
         for (int i = 0; i < childDropDowns.Count; i++)
         {
             if (!childDropDowns[i].gameObject.activeSelf)
