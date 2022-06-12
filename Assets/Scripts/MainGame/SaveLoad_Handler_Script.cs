@@ -77,7 +77,7 @@ public class SaveLoad_Handler_Script : MonoBehaviour
                 catch
                 {
                     Debug.Log("Error In Deserializing " + returner[i]);
-                    //errorFileNames.Add(returner[i]);
+                    errorFileNames.Add(returner[i]);
                     sr.Close();
                 }
             }
@@ -87,8 +87,7 @@ public class SaveLoad_Handler_Script : MonoBehaviour
             }
             if (temp == null)
             {
-                System.IO.Directory.Delete(Application.persistentDataPath + "/" + returner[i] + "." + fileType);
-                return getSaveFileNames();
+                handleErroredFiles();
             }
         }
         return returner;
@@ -233,8 +232,7 @@ public class SaveLoad_Handler_Script : MonoBehaviour
     {
         if (errorFileNames.Contains(mapId))
         {
-            System.IO.Directory.Delete(Application.persistentDataPath + "/" + mapId + "." + fileType);
-            errorFileNames.Remove(mapId);
+            handleErroredFiles();
             return null;
         }
         foreach (saveClass sc in CachedSaveData)
@@ -476,6 +474,33 @@ public class SaveLoad_Handler_Script : MonoBehaviour
             this.MapName = fileName;
         }
 
+    }
+
+
+    void handleErroredFiles()
+    {
+        string[] folderNames = Directory.GetDirectories(Application.persistentDataPath);
+        string errorFolderPath = Application.persistentDataPath + "/" + "ErroredFiles";
+        bool errorFolderExist = false;
+        foreach (string s in folderNames)
+        {
+            if (s.Equals("ErroredFiles"))
+            {
+                errorFolderExist = true;
+                break;
+            }
+        }
+        if (!errorFolderExist)
+        { 
+            DirectoryInfo temp = Directory.CreateDirectory(errorFolderPath);
+        }
+        foreach (string s in errorFileNames)
+        {
+            string errorFilePath = Application.persistentDataPath + "/" + s + "." + fileType;
+            string newErrorFilePath = errorFolderPath + "/" + s + "." + fileType;
+            File.Move(errorFilePath, newErrorFilePath);
+        }
+        errorFileNames.Clear();
     }
 
 
