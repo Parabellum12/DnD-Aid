@@ -147,7 +147,16 @@ public static class UtilClass
         BinaryFormatter binForm = new BinaryFormatter();
         memStream.Write(arrBytes, 0, arrBytes.Length);
         memStream.Seek(0, SeekOrigin.Begin);
-        TObject obj = (TObject)binForm.Deserialize(memStream);
+        TObject obj;
+        try
+        {
+            obj = (TObject)binForm.Deserialize(memStream);
+        }
+        catch
+        {
+            Debug.Log("error in Deserializing");
+            return default(TObject);
+        }
 
         return obj;
     }

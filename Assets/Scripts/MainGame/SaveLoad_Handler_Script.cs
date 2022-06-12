@@ -13,6 +13,7 @@ public class SaveLoad_Handler_Script : MonoBehaviour
     [SerializeField] StraightLine_Handler_ScriptV2 straightLineHandler;
     [SerializeField] CurvedLine_Handler_ScriptV2 curvedLineHandler;
     List<saveClass> CachedSaveData = new List<saveClass>();
+    List<string> errorFileNames = new List<string>();
     saveClass CurrentlyLoadedSaveData = null;
     //file data standard: <string data>;<string data>
     //string data standard: <overall tag>[<data>|<data>
@@ -59,6 +60,37 @@ public class SaveLoad_Handler_Script : MonoBehaviour
             //Debug.Log(returner[index]);
             index++;
         }
+        for (int i = 0; i < returner.Length; i++)
+        {
+            saveClass temp = null;
+            try
+            {
+                string persistentDataPath = Application.persistentDataPath + "/" + returner[i] + "." + fileType;
+                BinaryFormatter bf = new BinaryFormatter();
+                FileStream sr = new FileStream(persistentDataPath, FileMode.Open);
+                try
+                {
+                    Debug.Log("Deserializing " + returner[i]);
+                    temp = bf.Deserialize(sr) as saveClass;
+                    sr.Close();
+                }
+                catch
+                {
+                    Debug.Log("Error In Deserializing " + returner[i]);
+                    errorFileNames.Add(returner[i]);
+                    sr.Close();
+                }
+            }
+            catch
+            {
+                temp = null;
+            }
+            if (temp == null)
+            {
+                File.Delete(Application.persistentDataPath + "/" + returner[i] + "." + fileType);
+                return getSaveFileNames();
+            }
+        }
         return returner;
     }
 
@@ -95,7 +127,15 @@ public class SaveLoad_Handler_Script : MonoBehaviour
         string[] nameReturner = new string[returner.Length];
         for (int i = 0; i < returner.Length; i++)
         {
-            nameReturner[i] = getMapData(returner[i]).MapName;
+            saveClass temp = getMapData(returner[i]);
+            if (temp != null)
+            {
+                nameReturner[i] = temp.MapName;
+            }
+            else
+            {
+                return getSaveFileMapDataNames();
+            }
         }
         return nameReturner;
     }
@@ -158,7 +198,19 @@ public class SaveLoad_Handler_Script : MonoBehaviour
         string persistentDataPath = Application.persistentDataPath + "/" + fileName + "." + fileType;
         BinaryFormatter bf = new BinaryFormatter();
         FileStream sr = new FileStream(persistentDataPath, FileMode.Open);
-        saveClass temp = bf.Deserialize(sr) as saveClass;
+        saveClass temp = null;
+        try
+        {
+            Debug.Log("Deserializing " + fileName);
+            temp = bf.Deserialize(sr) as saveClass;
+        }
+        catch
+        {
+            Debug.Log("Error In Deserializing " + fileName);
+            errorFileNames.Add(fileName);
+            sr.Close();
+            return;
+        }
         CachedSaveData.Add(temp);
         sr.Close();
 
@@ -179,6 +231,12 @@ public class SaveLoad_Handler_Script : MonoBehaviour
 
     public saveClass getMapData(string mapId)
     {
+        if (errorFileNames.Contains(mapId))
+        {
+            File.Delete(Application.persistentDataPath + "/" + mapId + "." + fileType);
+            errorFileNames.Remove(mapId);
+            return null;
+        }
         foreach (saveClass sc in CachedSaveData)
         {
             if (sc == null)
