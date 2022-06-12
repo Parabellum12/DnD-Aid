@@ -94,7 +94,7 @@ public class InitiativeTokenUiHandler : MonoBehaviour
         referenceToken.setInitiativeValue(int.Parse(InitianiveInput.text), false);
         InitiativeChangedCallback.Invoke();
         Debug.Log("offEdit");
-        onEditBool = false;
+        //onEditBool = false;
         InitianiveInput.ReleaseSelection();
         lockMe = false;
     }

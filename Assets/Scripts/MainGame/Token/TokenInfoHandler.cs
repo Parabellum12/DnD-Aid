@@ -200,20 +200,18 @@ public class TokenInfoHandler : MonoBehaviourPunCallbacks
     {
         ActiveSelectedToken.UpdateInitiativeList();
     }
-
+    
 
 
     public void spawnTokenPush()
     {
-        gameView.RPC("spawnTokenHandle", RpcTarget.MasterClient, PhotonNetwork.LocalPlayer);
+        gameView.RPC("spawnTokenHandle", RpcTarget.MasterClient, PhotonNetwork.LocalPlayer, new float[] { Camera.main.transform.position.x, Camera.main.transform.position.y });
     }
 
     [PunRPC]
-    public void spawnTokenHandle(Photon.Realtime.Player RequestingPlayer)
+    public void spawnTokenHandle(Photon.Realtime.Player RequestingPlayer, float[] Pos)
     {
-        Vector3 temp = Camera.main.transform.position;
-        temp.z = -5;
-        GameObject go = PhotonNetwork.InstantiateRoomObject("Token", temp, Quaternion.identity);
+        GameObject go = PhotonNetwork.InstantiateRoomObject("Token", new Vector3(Pos[0], Pos[1], -5), Quaternion.identity);
         TokenHandler_Script scr = go.GetComponent<TokenHandler_Script>();
         scr.TokenInfoHandler_Script = this;
         scr.setID(getID(), false);
