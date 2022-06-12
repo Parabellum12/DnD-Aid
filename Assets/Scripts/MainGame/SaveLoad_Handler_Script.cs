@@ -25,7 +25,6 @@ public class SaveLoad_Handler_Script : MonoBehaviour
     }
 
     
-    
 
     
 
@@ -33,6 +32,7 @@ public class SaveLoad_Handler_Script : MonoBehaviour
     public string fileType = "SaveData";
     public string[] getSaveFileNames()
     {
+        
         string[] files = System.IO.Directory.GetFiles(Application.persistentDataPath, "*." + fileType);
         string[] returner = new string[files.Length];
         int index = 0;
@@ -77,7 +77,7 @@ public class SaveLoad_Handler_Script : MonoBehaviour
                 catch
                 {
                     Debug.Log("Error In Deserializing " + returner[i]);
-                    errorFileNames.Add(returner[i]);
+                    //errorFileNames.Add(returner[i]);
                     sr.Close();
                 }
             }
@@ -87,7 +87,7 @@ public class SaveLoad_Handler_Script : MonoBehaviour
             }
             if (temp == null)
             {
-                File.Delete(Application.persistentDataPath + "/" + returner[i] + "." + fileType);
+                System.IO.Directory.Delete(Application.persistentDataPath + "/" + returner[i] + "." + fileType);
                 return getSaveFileNames();
             }
         }
@@ -233,7 +233,7 @@ public class SaveLoad_Handler_Script : MonoBehaviour
     {
         if (errorFileNames.Contains(mapId))
         {
-            File.Delete(Application.persistentDataPath + "/" + mapId + "." + fileType);
+            System.IO.Directory.Delete(Application.persistentDataPath + "/" + mapId + "." + fileType);
             errorFileNames.Remove(mapId);
             return null;
         }
