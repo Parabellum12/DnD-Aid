@@ -31,6 +31,7 @@ public class MapSelector_Handler : MonoBehaviour
         {
             ms.KILLME();        
         }
+        mapSelectors.Clear();
         string[] fileNames = saveLoadHandler_Script.getSaveFileNames();
         localFilesDropDown.clearChildDropDowns();
         for (int i = 0; i < fileNames.Length; i++)
@@ -113,8 +114,8 @@ public class MapSelector_Handler : MonoBehaviour
                 SharedMapSelectors.Remove(scr);
                 mainHandler_Script.removeFromSharedMaps(UtilClass.ObjectToByteArray(sc), true);
                 cachedFilesDropdown.setUIPositions();
-                loadLocalFiles();
                 scr.KILLME();
+                loadLocalFiles();
 
             });
         }

@@ -18,6 +18,7 @@ public class MainGame_Handler_Script : MonoBehaviourPunCallbacks
     [SerializeField] PhotonView localView;
     List<SaveLoad_Handler_Script.saveClass> GlobalCachedMaps = new List<SaveLoad_Handler_Script.saveClass>();
     public List<SaveLoad_Handler_Script.saveClass> SharedMaps = new List<SaveLoad_Handler_Script.saveClass>();
+    List<SaveLoad_Handler_Script.saveClass> OtherSharedMaps = new List<SaveLoad_Handler_Script.saveClass>();
     [SerializeField] Dictionary<Player, List<SaveLoad_Handler_Script.saveClass>> playerToCachedMaps = new Dictionary<Player, List<SaveLoad_Handler_Script.saveClass>>();
     [SerializeField] General_UI_DropDown_Handler_ScriptV2 generalUiDropdownMainScr;
     [SerializeField] TMP_Text gameCodeText;
@@ -96,6 +97,7 @@ public class MainGame_Handler_Script : MonoBehaviourPunCallbacks
         Debug.Log("testWhy1"); 
         CallUpdatePlayerToPerms(false);
         playerToPerms.Remove(otherPlayer);
+        mapSelectorHandler_Script.loadSharedFiles();
         Debug.Log("testWhy2");
     }
 
@@ -198,6 +200,7 @@ public class MainGame_Handler_Script : MonoBehaviourPunCallbacks
         if (!networkedCall)
         {
             localView.RPC("addToSharedMaps", RpcTarget.Others, sc, true);
+            OtherSharedMaps.Add(UtilClass.ByteArrayToObject<SaveLoad_Handler_Script.saveClass>(sc));
             return;
         }
         SharedMaps.Add(UtilClass.ByteArrayToObject<SaveLoad_Handler_Script.saveClass>(sc));
@@ -212,6 +215,7 @@ public class MainGame_Handler_Script : MonoBehaviourPunCallbacks
         if (!networkedCall)
         {
             localView.RPC("removeFromSharedMaps", RpcTarget.Others, sc, true);
+            OtherSharedMaps.Remove(UtilClass.ByteArrayToObject<SaveLoad_Handler_Script.saveClass>(sc));
             return;
         }
         SharedMaps.Remove(UtilClass.ByteArrayToObject<SaveLoad_Handler_Script.saveClass>(sc));
@@ -355,7 +359,7 @@ public class MainGame_Handler_Script : MonoBehaviourPunCallbacks
     byte[] returnGlobalCacheAsByteArray()
     {
          
-        CachedMapsWrapper wrapper = new CachedMapsWrapper(GlobalCachedMaps.ToArray(), SharedMaps.ToArray());
+        CachedMapsWrapper wrapper = new CachedMapsWrapper(GlobalCachedMaps.ToArray(), OtherSharedMaps.ToArray());
         return UtilClass.ObjectToByteArray(wrapper);
     }
 
@@ -486,6 +490,14 @@ public class MainGame_Handler_Script : MonoBehaviourPunCallbacks
     public void kickPlayerHandle()
     {
         // 
+        bool temp = PhotonNetwork.IsMessageQueueRunning;
+        PhotonNetwork.IsMessageQueueRunning = true;
+        foreach (SaveLoad_Handler_Script.saveClass sc in OtherSharedMaps)
+        {
+            removeFromSharedMaps(UtilClass.ObjectToByteArray(sc), false);
+        }
+        PhotonNetwork.IsMessageQueueRunning = temp;
+
         PhotonNetwork.AutomaticallySyncScene = false;
         Debug.Log("kick Player Handle");
         PhotonNetwork.LeaveRoom();
