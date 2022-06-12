@@ -13,7 +13,7 @@ public class TokenInfoHandler : MonoBehaviourPunCallbacks
      */
     [SerializeField] List<GameObject> ActiveTokenUi;
     [SerializeField] List<GameObject> InactiveTokenUI;
-    [SerializeField] General_UI_DropDown_Handler_Script tokenInfoDropDownHandler;
+    [SerializeField] General_UI_DropDown_Handler_ScriptV2 tokenInfoDropDownHandler;
     [SerializeField] PhotonView gameView;
 
 
@@ -27,7 +27,8 @@ public class TokenInfoHandler : MonoBehaviourPunCallbacks
     private void Start()
     {
         SetUIToActive();
-        tokenInfoDropDownHandler.setUiPositions();
+        tokenInfoDropDownHandler.setUIPositionsNoCallback();
+        tokenInfoDropDownHandler.setUIPositions();
         SetUIToInactive();
     }
 
@@ -60,7 +61,7 @@ public class TokenInfoHandler : MonoBehaviourPunCallbacks
         {
             go.SetActive(true);
         }
-        tokenInfoDropDownHandler.setUiPositions();
+        tokenInfoDropDownHandler.setUIPositions();
     }
 
     private void Update()
@@ -124,7 +125,7 @@ public class TokenInfoHandler : MonoBehaviourPunCallbacks
         {
             go.SetActive(false);
         }
-        tokenInfoDropDownHandler.setUiPositions();
+        tokenInfoDropDownHandler.setUIPositions();
 
 
     }

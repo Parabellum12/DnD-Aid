@@ -38,7 +38,7 @@ public class General_UI_DropDown_Handler_ScriptV2 : MonoBehaviour
 
     float lastOffsetSize = 0;
 
-    private void Awake()
+    private void Start()
     {
         setup();
     }
@@ -75,8 +75,14 @@ public class General_UI_DropDown_Handler_ScriptV2 : MonoBehaviour
             }
         }
 
-        foreach (General_UI_DropDown_Handler_ScriptV2 scr in childDropDowns)
+        for (int i = 0; i < childDropDowns.Count; i++)
         {
+            General_UI_DropDown_Handler_ScriptV2 scr = childDropDowns[i];
+            if (scr == null)
+            {
+                Debug.LogWarning("Scr " + i + " On This Is Null");
+            }
+            scr.setup();
             scr.updateUICallback = () =>
             {
                 setUIPositions();
@@ -175,6 +181,8 @@ public class General_UI_DropDown_Handler_ScriptV2 : MonoBehaviour
         }
         else
         {
+            contentRectTransform.anchorMin = new Vector2(.5f, 1f);
+            contentRectTransform.anchorMax = new Vector2(.5f, 1f);
             contentRectTransform.sizeDelta = new Vector2(512, offsetDist - globalOffsetDist);
         }
     }

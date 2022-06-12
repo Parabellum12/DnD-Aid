@@ -13,7 +13,7 @@ public class tokenUiPlayerPerms_Handler : MonoBehaviour
     List<tokenPlayerPermUiInteraction_Handler> interactionHandlers = new List<tokenPlayerPermUiInteraction_Handler>();
     [SerializeField] PhotonView gameView;
     [SerializeField] MainGame_Handler_Script mainHandler;
-    [SerializeField] General_UI_DropDown_Handler_Script contentHandler;
+    [SerializeField] General_UI_DropDown_Handler_ScriptV2 contentHandler;
     [SerializeField] GameObject ChildGO;
 
     Dictionary<Photon.Realtime.Player, bool> playToMove = new Dictionary<Photon.Realtime.Player, bool>();
@@ -27,13 +27,13 @@ public class tokenUiPlayerPerms_Handler : MonoBehaviour
             GameObject go = Instantiate(tokenPermChangeUIPrefab, ChildGO.transform);
             tokenPlayerPermUiInteraction_Handler scr = go.GetComponent<tokenPlayerPermUiInteraction_Handler>();
             interactionHandlers.Add(scr);
-            contentHandler.addToChildDropDowns(go.GetComponent<General_UI_DropDown_Handler_Script>());
+            contentHandler.addToChildDropDowns(go.GetComponent<General_UI_DropDown_Handler_ScriptV2>());
             scr.setup(plr, mainHandler.returnPlayerPerms(plr)[(int)GlobalPermissionsHandler.PermisionNameToValue.GlobalMoveTokens] || moveplrs.Contains(plr), (plr, changedValue) =>
             {
                 callback.Invoke(plr, changedValue);
             });
         }
-        contentHandler.setUiPositions();
+        contentHandler.setUIPositions();
     }
 
 

@@ -441,7 +441,7 @@ GameObject:
   - component: {fileID: 2273570197306176384}
   - component: {fileID: 2273570197306176389}
   - component: {fileID: 2273570197306176386}
-  - component: {fileID: 2273570197306176387}
+  - component: {fileID: 9022773722762430413}
   m_Layer: 5
   m_Name: Menu DropDown Prefab
   m_TagString: Untagged
@@ -510,7 +510,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &2273570197306176387
+--- !u!114 &9022773722762430413
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -519,20 +519,22 @@ MonoBehaviour:
   m_GameObject: {fileID: 2273570197306176385}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 61046ea88fc59a045889df0e7642b20e, type: 3}
+  m_Script: {fileID: 11500000, guid: 5f84fc7eb33fdd548b5399a5b7169587, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  InteractButton: {fileID: 2273570196853200530}
+  isHolder: 0
+  isCanvasOrUiItem: 0
+  dropDownImageFollowChildSize: 1
+  engaged: 0
   mainImage: {fileID: 2273570197306176386}
-  dropDownBackGroundImage: {fileID: 2273570197440314564}
-  offsetDist: 0
-  globalOffset: 0
-  childDropDowns: []
-  IsChildOrParent: 1
-  dropDownImageFollowChilrenSize: 1
-  childrenHolder: {fileID: 2273570197537932400}
-  buttonRectTransform: {fileID: 2273570196853200531}
+  dropDownBackgroundImage: {fileID: 2273570197440314564}
+  InteractionButton: {fileID: 2273570196853200530}
   contentRectTransform: {fileID: 0}
+  childDropDowns: []
+  ChildrenObjectHolder: {fileID: 2273570197537932400}
+  globalOffsetDist: 0
+  itemSeperationDist: 0
+  offsetDist: 0
 --- !u!1 &2273570197440314564
 GameObject:
   m_ObjectHideFlags: 0

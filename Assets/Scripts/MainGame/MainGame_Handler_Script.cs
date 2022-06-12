@@ -19,7 +19,7 @@ public class MainGame_Handler_Script : MonoBehaviourPunCallbacks
     List<SaveLoad_Handler_Script.saveClass> GlobalCachedMaps = new List<SaveLoad_Handler_Script.saveClass>();
     public List<SaveLoad_Handler_Script.saveClass> SharedMaps = new List<SaveLoad_Handler_Script.saveClass>();
     [SerializeField] Dictionary<Player, List<SaveLoad_Handler_Script.saveClass>> playerToCachedMaps = new Dictionary<Player, List<SaveLoad_Handler_Script.saveClass>>();
-    [SerializeField] General_UI_DropDown_Handler_Script generalUiDropdownMainScr;
+    [SerializeField] General_UI_DropDown_Handler_ScriptV2 generalUiDropdownMainScr;
     [SerializeField] TMP_Text gameCodeText;
     [SerializeField] TMP_Text loadedMapText;
     [SerializeField] string loadedMapTextValue = "Currently Loaded Map:";
@@ -64,8 +64,8 @@ public class MainGame_Handler_Script : MonoBehaviourPunCallbacks
         if (firstUpdateLoop)
         {
             firstUpdateLoop = false;
-            generalUiDropdownMainScr.setUiPositionsNoCallback();
-            generalUiDropdownMainScr.setUiPositions();
+            generalUiDropdownMainScr.setUIPositionsNoCallback();
+            generalUiDropdownMainScr.setUIPositions();
         }
         //idk why but this fixes Ui Bug
         if (updateIndex < 0)
@@ -74,7 +74,7 @@ public class MainGame_Handler_Script : MonoBehaviourPunCallbacks
         }
         else
         {
-            generalUiDropdownMainScr.setUiPositions();
+            generalUiDropdownMainScr.setUIPositions();
         }
     }
 

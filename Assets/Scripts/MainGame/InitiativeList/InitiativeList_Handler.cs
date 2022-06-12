@@ -18,7 +18,7 @@ public class InitiativeList_Handler : MonoBehaviourPunCallbacks
 
     [SerializeField] List<InitiativeTokenUiHandler> Handlers = new List<InitiativeTokenUiHandler>();
 
-    [SerializeField] General_UI_DropDown_Handler_Script dropdownScript;
+    [SerializeField] General_UI_DropDown_Handler_ScriptV2 dropdownScript;
 
     [SerializeField] PhotonView localView;
 
@@ -142,7 +142,7 @@ public class InitiativeList_Handler : MonoBehaviourPunCallbacks
     void removeUiTokenElement(InitiativeTokenUiHandler handler)
     {
         Handlers.Remove(handler);
-        dropdownScript.RemoveFromChildDropDowns(handler.dropdownHandler);
+        dropdownScript.removeFromChildDropDowns(handler.dropdownHandler);
         Destroy(handler.gameObject);
         if (selectedIndex >= Handlers.Count)
         {
@@ -171,7 +171,7 @@ public class InitiativeList_Handler : MonoBehaviourPunCallbacks
         }
         Handlers.Remove(handler);
         removeUiTokenElement(scr);
-        dropdownScript.RemoveFromChildDropDowns(handler.dropdownHandler);
+        dropdownScript.removeFromChildDropDowns(handler.dropdownHandler);
         Destroy(handler.gameObject);
         if (selectedIndex >= Handlers.Count)
         {
@@ -190,13 +190,13 @@ public class InitiativeList_Handler : MonoBehaviourPunCallbacks
         dropdownScript.clearChildDropDowns();
         foreach (GameObject go in persistantChildObjects)
         {
-            dropdownScript.addToChildDropDowns(go.GetComponent<General_UI_DropDown_Handler_Script>());
+            dropdownScript.addToChildDropDowns(go.GetComponent<General_UI_DropDown_Handler_ScriptV2>());
         }
         foreach (InitiativeTokenUiHandler scr in Handlers)
         {
-            dropdownScript.addToChildDropDowns(scr.gameObject.GetComponent<General_UI_DropDown_Handler_Script>());
+            dropdownScript.addToChildDropDowns(scr.gameObject.GetComponent<General_UI_DropDown_Handler_ScriptV2>());
         }
-        dropdownScript.setUiPositions();
+        dropdownScript.setUIPositions();
         selectOnIndex(true, selectedIndex);
         if (!networkCAll)
         {

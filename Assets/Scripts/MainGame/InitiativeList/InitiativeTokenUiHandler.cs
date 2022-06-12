@@ -17,7 +17,7 @@ public class InitiativeTokenUiHandler : MonoBehaviour
     [SerializeField] Button SelectMeButton;
     public TokenHandler_Script referenceToken;
     //bool isMyTurn = false;
-    public General_UI_DropDown_Handler_Script dropdownHandler;
+    public General_UI_DropDown_Handler_ScriptV2 dropdownHandler;
     TokenInfoHandler infoHandler;
     private void Start()
     {

@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 8102939053105290933}
   - component: {fileID: 6986246091117813520}
   - component: {fileID: 6691250931333454168}
+  - component: {fileID: 343556105607660507}
   m_Layer: 5
   m_Name: Initiative Token UI
   m_TagString: Untagged
@@ -86,7 +87,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 154040487493996685}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 61046ea88fc59a045889df0e7642b20e, type: 3}
   m_Name: 
@@ -121,7 +122,33 @@ MonoBehaviour:
   tokenName: {fileID: 2511178249322159268}
   SelectMeButton: {fileID: 6654489105185166037}
   referenceToken: {fileID: 0}
-  dropdownHandler: {fileID: 0}
+  dropdownHandler: {fileID: 343556105607660507}
+  maxTimeBetweenClicks: 0.5
+--- !u!114 &343556105607660507
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 154040487493996685}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f84fc7eb33fdd548b5399a5b7169587, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isHolder: 1
+  isCanvasOrUiItem: 0
+  dropDownImageFollowChildSize: 0
+  engaged: 0
+  mainImage: {fileID: 8102939053105290933}
+  dropDownBackgroundImage: {fileID: 0}
+  InteractionButton: {fileID: 0}
+  contentRectTransform: {fileID: 0}
+  childDropDowns: []
+  ChildrenObjectHolder: {fileID: 0}
+  globalOffsetDist: 0
+  itemSeperationDist: 0
+  offsetDist: 0
 --- !u!1 &1548485512407812691
 GameObject:
   m_ObjectHideFlags: 0
