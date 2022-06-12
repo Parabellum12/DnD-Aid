@@ -24,14 +24,22 @@ public class General_DropdownPopup_Handler : MonoBehaviour
 
     public void setupPopup(string promptText, string[] optionsArray, string AcceptButtonText, string CancelButtonText, System.Action<string, int> AcceptCallback)
     {
-        string[] newoptionsArray = new string[optionsArray.Length+1];
-        for (int i = 0; i < optionsArray.Length; i++)
+        if (optionsArray.Length != 0)
         {
-            newoptionsArray[i] = optionsArray[i];
+            string[] newoptionsArray = new string[optionsArray.Length + 1];
+            for (int i = 0; i < optionsArray.Length; i++)
+            {
+                newoptionsArray[i] = optionsArray[i];
+            }
+            newoptionsArray[newoptionsArray.Length - 1] = "DO Not CLick Me, I shouldn't Be Showing!!!!!";
+            setOptions(newoptionsArray);
         }
-        newoptionsArray[newoptionsArray.Length - 1] = "DO Not CLick Me, I shouldn't Be Showing!!!!!";
+        else
+        {
+            optionsArray = new string[] {"Nothing To Load"};
+            setOptions(optionsArray);
+        }
         setPromptTemp(promptText);
-        setOptions(newoptionsArray);
         setAcceptButtonText(AcceptButtonText);
         setCancelButtonText(CancelButtonText);
         Funccallback = AcceptCallback;
@@ -49,7 +57,10 @@ public class General_DropdownPopup_Handler : MonoBehaviour
     {
         if (!inputGiven)
         {
-            Funccallback.Invoke(Dropdown.options[Dropdown.value].text, Dropdown.value);
+            if (!Dropdown.options[Dropdown.value].text.Equals("Nothing To Load"))
+            {
+                Funccallback.Invoke(Dropdown.options[Dropdown.value].text, Dropdown.value);
+            }
         }
         inputGiven = true;
     }
