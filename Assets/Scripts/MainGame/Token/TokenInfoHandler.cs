@@ -277,5 +277,5 @@ public class TokenInfoHandler : MonoBehaviourPunCallbacks
             tokenSpriteMaskSortingIndex += 2;
         }
     }
-    
+
 }

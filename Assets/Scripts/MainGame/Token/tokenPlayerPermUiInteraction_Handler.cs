@@ -57,15 +57,41 @@ public class tokenPlayerPermUiInteraction_Handler : MonoBehaviour
 
     private void Update()
     {
-        if (mainHandler.returnPlayerPerms(referencePlayer)[(int)GlobalPermissionsHandler.PermisionNameToValue.GlobalMoveTokens])
+        if (mainHandler == null)
         {
-            InteractButton.interactable = false;
-            ButtonImage.color = Color.green;
+            mainHandler = GameObject.FindGameObjectWithTag("GameController").GetComponent<MainGame_Handler_Script>();
+        }
+
+        if (plrListContains(referencePlayer))
+        {
+
+
+            if (mainHandler.returnPlayerPerms(referencePlayer)[(int)GlobalPermissionsHandler.PermisionNameToValue.GlobalMoveTokens])
+            {
+                InteractButton.interactable = false;
+                ButtonImage.color = Color.green;
+            }
+            else
+            {
+                InteractButton.interactable = GlobalPermissionsHandler.getPermValue(GlobalPermissionsHandler.PermisionNameToValue.ChangeOtherPlayerPerms);
+            }
         }
         else
         {
-            InteractButton.interactable = GlobalPermissionsHandler.getPermValue(GlobalPermissionsHandler.PermisionNameToValue.ChangeOtherPlayerPerms);
+            //call error
         }
+    }
+
+    bool plrListContains(Photon.Realtime.Player plr)
+    {
+        foreach (Photon.Realtime.Player curPlr in PhotonNetwork.PlayerList)
+        {
+            if (curPlr.Equals(plr))
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     public void handleClick()
