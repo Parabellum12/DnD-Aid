@@ -102,11 +102,17 @@ public class MainGame_Handler_Script : MonoBehaviourPunCallbacks
 
     public override void OnMasterClientSwitched(Player newMasterClient)
     {
+        if (newMasterClient.Equals(PhotonNetwork.LocalPlayer))
+        {
+            GlobalPermissionsHandler.setPermsAsHost();
+        }
+        /*
         Debug.Log("OnMasterClientSwitched");
         PhotonNetwork.AutomaticallySyncScene = true;
         PhotonNetwork.LeaveRoom();
         PhotonNetwork.Disconnect();
         SceneManager.LoadScene("TitleScreen");
+        */
     }
 
 
