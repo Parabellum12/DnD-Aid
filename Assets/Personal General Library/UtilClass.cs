@@ -162,6 +162,115 @@ public static class UtilClass
     }
 
 
+    public static string[] GetFileNames(string DirectoryPath, string FileType)
+    {
+        string[] files = System.IO.Directory.GetFiles(DirectoryPath, "*." + FileType);
+        string[] fileNames = new string[files.Length];
+        for (int i = 0; i < files.Length; i++)
+        {
+            int size = files[i].Length - (DirectoryPath.Length + FileType.Length + 2);
+            string currentFileName = files[i].Substring(DirectoryPath.Length + 1, size);
+            fileNames[i] = currentFileName;
+            Debug.Log("UtilClass: GetFileNames: " + currentFileName);
+        }
+        return fileNames;
+    }
+
+    public static string[] GetFileNames(string DirectoryPath)
+    {
+        string[] files = System.IO.Directory.GetFiles(DirectoryPath, "*");
+        string[] fileNames = new string[files.Length];
+        for (int i = 0; i < files.Length; i++)
+        {
+            int size = files[i].Length - (DirectoryPath.Length);
+            string currentFileName = files[i].Substring(DirectoryPath.Length + 1, size);
+            fileNames[i] = currentFileName;
+            Debug.Log("UtilClass: GetFileNames2: " + currentFileName);
+        }
+        return fileNames;
+    }
+
+    public static void SaveToFile(string DirectoryPath, string FileType, string FileName, object graph)
+    {
+        string path = DirectoryPath + "/" + FileName + "." + FileType;
+        FileStream fileStream;
+        BinaryFormatter binaryFormatter = new BinaryFormatter();
+        if (File.Exists(path))
+        {
+            //Debug.Log("replace F");
+            fileStream = new FileStream(path, FileMode.Truncate);
+        }
+        else
+        {
+            //Debug.Log("new F");
+            fileStream = new FileStream(path, FileMode.CreateNew);
+        }
+        binaryFormatter.Serialize(fileStream, graph);
+    }
+    
+    public static TLoadObject LoadFromFile<TLoadObject>(string DirectoryPath, string FileType, string FileName, bool AutoErrorHandling)
+    {
+        return LoadFromFile<TLoadObject>(DirectoryPath, FileName+"."+FileType, AutoErrorHandling);
+    }
+    public static TLoadObject LoadFromFile<TLoadObject>(string DirectoryPath, string FileNameWithType, bool AutoErrorHandling)
+    {
+        return LoadFromFile<TLoadObject>(DirectoryPath + "/" + FileNameWithType, AutoErrorHandling);
+    }
+    public static TLoadObject LoadFromFile<TLoadObject>(string FullFilePath, bool AutoErrorHandling)
+    {
+        if (!File.Exists(FullFilePath))
+        {
+            return default(TLoadObject);
+        }
+        BinaryFormatter binaryFormatter = new BinaryFormatter();
+        FileStream fileStream = new FileStream(FullFilePath, FileMode.Open);
+        TLoadObject returner = default(TLoadObject);
+        try
+        {
+            returner = (TLoadObject)binaryFormatter.Deserialize(fileStream);
+        }
+        catch
+        {
+            Debug.LogWarning("LoadFromFile Error:" + FullFilePath);
+            if (AutoErrorHandling)
+            {
+                //send file to errorFoder
+                SendFileToErrorFolder(FullFilePath);
+            }
+            return default(TLoadObject);
+        }
+        return returner;
+    }
+
+    static void SendFileToErrorFolder(string InitialFilePath)
+    {
+        string ErrorFolderPath = Application.persistentDataPath + "/ErrorFolder";
+
+        string[] folderNames = Directory.GetDirectories(Application.persistentDataPath);
+        bool ErrorFolderExists = false;
+        foreach (string s in folderNames)
+        {
+            if (s.Equals("ErrorFolder"))
+            {
+                ErrorFolderExists = true;
+                break;
+            }
+        }
+        if (!ErrorFolderExists)
+        {
+            DirectoryInfo temp = Directory.CreateDirectory(ErrorFolderPath);
+        }
+        try
+        {
+            File.Move(InitialFilePath, ErrorFolderPath);
+        }
+        catch
+        {
+            Debug.LogWarning("SendFileToErrorFolder Error:" + InitialFilePath);
+        }
+    }
+    
+
 
     public static Texture2D LoadPNG(string filePath)
     {

@@ -32,7 +32,7 @@ public class SaveLoad_Handler_Script : MonoBehaviour
     public string fileType = "SaveData";
     public string[] getSaveFileNames()
     {
-        
+        UtilClass.GetFileNames(Application.persistentDataPath);
         string[] files = System.IO.Directory.GetFiles(Application.persistentDataPath, "*." + fileType);
         string[] returner = new string[files.Length];
         int index = 0;
