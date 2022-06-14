@@ -4,46 +4,74 @@ using UnityEngine;
 
 public class InputManager : MonoBehaviour
 {
-    Dictionary<KeyCode, System.Action> keyCodeToActionDown = new Dictionary<KeyCode, System.Action>();
-    Dictionary<KeyCode, System.Action> keyCodeToActionHeld = new Dictionary<KeyCode, System.Action>();
+    Dictionary<KeyCode, System.Action> KeyCodeToActionDown = new Dictionary<KeyCode, System.Action>();
+    Dictionary<KeyCode, System.Action> KeyCodeToActionUp = new Dictionary<KeyCode, System.Action>();
+    Dictionary<KeyCode, System.Action> KeyCodeToActionHeld = new Dictionary<KeyCode, System.Action>();
+
+
+    Dictionary<KeyCode, List<string>> KeycodeToActionName = new Dictionary<KeyCode, List<string>>();
+    Dictionary<string, KeyCode> ActionToKeyCode = new Dictionary<string, KeyCode>();
     public enum keyInputType
     {
         Replace,
         Add
     }
-    keyInputType DuplicateInputSettings = keyInputType.Replace;
+    public keyInputType DuplicateInputSettings = keyInputType.Replace;
 
 
 
     private void Update()
     {
         handleDownCalls();
+        handleUpCalls();
         handleHeldCalls();
     }
 
 
-    public void AddKeyToActionDown(KeyCode key, System.Action action)
+    public void AddKeyToActionDown(KeyCode key, System.Action action, string ActionName)
     {
         if (DuplicateInputSettings == keyInputType.Replace)
         {
             RemoveKeyInput(key);
         }
-        keyCodeToActionDown.Add(key, action);
+        KeyCodeToActionDown.Add(key, action);
+    }
+    public void AddKeyToActionUp(KeyCode key, System.Action action, string ActionName)
+    {
+        if (DuplicateInputSettings == keyInputType.Replace)
+        {
+            RemoveKeyInput(key);
+        }
+        KeyCodeToActionUp.Add(key, action);
     }
 
-    public void AddKeyToActionHeld(KeyCode key, System.Action action)
+    public void AddKeyToActionHeld(KeyCode key, System.Action action, string ActionName)
     {
         if (DuplicateInputSettings == keyInputType.Replace)
         {
             RemoveKeyInput(key);
         }
-        keyCodeToActionHeld.Add(key, action);
+        KeyCodeToActionHeld.Add(key, action);
     }
 
     public void RemoveKeyInput(KeyCode key)
     {
-        keyCodeToActionDown.Remove(key);
-        keyCodeToActionHeld.Remove(key);
+        KeyCodeToActionDown.Remove(key);
+        KeyCodeToActionUp.Remove(key);
+        KeyCodeToActionHeld.Remove(key);
+
+
+        KeycodeToActionName.TryGetValue(key, out List<string> ActionNames);
+        foreach (string s in ActionNames)
+        {
+            ActionToKeyCode.Remove(s);
+        }
+    }
+
+    public void RemoveKeyInput(string ActionName)
+    {
+        ActionToKeyCode.TryGetValue(ActionName, out KeyCode key);
+        RemoveKeyInput(key);
     }
 
 
@@ -66,11 +94,22 @@ public class InputManager : MonoBehaviour
 
     void handleDownCalls()
     {
-        foreach (KeyCode key in keyCodeToActionDown.Keys)
+        foreach (KeyCode key in KeyCodeToActionDown.Keys)
         {
             if (Input.GetKeyDown(key))
             {
-                keyCodeToActionDown.TryGetValue(key, out System.Action action);
+                KeyCodeToActionDown.TryGetValue(key, out System.Action action);
+                action?.Invoke();
+            }
+        }
+    }
+    void handleUpCalls()
+    {
+        foreach (KeyCode key in KeyCodeToActionUp.Keys)
+        {
+            if (Input.GetKeyDown(key))
+            {
+                KeyCodeToActionUp.TryGetValue(key, out System.Action action);
                 action?.Invoke();
             }
         }
@@ -78,11 +117,11 @@ public class InputManager : MonoBehaviour
 
     void handleHeldCalls()
     {
-        foreach (KeyCode key in keyCodeToActionHeld.Keys)
+        foreach (KeyCode key in KeyCodeToActionHeld.Keys)
         {
             if (Input.GetKeyDown(key))
             {
-                keyCodeToActionHeld.TryGetValue(key, out System.Action action);
+                KeyCodeToActionHeld.TryGetValue(key, out System.Action action);
                 action?.Invoke();
             }
         }
