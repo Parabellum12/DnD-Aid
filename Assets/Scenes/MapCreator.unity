@@ -678,7 +678,7 @@ MonoBehaviour:
   maxZoomRate: 15
   TimeLimitBetweenScrollsForZoomAccel: 0.5
   minCameraZoom: 50
-  maxCameraZoom: 100
+  maxCameraZoom: 500
   lockMoveIfOverUi: 1
   lockZoomIfOverUi: 1
   lockMovement: 0
