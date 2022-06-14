@@ -1,11 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
 
 public class General_2D_Camera_Handler_Script : MonoBehaviour
 {
     /*
      * general code created for 2d cameras
+     * 
+     * REQUIRES THE INPUT MANAGER TO FUNCTION
      */
     public bool HorizontalMovement = true;
     public bool VerticalMovement = true;
@@ -41,13 +45,62 @@ public class General_2D_Camera_Handler_Script : MonoBehaviour
 
     [SerializeField] Camera cam;
 
+    [SerializeField] InputManager InputManager;
+    int horizontalMove = 0;
+    int verticalMove = 0;
 
-    int horizontalMove;
-    int verticalMove;
+    private void Start()
+    {
 
+        InputManager.AddKeyBinding(KeyCode.A, InputManager.KeyActionType.Up, "KeyCameraMoveLeftEND", () =>
+        {
+            horizontalMove = 0;
+            //Debug.Log("Up A");
+        });
+        InputManager.AddKeyBinding(KeyCode.D, InputManager.KeyActionType.Up, "KeyCameraMoveRightEND", () =>
+        {
+            horizontalMove = 0;
+            //Debug.Log("Up D");
+        });
+        InputManager.AddKeyBinding(KeyCode.W, InputManager.KeyActionType.Up, "KeyCameraMoveUpEND", () =>
+        {
+            verticalMove = 0;
+            //Debug.Log("Up W");
+        });
+        InputManager.AddKeyBinding(KeyCode.S, InputManager.KeyActionType.Up, "KeyCameraMoveDownEND", () =>
+        {
+            verticalMove = 0;
+           // Debug.Log("Up S");
+        });
+
+
+        InputManager.AddKeyBinding(KeyCode.A, InputManager.KeyActionType.Pressed, "KeyCameraMoveLeft", () =>
+        {
+            horizontalMove = -1;
+            //Debug.Log("Pressed A");
+        });
+        InputManager.AddKeyBinding(KeyCode.D, InputManager.KeyActionType.Pressed, "KeyCameraMoveRight", () =>
+        {
+            horizontalMove = 1;
+            //Debug.Log("Pressed D");
+        });
+        InputManager.AddKeyBinding(KeyCode.W, InputManager.KeyActionType.Pressed, "KeyCameraMoveUp", () =>
+        {
+            verticalMove = 1;
+            //Debug.Log("Pressed W");
+        });
+        InputManager.AddKeyBinding(KeyCode.S, InputManager.KeyActionType.Pressed, "KeyCameraMoveDown", () =>
+        {
+            verticalMove = -1;
+            //Debug.Log("Pressed S");
+        });
+
+
+    }
     // Update is called once per frame
     void Update()
     {
+        /*
         horizontalMove = 0;
         verticalMove = 0;
         if (WASDPan)
@@ -101,7 +154,7 @@ public class General_2D_Camera_Handler_Script : MonoBehaviour
 
         verticalMove = Mathf.Clamp(verticalMove, -1, 1);
         horizontalMove = Mathf.Clamp(horizontalMove, -1, 1);
-
+        */
 
 
 

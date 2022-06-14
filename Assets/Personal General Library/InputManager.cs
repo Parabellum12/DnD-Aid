@@ -4,74 +4,17 @@ using UnityEngine;
 
 public class InputManager : MonoBehaviour
 {
-    Dictionary<KeyCode, System.Action> KeyCodeToActionDown = new Dictionary<KeyCode, System.Action>();
-    Dictionary<KeyCode, System.Action> KeyCodeToActionUp = new Dictionary<KeyCode, System.Action>();
-    Dictionary<KeyCode, System.Action> KeyCodeToActionHeld = new Dictionary<KeyCode, System.Action>();
+    Dictionary<string, KeyCode> actionNameToKey = new Dictionary<string, KeyCode>();
+    Dictionary<KeyCode, List<string>> keyToActionName = new Dictionary<KeyCode, List<string>>();
+    Dictionary<string, System.Action> actionNameToFunctionCall = new Dictionary<string, System.Action>();
+    Dictionary<string, KeyActionType> actionCallType = new Dictionary<string, KeyActionType>();
 
-
-    Dictionary<KeyCode, List<string>> KeycodeToActionName = new Dictionary<KeyCode, List<string>>();
-    Dictionary<string, KeyCode> ActionToKeyCode = new Dictionary<string, KeyCode>();
-    public enum keyInputType
+    public enum KeyActionType
     {
-        Replace,
-        Add
-    }
-    public keyInputType DuplicateInputSettings = keyInputType.Replace;
-
-
-
-    private void Update()
-    {
-        handleDownCalls();
-        handleUpCalls();
-        handleHeldCalls();
-    }
-
-
-    public void AddKeyToActionDown(KeyCode key, System.Action action, string ActionName)
-    {
-        if (DuplicateInputSettings == keyInputType.Replace)
-        {
-            RemoveKeyInput(key);
-        }
-        KeyCodeToActionDown.Add(key, action);
-    }
-    public void AddKeyToActionUp(KeyCode key, System.Action action, string ActionName)
-    {
-        if (DuplicateInputSettings == keyInputType.Replace)
-        {
-            RemoveKeyInput(key);
-        }
-        KeyCodeToActionUp.Add(key, action);
-    }
-
-    public void AddKeyToActionHeld(KeyCode key, System.Action action, string ActionName)
-    {
-        if (DuplicateInputSettings == keyInputType.Replace)
-        {
-            RemoveKeyInput(key);
-        }
-        KeyCodeToActionHeld.Add(key, action);
-    }
-
-    public void RemoveKeyInput(KeyCode key)
-    {
-        KeyCodeToActionDown.Remove(key);
-        KeyCodeToActionUp.Remove(key);
-        KeyCodeToActionHeld.Remove(key);
-
-
-        KeycodeToActionName.TryGetValue(key, out List<string> ActionNames);
-        foreach (string s in ActionNames)
-        {
-            ActionToKeyCode.Remove(s);
-        }
-    }
-
-    public void RemoveKeyInput(string ActionName)
-    {
-        ActionToKeyCode.TryGetValue(ActionName, out KeyCode key);
-        RemoveKeyInput(key);
+        None,
+        Down,
+        Pressed,
+        Up,
     }
 
 
@@ -92,37 +35,119 @@ public class InputManager : MonoBehaviour
     }
 
 
-    void handleDownCalls()
+
+    public void AddKeyBinding(KeyCode key, KeyActionType actionType, string ActionNameOrID, System.Action action)
     {
-        foreach (KeyCode key in KeyCodeToActionDown.Keys)
+        if (actionNameToKey.ContainsKey(ActionNameOrID))
         {
-            if (Input.GetKeyDown(key))
+            RemoveKeyBinding(ActionNameOrID);
+        }
+        actionCallType.Add(ActionNameOrID, actionType);
+        actionNameToKey.Add(ActionNameOrID, key);
+        if (keyToActionName.ContainsKey(key))
+        {
+            keyToActionName.TryGetValue(key, out List<string> temp);
+            temp.Add(ActionNameOrID);
+            keyToActionName.Remove(key);
+            keyToActionName.Add(key, temp);
+        }
+        else
+        {
+            List<string> temp = new List<string>();
+            temp.Add(ActionNameOrID);
+            keyToActionName.Add(key, temp);
+        }
+        actionNameToFunctionCall.Add(ActionNameOrID, action);
+
+
+        keyToActionName.TryGetValue(key, out List<string> temp2);
+        //Debug.Log(ActionNameOrID + ":"+temp2.Count);
+    }
+
+    public void RemoveKeyBinding(KeyCode key)
+    {
+        keyToActionName.TryGetValue(key, out List<string> actionNames);
+        if (keyToActionName.ContainsKey(key))
+        {
+            keyToActionName.Remove(key);
+            foreach (string actionName in actionNames)
             {
-                KeyCodeToActionDown.TryGetValue(key, out System.Action action);
-                action?.Invoke();
+                actionNameToKey.Remove(actionName);
+                actionNameToFunctionCall.Remove(actionName);
+                actionCallType.Remove(actionName);
             }
         }
     }
-    void handleUpCalls()
+    public void RemoveKeyBinding(string actionName)
     {
-        foreach (KeyCode key in KeyCodeToActionUp.Keys)
+        if (actionNameToKey.ContainsKey(actionName))
         {
-            if (Input.GetKeyDown(key))
-            {
-                KeyCodeToActionUp.TryGetValue(key, out System.Action action);
-                action?.Invoke();
-            }
+            actionNameToKey.TryGetValue(actionName, out KeyCode key);
+            actionNameToFunctionCall.Remove(actionName);
+            actionCallType.Remove(actionName);
+
+
+            keyToActionName.TryGetValue(key, out List<string> temp);
+            temp.Remove(actionName);
+            keyToActionName.Remove(key);
+            keyToActionName.Add(key, temp);
+            actionNameToKey.Remove(actionName);
         }
     }
 
-    void handleHeldCalls()
+
+    private void LateUpdate()
     {
-        foreach (KeyCode key in KeyCodeToActionHeld.Keys)
+        CallKeyBindingHandling();
+    }
+    public void CallKeyBindingHandling()
+    {
+        foreach (KeyCode key in keyToActionName.Keys)
         {
-            if (Input.GetKeyDown(key))
+            HandleKeyBindingActionCall(key);
+        }
+    }
+
+    void HandleKeyBindingActionCall(KeyCode key)
+    {
+        keyToActionName.TryGetValue(key, out List<string> actionNames);
+        foreach (string actionName in actionNames)
+        {
+
+
+            actionCallType.TryGetValue(actionName, out KeyActionType type);
+            switch (type)
             {
-                KeyCodeToActionHeld.TryGetValue(key, out System.Action action);
-                action?.Invoke();
+                case KeyActionType.None:
+                    //Debug.Log("Call " + actionName + " Error");
+                    return;
+                case KeyActionType.Down:
+                    if (Input.GetKeyDown(key))
+                    {
+                        actionNameToFunctionCall.TryGetValue(actionName, out System.Action callback);
+                        //Debug.Log("Call " + actionName + " Down");
+                        callback?.Invoke();
+                    }
+                    //Debug.Log("Test Call " + actionName + " Down");
+                    break;
+                case KeyActionType.Up:
+                    if (Input.GetKeyUp(key))
+                    {
+                        actionNameToFunctionCall.TryGetValue(actionName, out System.Action callback);
+                        //Debug.Log("Call " + actionName + " Up");
+                        callback?.Invoke();
+                    }
+                    //Debug.Log("Test Call " + actionName + " Up");
+                    break;
+                case KeyActionType.Pressed:
+                    if (Input.GetKey(key))
+                    {
+                        actionNameToFunctionCall.TryGetValue(actionName, out System.Action callback);
+                        //Debug.Log("Call " + actionName +" pressed");
+                        callback?.Invoke();
+                    }
+                    //Debug.Log("Test Call " + actionName + " Pressed");
+                    break;
             }
         }
     }
