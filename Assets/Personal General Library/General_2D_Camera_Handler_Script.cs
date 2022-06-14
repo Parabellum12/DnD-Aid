@@ -48,54 +48,65 @@ public class General_2D_Camera_Handler_Script : MonoBehaviour
     [SerializeField] InputManager InputManager;
     int horizontalMove = 0;
     int verticalMove = 0;
+    bool moveSpeedUpActive = false;
 
     private void Start()
     {
 
-        InputManager.AddKeyBinding(KeyCode.A, InputManager.KeyActionType.Up, "KeyCameraMoveLeftEND", () =>
-        {
-            horizontalMove = 0;
-            //Debug.Log("Up A");
-        });
-        InputManager.AddKeyBinding(KeyCode.D, InputManager.KeyActionType.Up, "KeyCameraMoveRightEND", () =>
-        {
-            horizontalMove = 0;
-            //Debug.Log("Up D");
-        });
-        InputManager.AddKeyBinding(KeyCode.W, InputManager.KeyActionType.Up, "KeyCameraMoveUpEND", () =>
-        {
-            verticalMove = 0;
-            //Debug.Log("Up W");
-        });
-        InputManager.AddKeyBinding(KeyCode.S, InputManager.KeyActionType.Up, "KeyCameraMoveDownEND", () =>
-        {
-            verticalMove = 0;
-           // Debug.Log("Up S");
-        });
 
 
-        InputManager.AddKeyBinding(KeyCode.A, InputManager.KeyActionType.Pressed, "KeyCameraMoveLeft", () =>
+        InputManager.AddKeyBinding(KeyCode.A, InputManager.KeyActionType.Down, "KeyCameraMoveLeft", () =>
         {
-            horizontalMove = -1;
+            horizontalMove--;
             //Debug.Log("Pressed A");
         });
-        InputManager.AddKeyBinding(KeyCode.D, InputManager.KeyActionType.Pressed, "KeyCameraMoveRight", () =>
+        InputManager.AddKeyBinding(KeyCode.D, InputManager.KeyActionType.Down, "KeyCameraMoveRight", () =>
         {
-            horizontalMove = 1;
+            horizontalMove++;
             //Debug.Log("Pressed D");
         });
-        InputManager.AddKeyBinding(KeyCode.W, InputManager.KeyActionType.Pressed, "KeyCameraMoveUp", () =>
+        InputManager.AddKeyBinding(KeyCode.W, InputManager.KeyActionType.Down, "KeyCameraMoveUp", () =>
         {
-            verticalMove = 1;
+            verticalMove++;
             //Debug.Log("Pressed W");
         });
-        InputManager.AddKeyBinding(KeyCode.S, InputManager.KeyActionType.Pressed, "KeyCameraMoveDown", () =>
+        InputManager.AddKeyBinding(KeyCode.S, InputManager.KeyActionType.Down, "KeyCameraMoveDown", () =>
         {
-            verticalMove = -1;
+            verticalMove--;
             //Debug.Log("Pressed S");
         });
 
 
+        InputManager.AddKeyBinding(KeyCode.A, InputManager.KeyActionType.Up, "KeyCameraMoveLeftEND", () =>
+        {
+            horizontalMove++;
+            //Debug.Log("Up A");
+        });
+        InputManager.AddKeyBinding(KeyCode.D, InputManager.KeyActionType.Up, "KeyCameraMoveRightEND", () =>
+        {
+            horizontalMove--;
+            //Debug.Log("Up D");
+        });
+        InputManager.AddKeyBinding(KeyCode.W, InputManager.KeyActionType.Up, "KeyCameraMoveUpEND", () =>
+        {
+            verticalMove--;
+            //Debug.Log("Up W");
+        });
+        InputManager.AddKeyBinding(KeyCode.S, InputManager.KeyActionType.Up, "KeyCameraMoveDownEND", () =>
+        {
+            verticalMove++;
+            // Debug.Log("Up S");
+        });
+
+
+        InputManager.AddKeyBinding(KeyCode.LeftShift, InputManager.KeyActionType.Down, "KeyCameraMoveSpeedUpStart", () =>
+        {
+            moveSpeedUpActive = true;
+        });
+        InputManager.AddKeyBinding(KeyCode.LeftShift, InputManager.KeyActionType.Up, "KeyCameraMoveSpeedUpEnd", () =>
+        {
+            moveSpeedUpActive = false;
+        });
     }
     // Update is called once per frame
     void Update()
@@ -156,7 +167,12 @@ public class General_2D_Camera_Handler_Script : MonoBehaviour
         horizontalMove = Mathf.Clamp(horizontalMove, -1, 1);
         */
 
-
+        if (!Application.isFocused)
+        {
+            horizontalMove = 0;
+            verticalMove = 0;
+            moveSpeedUpActive = false;
+        }
 
         handleScroll();
         handleKeyMove();
@@ -235,14 +251,14 @@ public class General_2D_Camera_Handler_Script : MonoBehaviour
     void handleKeyMove()
     {
        //Debug.Log("handleKeyMove");
-        if (lockMovement || lockMoveIfOverUi && UtilClass.IsPointerOverUIElement(LayerMask.NameToLayer("UI")) || !UtilClass.IsPointerOverUIElement(LayerMask.NameToLayer("mouseOverCanvas")))
+        if (lockMovement || lockMoveIfOverUi && UtilClass.IsPointerOverUIElement(LayerMask.NameToLayer("UI")) || !Application.isFocused)
         {
             return;
         }
         horizontalMove = Mathf.Clamp(horizontalMove, -1, 1);
         verticalMove = Mathf.Clamp(verticalMove, -1, 1);
         float moveSpeedMulti = 1;
-        if (ShiftForFasterMovement && Input.GetKey(KeyCode.LeftShift))
+        if (ShiftForFasterMovement && moveSpeedUpActive)
         {
             moveSpeedMulti = shiftMoveSpeedMultiplier;
         }
@@ -254,7 +270,7 @@ public class General_2D_Camera_Handler_Script : MonoBehaviour
     Vector3 originalMousePos;
     void handleCameraPan()
     {
-        if (lockMovement || !MousePan || (lockMoveIfOverUi && UtilClass.IsPointerOverUIElement(LayerMask.NameToLayer("UI"))) || !UtilClass.IsPointerOverUIElement(LayerMask.NameToLayer("mouseOverCanvas")))
+        if (lockMovement || !MousePan || (lockMoveIfOverUi && UtilClass.IsPointerOverUIElement(LayerMask.NameToLayer("UI"))) || !Application.isFocused)
         {
             return;
         }
