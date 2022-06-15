@@ -56,6 +56,18 @@ public class StraightLineHandler_Script : MonoBehaviour
         }
     }
 
+    public void setPoints(List<Point> newPoints)
+    {
+        allPoints.Clear();
+        allPoints.AddRange(newPoints);
+        DrawLines();
+    }
+
+    public List<Point> GetAllPoints()
+    {
+        return allPoints;
+    }
+
     public void EndCurrentLine()
     {
         currentState = State.NewLine;
@@ -214,7 +226,7 @@ public class StraightLineHandler_Script : MonoBehaviour
     }
 
 
-    class Point
+    public class Point
     {
         Vector2 pos;
         List<Point> PointsIPointTo = new List<Point>();

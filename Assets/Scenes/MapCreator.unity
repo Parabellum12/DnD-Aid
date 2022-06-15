@@ -233,9 +233,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   StraightLineHandler: {fileID: 244517337}
+  CurvedLineHandler: {fileID: 244517336}
   General_2D_CameraHandler: {fileID: 1134267933}
   MarkerHandler: {fileID: 1244388401}
   inputManager: {fileID: 244517340}
+  autoAddKeyBindings: 1
   SelectedTool: 0
 --- !u!114 &244517336
 MonoBehaviour:
@@ -249,6 +251,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d83a2058aad560648a0abbf622c6e6b5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  maxLineCount: 15
+  maxResCount: 1000
 --- !u!114 &244517337
 MonoBehaviour:
   m_ObjectHideFlags: 0
