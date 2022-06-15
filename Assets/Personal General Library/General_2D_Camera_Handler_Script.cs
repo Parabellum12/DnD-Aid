@@ -111,61 +111,6 @@ public class General_2D_Camera_Handler_Script : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        /*
-        horizontalMove = 0;
-        verticalMove = 0;
-        if (WASDPan)
-        {
-            if (Input.GetKey(KeyCode.A))
-            {
-                horizontalMove--;
-            }
-            if (Input.GetKey(KeyCode.D))
-            {
-                horizontalMove++;
-            }
-
-            if (Input.GetKey(KeyCode.W))
-            {
-                verticalMove++;
-            }
-            if (Input.GetKey(KeyCode.S))
-            {
-                verticalMove--;
-            }
-        }
-        if (ArrowKeyPan)
-        {
-            if (Input.GetKey(KeyCode.LeftArrow))
-            {
-                horizontalMove--;
-            }
-            if (Input.GetKey(KeyCode.RightArrow))
-            {
-                horizontalMove++;
-            }
-
-            if (Input.GetKey(KeyCode.UpArrow))
-            {
-                verticalMove++;
-            }
-            if (Input.GetKey(KeyCode.DownArrow))
-            {
-                verticalMove--;
-            }
-        }
-        if (!HorizontalMovement)
-        {
-            horizontalMove = 0;
-        }
-        if (!VerticalMovement)
-        {
-            verticalMove = 0;
-        }
-
-        verticalMove = Mathf.Clamp(verticalMove, -1, 1);
-        horizontalMove = Mathf.Clamp(horizontalMove, -1, 1);
-        */
 
         if (!Application.isFocused)
         {
@@ -178,6 +123,8 @@ public class General_2D_Camera_Handler_Script : MonoBehaviour
         handleKeyMove();
         handleCameraPan();
     }
+
+    public bool CameraMousePaning = false;
 
 
     bool buttonsHeldForZoomIn()
@@ -268,10 +215,13 @@ public class General_2D_Camera_Handler_Script : MonoBehaviour
     }
 
     Vector3 originalMousePos;
+    bool waitingForRelease = false;
     void handleCameraPan()
     {
-        if (lockMovement || !MousePan || (lockMoveIfOverUi && UtilClass.IsPointerOverUIElement(LayerMask.NameToLayer("UI"))) || !Application.isFocused)
+        if ((lockMovement || !MousePan || (lockMoveIfOverUi && UtilClass.IsPointerOverUIElement(LayerMask.NameToLayer("UI"))) || !Application.isFocused) && !CameraMousePaning)
         {
+            CameraMousePaning = false;
+            waitingForRelease = false;
             return;
         }
 
@@ -279,9 +229,27 @@ public class General_2D_Camera_Handler_Script : MonoBehaviour
         {
             originalMousePos = UtilClass.getMouseWorldPosition();
         }
+
+
+
+        if (!waitingForRelease)
+        {
+            CameraMousePaning = false;
+        }
+
+
+        if (Input.GetMouseButtonUp(MouseButtonToPanWith) || Input.GetMouseButtonUp(SecondaryMouseButonTOPanWith))
+        {
+            waitingForRelease = false;
+        }
         else if (Input.GetMouseButton(MouseButtonToPanWith) || Input.GetMouseButton(SecondaryMouseButonTOPanWith))
         {
             Vector2 newMousePos = UtilClass.getMouseWorldPosition();
+            if (!originalMousePos.Equals(newMousePos))
+            {
+                waitingForRelease = true;
+                CameraMousePaning = true;
+            }
             float horizotalDist = newMousePos.x - originalMousePos.x;
             float verticalDist = newMousePos.y - originalMousePos.y;
 

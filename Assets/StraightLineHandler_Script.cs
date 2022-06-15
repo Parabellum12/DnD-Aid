@@ -18,20 +18,26 @@ public class StraightLineHandler_Script : MonoBehaviour
         currentState = State.NewLine;
     }
 
-    enum State
+    public enum State
     {
         NewLine,
         ContinueLine
     }
     State currentState = State.NewLine;
 
-    Point lastPointAdded = null;
+    public State ReturnState()
+    {
+        return currentState;
+    }
 
+    Point lastPointAdded = null;
+    int currentLineCount = 0;
     public void AddPoint(Vector2 pos, bool alsoDrawLines)
     {
         Point newPoint = new Point(pos);
         if (currentState == State.ContinueLine)
         {
+            currentLineCount++;
             lastPointAdded.AddPoint(newPoint);
         }
         else
@@ -44,33 +50,17 @@ public class StraightLineHandler_Script : MonoBehaviour
         {
             DrawLines();
         }
+        if (currentLineCount > 0)
+        {
+            PrunePoints();
+        }
     }
 
     public void EndCurrentLine()
     {
         currentState = State.NewLine;
+        currentLineCount = 0;
         lastPointAdded = null;
-    }
-
-    public void RemovePoint(Vector2 pos, bool alsoDrawLines)
-    {
-        Point pToRemove = null;
-        foreach (Point p in allPoints)
-        {
-            if (p.GetPos().Equals(pos))
-            {
-                RemovePoint(p);
-                pToRemove = p;
-            }
-        }
-        if (pToRemove != null)
-        {
-            allPoints.Remove(pToRemove);
-        }
-        if (alsoDrawLines)
-        {
-            DrawLines();
-        }
     }
 
     public void HandleGuideLine(Vector2 Pos)
@@ -129,6 +119,100 @@ public class StraightLineHandler_Script : MonoBehaviour
         allLineRenderers.Add(lr);
     }
 
+    void PrunePoints()
+    {
+        Debug.Log("hi");
+        //collapse points in same pos into 1, remove unneeded points
+        Vector2[] points = new Vector2[allPoints.Count];
+        List<Vector2Int> samePoints = new List<Vector2Int>();
+        for (int i = 0; i < points.Length; i++)
+        {
+            points[i] = allPoints[i].GetPos();
+            for (int j = 0; j < i; j++)
+            {
+                if (points[i].Equals(points[j]) && j != i)
+                {
+                    samePoints.Add(new Vector2Int(i, j));
+                }
+            }
+        }
+        for (int i = 0; i < samePoints.Count; i++)
+        {
+            for (int j = 0; j < allPoints.Count; j++)
+            {
+                if (j != samePoints[i].x && j != samePoints[i].y)
+                {
+                    allPoints[j].ReplacePointWithNewPoint(allPoints[samePoints[i].x], allPoints[samePoints[i].y]);
+                }
+            }
+
+            allPoints[samePoints[i].y].AddPoint(allPoints[samePoints[i].x].ReturnPointsIPointTo().ToArray());
+            allPoints.Remove(allPoints[samePoints[i].x]);
+        }
+
+    }
+
+    int maxLineTestResolution = 1000;
+
+    public bool HandleSelect(Vector2 pos)
+    {
+        float startTime = Time.realtimeSinceStartup;
+        foreach (Point p in allPoints)
+        {
+            foreach (Vector4 lines in p.GetAllLines())
+            {
+                int neededPoints = Mathf.Clamp(Mathf.CeilToInt(Vector2.Distance(new Vector2(lines.x, lines.y), new Vector2(lines.z, lines.w)) / 1.5f), 1, maxLineTestResolution);
+                for (float i = 0; i < 1; i += 1f / neededPoints)
+                {
+                    if (UtilClass.isDistWithinErrorRange(new Vector2(lines.x, lines.y), new Vector2(lines.z, lines.w), 1f))
+                    {
+                        //generateHandles;
+                        updateLineTestResolution((Time.realtimeSinceStartup - startTime) > .1f, Time.realtimeSinceStartup - startTime);
+                        return true;
+                    }
+                }
+            }
+        }
+
+        updateLineTestResolution((Time.realtimeSinceStartup - startTime) > .1f, Time.realtimeSinceStartup - startTime);
+        return false;
+    }
+    private void updateLineTestResolution(bool WasTooLong, float magnitude)
+    {
+        float mutliBy = 1;
+        if (WasTooLong)
+        {
+            mutliBy = -1f;
+        }
+
+        int subBy = 0;
+        if (magnitude < .2f)
+        {
+            subBy = 50;
+        }
+        else if (magnitude < .3f)
+        {
+            subBy = 100;
+        }
+        else if (magnitude < .4f)
+        {
+            subBy = 200;
+        }
+        else if (magnitude < .5f)
+        {
+            subBy = 300;
+        }
+        else
+        {
+            subBy = 500;
+        }
+
+
+        maxLineTestResolution += Mathf.RoundToInt(subBy * mutliBy);
+
+        maxLineTestResolution = Mathf.Clamp(maxLineTestResolution, 1, 1000);
+    }
+
 
     class Point
     {
@@ -143,6 +227,11 @@ public class StraightLineHandler_Script : MonoBehaviour
         public void AddPoint(Point nextPoint)
         {
             PointsIPointTo.Add(nextPoint);
+        }
+
+        public void AddPoint(Point[] nextPoints)
+        {
+            PointsIPointTo.AddRange(nextPoints);
         }
 
         public void RemovePoint(Point nextPoint)
@@ -164,6 +253,29 @@ public class StraightLineHandler_Script : MonoBehaviour
         public Vector2 GetPos()
         {
             return pos;
+        }
+
+        public List<Point> ReturnPointsIPointTo()
+        {
+            return PointsIPointTo;
+        }
+
+        public void ReplacePointWithNewPoint(Point oldPoint, Point newPoint)
+        {
+            bool addNew = false;
+            foreach (Point point in PointsIPointTo)
+            {
+                if (point.Equals(oldPoint))
+                {
+                    PointsIPointTo.Remove(oldPoint);
+                    addNew = true;
+                    break;
+                }
+            }
+            if (addNew)
+            {
+                PointsIPointTo.Add(newPoint);
+            }
         }
     }
 }

@@ -8,7 +8,7 @@ public class InputManager : MonoBehaviour
     Dictionary<KeyCode, List<string>> keyToActionName = new Dictionary<KeyCode, List<string>>();
     Dictionary<string, System.Action> actionNameToFunctionCall = new Dictionary<string, System.Action>();
     Dictionary<string, KeyActionType> actionCallType = new Dictionary<string, KeyActionType>();
-
+    [SerializeField]List<string> KeyBindings = new List<string>();
     public enum KeyActionType
     {
         None,
@@ -31,6 +31,20 @@ public class InputManager : MonoBehaviour
                 }
             }
             yield return null;
+        }
+    }
+
+    void handleInspectorVisuals()
+    {
+        KeyBindings.Clear();
+        foreach (KeyCode key in keyToActionName.Keys)
+        {
+            keyToActionName.TryGetValue(key, out List<string> s);
+            foreach (string s2 in s)
+            {
+                actionCallType.TryGetValue(s2, out KeyActionType type);
+                KeyBindings.Add(key.ToString() + ":" + type.ToString() + "  " + s2);
+            }
         }
     }
 
@@ -61,6 +75,7 @@ public class InputManager : MonoBehaviour
 
 
         keyToActionName.TryGetValue(key, out List<string> temp2);
+        handleInspectorVisuals();
         //Debug.Log(ActionNameOrID + ":"+temp2.Count);
     }
 
@@ -77,6 +92,7 @@ public class InputManager : MonoBehaviour
                 actionCallType.Remove(actionName);
             }
         }
+        handleInspectorVisuals();
     }
     public void RemoveKeyBinding(string actionName)
     {
@@ -93,6 +109,7 @@ public class InputManager : MonoBehaviour
             keyToActionName.Add(key, temp);
             actionNameToKey.Remove(actionName);
         }
+        handleInspectorVisuals();
     }
 
 
