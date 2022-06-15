@@ -171,7 +171,7 @@ public static class UtilClass
             int size = files[i].Length - (DirectoryPath.Length + FileType.Length + 2);
             string currentFileName = files[i].Substring(DirectoryPath.Length + 1, size);
             fileNames[i] = currentFileName;
-            Debug.Log("UtilClass: GetFileNames: " + currentFileName);
+            //Debug.Log("UtilClass: GetFileNames: " + currentFileName);
         }
         return fileNames;
     }
@@ -182,10 +182,12 @@ public static class UtilClass
         string[] fileNames = new string[files.Length];
         for (int i = 0; i < files.Length; i++)
         {
-            int size = files[i].Length - (DirectoryPath.Length);
+            //Debug.Log("UtilClass: GetFileNames2a: " + files[i]);
+            int size = files[i].Length - (DirectoryPath.Length+1);
+            //Debug.Log("UtilClass: GetFileNames2aa: " + (DirectoryPath.Length + 1) + ":" +  size + ":" + files[i].Length);
             string currentFileName = files[i].Substring(DirectoryPath.Length + 1, size);
             fileNames[i] = currentFileName;
-            Debug.Log("UtilClass: GetFileNames2: " + currentFileName);
+            //Debug.Log("UtilClass: GetFileNames2b: " + currentFileName);
         }
         return fileNames;
     }
