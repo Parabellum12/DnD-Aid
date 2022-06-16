@@ -251,7 +251,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d83a2058aad560648a0abbf622c6e6b5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxLineCount: 15
+  maxLineCount: 16
   maxResCountHolder: 500
   maxResCount: 0
   minTestAmount: 0.01
@@ -758,7 +758,7 @@ MonoBehaviour:
   HorizontalMovement: 1
   VerticalMovement: 1
   ShiftForFasterMovement: 1
-  baseMoveSpeed: 20
+  baseMoveSpeed: 50
   shiftMoveSpeedMultiplier: 2.5
   MousePan: 1
   MouseButtonToPanWith: 2
@@ -769,9 +769,9 @@ MonoBehaviour:
   CamZoom: 1
   CamZoomViaButtons: 1
   CamZoomDoesAccel: 1
-  CamZoomAccelRateWaitTime: 0.5
+  CamZoomAccelRateWaitTime: 1
   CamZoomAccelRate: 10
-  maxZoomRate: 15
+  maxZoomRate: 25
   TimeLimitBetweenScrollsForZoomAccel: 0.5
   minCameraZoom: 50
   maxCameraZoom: 500
