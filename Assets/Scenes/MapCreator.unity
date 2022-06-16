@@ -254,6 +254,8 @@ MonoBehaviour:
   maxLineCount: 15
   maxResCountHolder: 500
   maxResCount: 0
+  minTestAmount: 0.01
+  minChangeBy: 5
 --- !u!114 &244517337
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -95,14 +95,13 @@ public class LineCreatorHandler_Script : MonoBehaviour
             case Tools.Off:
                 break;
             case Tools.Select:
-                float starTime = Time.realtimeSinceStartup;
-                if (CurvedLineHandler.HandleSelect(MarkerHandler.transform.position))
-                {
-                    Debug.Log("CurvedLineHandler Select");
-                }
-                else if (StraightLineHandler.HandleSelect(MarkerHandler.transform.position))
+                float starTime = Time.realtimeSinceStartup; if (StraightLineHandler.HandleSelect(MarkerHandler.transform.position))
                 {
                     Debug.Log("StraightLineHandler Select");
+                }
+                else if (CurvedLineHandler.HandleSelect(MarkerHandler.transform.position))
+                {
+                    Debug.Log("CurvedLineHandler Select");
                 }
                 else
                 {

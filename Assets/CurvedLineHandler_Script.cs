@@ -39,7 +39,7 @@ public class CurvedLineHandler_Script : MonoBehaviour
         {
             EndLine();
         }
-        else
+        else if (lastAddedLine.GetPointCount() >= 2)
         {
             DrawLine(lastAddedLine, true);
         }
@@ -52,7 +52,7 @@ public class CurvedLineHandler_Script : MonoBehaviour
             return;
         }
         currentState = State.NewLine;
-        lastAddedLine.draw(175);
+        DrawLine(lastAddedLine, 175);
         lastAddedLine = null;
     }
 
@@ -65,13 +65,24 @@ public class CurvedLineHandler_Script : MonoBehaviour
     {
         foreach (CurvedLine cl in allLines)
         {
-            if (cl.IsSelected(pos))
+            if (cl.IsSelected(pos, true))
             {
                 //handle creating editing handles
                 //Debug.Log("Curved HandleSelect");
                 return true;
             }
         }
+        /*
+        foreach (CurvedLine cl in allLines)
+        {
+            if (cl.IsSelected(pos, false))
+            {
+                //handle creating editing handles
+                //Debug.Log("Curved HandleSelect");
+                return true;
+            }
+        }
+        */
         return false;
     }
 
@@ -102,24 +113,65 @@ public class CurvedLineHandler_Script : MonoBehaviour
     {
         //Debug.Log("DrawLine");
         float startTime = Time.realtimeSinceStartup;
-        line.draw(maxResCount);
+        if (line.GetPointCount() < 2)
+        {
+            line.KillMe();
+            allLines.Remove(line);
+        }
+        else
+        {
+            line.draw(maxResCount);
+        }
         if (updateRes)
         {
-            updateMaxRes(Time.realtimeSinceStartup - startTime > .05f, Time.realtimeSinceStartup - startTime);
+            updateMaxRes(Time.realtimeSinceStartup - startTime > minTestAmount, Time.realtimeSinceStartup - startTime);
         }
+    }
+
+    public void DrawLine(CurvedLine line, int resCount)
+    {
+        //Debug.Log("DrawLine");
+        float startTime = Time.realtimeSinceStartup;
+        if (line.GetPointCount() < 2)
+        {
+            line.KillMe();
+            allLines.Remove(line);
+        }
+        else
+        {
+            line.draw(resCount);
+        }
+        updateMaxRes(Time.realtimeSinceStartup - startTime > minTestAmount, Time.realtimeSinceStartup - startTime);
+
     }
 
     public void DrawLines()
     {
         //Debug.Log("DrawAllLine");
         float startTime = Time.realtimeSinceStartup;
+        List<CurvedLine> toRemove = new List<CurvedLine>();
         foreach (CurvedLine cl in allLines)
         {
-            cl.draw(maxResCount);
+            if (cl.GetPointCount() < 2)
+            {
+                toRemove.Add(cl);
+            }
+            else
+            {
+                cl.draw(maxResCount);
+            }
         }
-        updateMaxRes(Time.realtimeSinceStartup - startTime > .05f, Time.realtimeSinceStartup - startTime);
+        updateMaxRes(Time.realtimeSinceStartup - startTime > minTestAmount, Time.realtimeSinceStartup - startTime);
+
+        foreach (CurvedLine cl in toRemove)
+        {
+            cl.KillMe();
+            allLines.Remove(cl);
+        }
     }
 
+    [SerializeField] float minTestAmount = .05f;
+    [SerializeField] int minChangeBy = 5;
     void updateMaxRes(bool over, float amount)
     {
         int multi = 1;
@@ -129,37 +181,39 @@ public class CurvedLineHandler_Script : MonoBehaviour
         }
         else
         {
-            maxResCount += 10;
+            maxResCount += 2;
             maxResCount = Mathf.Clamp(maxResCount, 1, maxResCountHolder);
+            Debug.Log("updateMaxRes Time: " + amount);
             return;
         }
-        int changeby = 50;
-        if (amount < .05f)
+        int changeby;
+        if (amount < minTestAmount)
         {
-            changeby = 25;
+            changeby = minChangeBy;
         }
-        else if (amount < .1f)
+        else if (amount < minTestAmount*2f)
         {
-            changeby = 100;
+            changeby = minChangeBy*2;
         }
-        else if (amount < .15f)
+        else if (amount < minTestAmount*3)
         {
-            changeby = 150;
+            changeby = minChangeBy*3;
         }
-        else if (amount < .2f)
+        else if (amount < minTestAmount*4)
         {
-            changeby = 200;
+            changeby = minChangeBy*4;
         }
-        else if (amount < .25f)
+        else if (amount < minTestAmount*5)
         {
-            changeby = 250;
+            changeby = minChangeBy*5;
         }
         else
         {
-            changeby = 500;
+            changeby = minChangeBy*10;
         }
         maxResCount += changeby * multi;
         maxResCount = Mathf.Clamp(maxResCount, 1, maxResCountHolder);
+        Debug.Log("updateMaxRes Time: " + amount);
     }
 
 
@@ -185,7 +239,7 @@ public class CurvedLineHandler_Script : MonoBehaviour
             lerpData = null;
         }
 
-        public bool IsSelected(Vector2 pos)
+        public bool IsSelected(Vector2 pos, bool firstORSecondCatch)
         {
             if (lerpData == null)
             {
@@ -199,27 +253,31 @@ public class CurvedLineHandler_Script : MonoBehaviour
             }
             Debug.Log("Proccess Line");
 
-
-            for (int i = 0; i < drawnPositions.Length-1; i++)
+            if (firstORSecondCatch)
             {
-                if (UtilClass.isPointWithinDistanceToLine(drawnPositions[i], drawnPositions[i+1], pos, 1.25f))
+                for (int i = 0; i < drawnPositions.Length - 1; i++)
                 {
-                    Debug.Log("CurvedLine IsSelected First Catch");
-                    return true;
+                    if (UtilClass.isPointWithinDistanceToLine(drawnPositions[i], drawnPositions[i + 1], pos, 1.5f))
+                    {
+                        Debug.Log("CurvedLine IsSelected First Catch");
+                        return true;
+                    }
                 }
+                return false;
             }
-
-
-            for (float i = 0; i <= 1; i += 1f/250)
+            else
             {
-                Vector2 a = lerpData.getLerpPos(i);
-                if (Vector2.Distance(a ,pos) <= 1.25f)
+                for (float i = 0; i <= 1; i += 1f / 250)
                 {
-                    Debug.Log("CurvedLine IsSelected Second Catch");
-                    return true;
+                    Vector2 a = lerpData.getLerpPos(i);
+                    if (Vector2.Distance(a, pos) <= 1.5f)
+                    {
+                        Debug.Log("CurvedLine IsSelected Second Catch");
+                        return true;
+                    }
                 }
+                return false;
             }
-            return false;
         }
 
 
@@ -246,7 +304,7 @@ public class CurvedLineHandler_Script : MonoBehaviour
             {
                 return;
             }
-            int lineResolution = Mathf.Clamp(maxResolutionCount, Points.Count*2, maxResolutionCount);
+            int lineResolution = Mathf.Clamp(maxResolutionCount, Mathf.RoundToInt(Points.Count*1.5f), maxResolutionCount);
             if (lerpData == null)
             {
 
@@ -313,6 +371,12 @@ public class CurvedLineHandler_Script : MonoBehaviour
             lineRenderer.positionCount = poses.Count;
             lineRenderer.SetPositions(poses.ToArray());
             drawnPositions = poses.ToArray();
+        }
+
+        public void KillMe()
+        {
+            Debug.LogError("Kill me");
+            Destroy(lineRenderer.gameObject);
         }
 
 

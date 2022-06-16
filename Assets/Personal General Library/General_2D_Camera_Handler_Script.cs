@@ -15,8 +15,8 @@ public class General_2D_Camera_Handler_Script : MonoBehaviour
     public bool VerticalMovement = true;
     public bool ShiftForFasterMovement = true;
 
-    public float baseMoveSpeed = 5f;
-    public float shiftMoveSpeedMultiplier = 2f;
+    public float baseMoveSpeed = 50f;
+    public float shiftMoveSpeedMultiplier = 2.5f;
 
     public bool MousePan = true;
     public int MouseButtonToPanWith = 2;
@@ -29,12 +29,12 @@ public class General_2D_Camera_Handler_Script : MonoBehaviour
     public bool CamZoom = true;
     public bool CamZoomViaButtons = true;
     public bool CamZoomDoesAccel = true;
-    public float CamZoomAccelRateWaitTime = 3f;
-    public float CamZoomAccelRate = 5f;
-    public float maxZoomRate = 20;
-    public float TimeLimitBetweenScrollsForZoomAccel = .1f;
+    public float CamZoomAccelRateWaitTime = 1f;
+    public float CamZoomAccelRate = 10f;
+    public float maxZoomRate = 25;
+    public float TimeLimitBetweenScrollsForZoomAccel = .5f;
     public float minCameraZoom = 50f;
-    public float maxCameraZoom = 100f;
+    public float maxCameraZoom = 500f;
 
 
     public bool lockMoveIfOverUi = true;
