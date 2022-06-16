@@ -46,6 +46,13 @@ public class LineCreatorHandler_Script : MonoBehaviour
             });
         }
 
+
+        Vector2 a = new Vector2(0, 5);
+        Vector2 b = new Vector2(0, 0);
+        Vector2 c = new Vector2(0, 1);
+
+        Debug.Log(a + "->" + b + ":" + c + ":" + UtilClass.isPointWithinDistanceToLine(a,b,c,1));
+
     }
 
     public enum Tools
@@ -79,11 +86,29 @@ public class LineCreatorHandler_Script : MonoBehaviour
 
     void handleClick()
     {
+        if (!Application.isFocused || !UtilClass.IsPointerOverUIElement(LayerMask.NameToLayer("mouseOverCanvas")))
+        {
+            return;
+        }
         switch (SelectedTool)
         {
             case Tools.Off:
                 break;
             case Tools.Select:
+                float starTime = Time.realtimeSinceStartup;
+                if (CurvedLineHandler.HandleSelect(MarkerHandler.transform.position))
+                {
+                    Debug.Log("CurvedLineHandler Select");
+                }
+                else if (StraightLineHandler.HandleSelect(MarkerHandler.transform.position))
+                {
+                    Debug.Log("StraightLineHandler Select");
+                }
+                else
+                {
+                    //Debug.Log("None Select");
+                }
+                Debug.Log("SelectLine Time:"+ (Time.realtimeSinceStartup - starTime));
                 break;
             case Tools.StraightLine:
                 StraightLineHandler.AddPoint(MarkerHandler.transform.position, true);

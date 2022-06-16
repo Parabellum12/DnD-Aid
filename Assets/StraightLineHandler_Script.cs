@@ -133,7 +133,7 @@ public class StraightLineHandler_Script : MonoBehaviour
 
     void PrunePoints()
     {
-        Debug.Log("hi");
+        //Debug.Log("hi");
         //collapse points in same pos into 1, remove unneeded points
         Vector2[] points = new Vector2[allPoints.Count];
         List<Vector2Int> samePoints = new List<Vector2Int>();
@@ -173,16 +173,17 @@ public class StraightLineHandler_Script : MonoBehaviour
         {
             foreach (Vector4 lines in p.GetAllLines())
             {
-                int neededPoints = Mathf.Clamp(Mathf.CeilToInt(Vector2.Distance(new Vector2(lines.x, lines.y), new Vector2(lines.z, lines.w)) / 1.5f), 1, maxLineTestResolution);
-                for (float i = 0; i < 1; i += 1f / neededPoints)
+                Vector2 a = new Vector2(lines.x, lines.y);
+                Vector2 b = new Vector2(lines.z, lines.w);
+                //Debug.Log("CurvedLine HandleSelect:" + a + "->" + b + ":" + pos);
+                if (UtilClass.isPointWithinDistanceToLine(a, b, pos, 1.25f))
                 {
-                    if (UtilClass.isDistWithinErrorRange(new Vector2(lines.x, lines.y), new Vector2(lines.z, lines.w), 1f))
-                    {
-                        //generateHandles;
-                        updateLineTestResolution((Time.realtimeSinceStartup - startTime) > .1f, Time.realtimeSinceStartup - startTime);
-                        return true;
-                    }
+                    //generateHandles;
+                    //Debug.Log("Straight HandleSelect");
+                    updateLineTestResolution((Time.realtimeSinceStartup - startTime) > .1f, Time.realtimeSinceStartup - startTime);
+                    return true;
                 }
+
             }
         }
 

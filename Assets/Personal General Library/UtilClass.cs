@@ -118,7 +118,20 @@ public static class UtilClass
     public static bool isPointWithinDistanceToLine(Vector2 a, Vector2 b, Vector2 c, float dist)
     {
         //point c in relation to line a-b
-        return GetClosestDistanceBetweenLineAndPoint2D(a,b,c) <= dist;
+        float distAB = Vector2.Distance(a,b);
+        float distAC = Vector2.Distance(a,c);
+        float distBC = Vector2.Distance(b, c);
+        if (distAC <= distAB && distBC <= distAB)
+        {
+            return GetClosestDistanceBetweenLineAndPoint2D(a, b, c) <= dist;
+        }
+        else
+        {
+            //Debug.Log("isPointWithinDistanceToLine First Catch");
+            return false;
+        }
+
+
     }
 
 

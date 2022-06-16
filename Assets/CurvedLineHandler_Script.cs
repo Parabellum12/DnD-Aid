@@ -9,6 +9,8 @@ public class CurvedLineHandler_Script : MonoBehaviour
     GameObject CurvedLineHolder;
     public int maxLineCount = 9;
     [SerializeField] int maxResCount = 1000;
+    
+
     private void Start()
     {
         CurvedLineHolder = new GameObject("CurvedLineHolder");
@@ -25,6 +27,7 @@ public class CurvedLineHandler_Script : MonoBehaviour
     {
         if (currentState == State.NewLine)
         {
+            maxResCount = 1000;
             currentState = State.ContinueLine;
             lastAddedLine = new CurvedLine(CurvedLineHolder);
             allLines.Add(lastAddedLine);
@@ -48,9 +51,36 @@ public class CurvedLineHandler_Script : MonoBehaviour
             return;
         }
         currentState = State.NewLine;
-        DrawLine(lastAddedLine, true);
+        lastAddedLine.draw(250);
         lastAddedLine = null;
     }
+
+
+
+
+
+
+    public bool HandleSelect(Vector2 pos)
+    {
+        foreach (CurvedLine cl in allLines)
+        {
+            if (cl.IsSelected(pos))
+            {
+                //handle creating editing handles
+                //Debug.Log("Curved HandleSelect");
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+
+
+
+
+
+
 
     Vector2 lastPointGuideLineDrawnAt;
 
@@ -67,11 +97,9 @@ public class CurvedLineHandler_Script : MonoBehaviour
 
 
 
-
-
     public void DrawLine(CurvedLine line, bool updateRes)
     {
-        Debug.Log("DrawLine");
+        //Debug.Log("DrawLine");
         float startTime = Time.realtimeSinceStartup;
         line.draw(maxResCount);
         if (updateRes)
@@ -82,11 +110,11 @@ public class CurvedLineHandler_Script : MonoBehaviour
 
     public void DrawLines()
     {
-        Debug.Log("DrawAllLine");
+        //Debug.Log("DrawAllLine");
         float startTime = Time.realtimeSinceStartup;
         foreach (CurvedLine cl in allLines)
         {
-            lastAddedLine.draw(maxResCount);
+            cl.draw(maxResCount);
         }
         updateMaxRes(Time.realtimeSinceStartup - startTime > .05f, Time.realtimeSinceStartup - startTime);
     }
@@ -100,14 +128,14 @@ public class CurvedLineHandler_Script : MonoBehaviour
         }
         else
         {
-            maxResCount += 100;
+            maxResCount += 10;
             maxResCount = Mathf.Clamp(maxResCount, 1, 1000);
             return;
         }
         int changeby = 50;
         if (amount < .05f)
         {
-            changeby = 50;
+            changeby = 25;
         }
         else if (amount < .1f)
         {
@@ -142,7 +170,10 @@ public class CurvedLineHandler_Script : MonoBehaviour
         List<Vector2> Points = new List<Vector2>();
         GameObject CurvedLineLineRendererHolder;
         LineRenderer lineRenderer;
-
+        LerpData lerpData = null;
+        Vector3[] drawnPositions = null;
+        Vector2 centerOfCurve;
+        float maxDistFromCurveCenter;
         public CurvedLine(GameObject CurvedLineLineRendererHolder)
         {
             this.CurvedLineLineRendererHolder = CurvedLineLineRendererHolder;
@@ -150,17 +181,46 @@ public class CurvedLineHandler_Script : MonoBehaviour
             go.transform.parent = this.CurvedLineLineRendererHolder.transform;
             go.transform.position = new Vector3(0,0,-2);
             lineRenderer = go.AddComponent<LineRenderer>();
+            lerpData = null;
+        }
+
+        public bool IsSelected(Vector2 pos)
+        {
+            if (lerpData == null)
+            {
+                //Debug.Log("CurvedLine IsSelected First Catch");
+                return false;
+            }
+            if (Vector2.Distance(centerOfCurve, pos) > maxDistFromCurveCenter)
+            {
+                
+                return false;
+            }
+            Debug.Log("Proccess Line");
+            int index = 0;
+            for (float i = 0; i <= 1; i += 1f/500)
+            {
+                Vector2 a = drawnPositions[index];
+                if (Vector2.Distance(a ,pos) <= 1.25f)
+                {
+                    return true;
+                }
+                index++;
+            }
+            return false;
         }
 
 
         public void AddPoint(Vector2 newPoint)
         {
             Points.Add(newPoint);
+            lerpData = null;
         }
 
         public void RemoveLastPoint()
         {
             Points.RemoveAt(Points.Count - 1);
+            lerpData = null;
         }
 
         public int GetPointCount()
@@ -174,43 +234,73 @@ public class CurvedLineHandler_Script : MonoBehaviour
             {
                 return;
             }
-            List<LerpData> lerps = new List<LerpData>();
-            float maxDist = 0;
-            for (int i = 0; i < Points.Count-1; i++)
+            int lineResolution = Mathf.Clamp(maxResolutionCount, Points.Count*2, maxResolutionCount);
+            if (lerpData == null)
             {
-                lerps.Add(new LerpData(Points[i], Points[i+1]));
-                maxDist += Vector2.Distance(Points[i], Points[i + 1]);
-            }
 
-            int lineResolution = Mathf.Clamp(maxResolutionCount, Points.Count, maxResolutionCount);
-
-            while (lerps.Count > 1)
-            {
-                List<LerpData> tempLerps = new List<LerpData>();
-                for (int i = 0; i < lerps.Count-1; i++)
+                centerOfCurve = Vector2.zero;
+                List<LerpData> lerps = new List<LerpData>();
+                float maxDist = 0;
+                for (int i = 0; i < Points.Count - 1; i++)
                 {
-                    tempLerps.Add(new LerpData(lerps[i], lerps[i+1]));
+                    lerps.Add(new LerpData(Points[i], Points[i + 1]));
+                    maxDist += Vector2.Distance(Points[i], Points[i + 1]);
+                    centerOfCurve += Points[i];
                 }
-                lerps.Clear();
-                lerps.AddRange(tempLerps);
-            }
-            lineRenderer.positionCount = 0;
+                centerOfCurve = centerOfCurve / Points.Count;
 
+
+
+
+
+
+
+                while (lerps.Count > 1)
+                {
+                    List<LerpData> tempLerps = new List<LerpData>();
+                    for (int i = 0; i < lerps.Count - 1; i++)
+                    {
+                        tempLerps.Add(new LerpData(lerps[i], lerps[i + 1]));
+                    }
+                    lerps.Clear();
+                    lerps.AddRange(tempLerps);
+                }
+                lineRenderer.positionCount = 0;
+                lerpData = lerps[0];
+            }
             float lastDrawPoint = 0;
             List<Vector3> poses = new List<Vector3>();
+
+
+
+            float maxDistFromCenter = 0;
+
             for (float i = 0; i <= 1f; i += 1f/ lineResolution)
             {
-                Vector2 temp = lerps[0].getLerpPos(i);
+                Vector2 temp = lerpData.getLerpPos(i);
                 poses.Add(new Vector3(temp.x, temp.y, -2));
+
+                if (Vector2.Distance(centerOfCurve, temp) > maxDistFromCenter)
+                {
+                    maxDistFromCenter = Vector2.Distance(centerOfCurve, temp);
+                }
+
                 lastDrawPoint = i;
             }
             if (lastDrawPoint != 1f)
             {
-                Vector2 temp = lerps[0].getLerpPos(1);
+                Vector2 temp = lerpData.getLerpPos(1);
+                if (Vector2.Distance(centerOfCurve, temp) > maxDistFromCenter)
+                {
+                    maxDistFromCenter = Vector2.Distance(centerOfCurve, temp);
+                }
                 poses.Add(new Vector3(temp.x, temp.y, -2));
             }
+            maxDistFromCurveCenter = maxDistFromCenter;
+            drawnPositions = poses.ToArray();
             lineRenderer.positionCount = poses.Count;
             lineRenderer.SetPositions(poses.ToArray());
+            drawnPositions = poses.ToArray();
         }
 
 
