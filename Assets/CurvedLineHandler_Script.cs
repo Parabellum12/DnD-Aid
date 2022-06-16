@@ -8,11 +8,12 @@ public class CurvedLineHandler_Script : MonoBehaviour
     CurvedLine lastAddedLine;
     GameObject CurvedLineHolder;
     public int maxLineCount = 9;
-    [SerializeField] int maxResCount = 1000;
-    
+    [SerializeField] int maxResCountHolder = 1000;
+    [SerializeField]int maxResCount;
 
     private void Start()
     {
+        maxResCount = maxResCountHolder;
         CurvedLineHolder = new GameObject("CurvedLineHolder");
     }
 
@@ -27,7 +28,7 @@ public class CurvedLineHandler_Script : MonoBehaviour
     {
         if (currentState == State.NewLine)
         {
-            maxResCount = 1000;
+            maxResCount = maxResCountHolder;
             currentState = State.ContinueLine;
             lastAddedLine = new CurvedLine(CurvedLineHolder);
             allLines.Add(lastAddedLine);
@@ -51,7 +52,7 @@ public class CurvedLineHandler_Script : MonoBehaviour
             return;
         }
         currentState = State.NewLine;
-        lastAddedLine.draw(250);
+        lastAddedLine.draw(175);
         lastAddedLine = null;
     }
 
@@ -129,7 +130,7 @@ public class CurvedLineHandler_Script : MonoBehaviour
         else
         {
             maxResCount += 10;
-            maxResCount = Mathf.Clamp(maxResCount, 1, 1000);
+            maxResCount = Mathf.Clamp(maxResCount, 1, maxResCountHolder);
             return;
         }
         int changeby = 50;
@@ -158,7 +159,7 @@ public class CurvedLineHandler_Script : MonoBehaviour
             changeby = 500;
         }
         maxResCount += changeby * multi;
-        maxResCount = Mathf.Clamp(maxResCount, 1, 1000);
+        maxResCount = Mathf.Clamp(maxResCount, 1, maxResCountHolder);
     }
 
 
@@ -197,15 +198,26 @@ public class CurvedLineHandler_Script : MonoBehaviour
                 return false;
             }
             Debug.Log("Proccess Line");
-            int index = 0;
-            for (float i = 0; i <= 1; i += 1f/500)
+
+
+            for (int i = 0; i < drawnPositions.Length-1; i++)
             {
-                Vector2 a = drawnPositions[index];
-                if (Vector2.Distance(a ,pos) <= 1.25f)
+                if (UtilClass.isPointWithinDistanceToLine(drawnPositions[i], drawnPositions[i+1], pos, 1.25f))
                 {
+                    Debug.Log("CurvedLine IsSelected First Catch");
                     return true;
                 }
-                index++;
+            }
+
+
+            for (float i = 0; i <= 1; i += 1f/250)
+            {
+                Vector2 a = lerpData.getLerpPos(i);
+                if (Vector2.Distance(a ,pos) <= 1.25f)
+                {
+                    Debug.Log("CurvedLine IsSelected Second Catch");
+                    return true;
+                }
             }
             return false;
         }

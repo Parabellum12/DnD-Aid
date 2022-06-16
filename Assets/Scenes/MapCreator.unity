@@ -252,7 +252,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxLineCount: 15
-  maxResCount: 1000
+  maxResCountHolder: 500
+  maxResCount: 0
 --- !u!114 &244517337
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -47,9 +47,9 @@ public class LineCreatorHandler_Script : MonoBehaviour
         }
 
 
-        Vector2 a = new Vector2(0, 5);
-        Vector2 b = new Vector2(0, 0);
-        Vector2 c = new Vector2(0, 1);
+        Vector2 a = new Vector2(0, 0);
+        Vector2 b = new Vector2(5, 0);
+        Vector2 c = new Vector2(1, 0);
 
         Debug.Log(a + "->" + b + ":" + c + ":" + UtilClass.isPointWithinDistanceToLine(a,b,c,1));
 
