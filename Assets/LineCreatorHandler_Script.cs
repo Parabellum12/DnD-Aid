@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class LineCreatorHandler_Script : MonoBehaviour
 {
@@ -10,6 +11,8 @@ public class LineCreatorHandler_Script : MonoBehaviour
     [SerializeField] MarkerHandler_Script MarkerHandler;
     [SerializeField] InputManager inputManager;
     [SerializeField] bool autoAddKeyBindings = true;
+
+    [SerializeField] Canvas canvas;
     private void Start()
     {
         if (autoAddKeyBindings)
@@ -47,11 +50,16 @@ public class LineCreatorHandler_Script : MonoBehaviour
         }
 
 
+<<<<<<< Updated upstream
         Vector2 a = new Vector2(0, 0);
         Vector2 b = new Vector2(5, 0);
         Vector2 c = new Vector2(1, 0);
+=======
+        UtilClass.FileSelector(canvas, Application.streamingAssetsPath, new string[] { ".txt" }, true, (selectedFiles) =>
+        {
+>>>>>>> Stashed changes
 
-        Debug.Log(a + "->" + b + ":" + c + ":" + UtilClass.isPointWithinDistanceToLine(a,b,c,1));
+        });
 
     }
 

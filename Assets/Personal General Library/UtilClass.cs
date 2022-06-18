@@ -181,10 +181,7 @@ public static class UtilClass
         string[] fileNames = new string[files.Length];
         for (int i = 0; i < files.Length; i++)
         {
-            int size = files[i].Length - (DirectoryPath.Length + FileType.Length + 2);
-            string currentFileName = files[i].Substring(DirectoryPath.Length + 1, size);
-            fileNames[i] = currentFileName;
-            Debug.Log("UtilClass: GetFileNames: " + currentFileName);
+            fileNames[i] = Path.GetFileNameWithoutExtension(files[i]);
         }
         return fileNames;
     }
@@ -195,17 +192,14 @@ public static class UtilClass
         string[] fileNames = new string[files.Length];
         for (int i = 0; i < files.Length; i++)
         {
-            int size = files[i].Length - (DirectoryPath.Length);
-            string currentFileName = files[i].Substring(DirectoryPath.Length + 1, size);
-            fileNames[i] = currentFileName;
-            Debug.Log("UtilClass: GetFileNames2: " + currentFileName);
+            fileNames[i] = Path.GetFileNameWithoutExtension(files[i]);
         }
         return fileNames;
     }
 
     public static void SaveToFile(string DirectoryPath, string FileType, string FileName, object graph)
     {
-        string path = DirectoryPath + "/" + FileName + "." + FileType;
+        string path = Path.Combine(DirectoryPath, FileName + "." + FileType);
         FileStream fileStream;
         BinaryFormatter binaryFormatter = new BinaryFormatter();
         if (File.Exists(path))
@@ -227,7 +221,7 @@ public static class UtilClass
     }
     public static TLoadObject LoadFromFile<TLoadObject>(string DirectoryPath, string FileNameWithType, bool AutoErrorHandling)
     {
-        return LoadFromFile<TLoadObject>(DirectoryPath + "/" + FileNameWithType, AutoErrorHandling);
+        return LoadFromFile<TLoadObject>(Path.Combine(DirectoryPath, FileNameWithType), AutoErrorHandling);
     }
     public static TLoadObject LoadFromFile<TLoadObject>(string FullFilePath, bool AutoErrorHandling)
     {
@@ -257,7 +251,7 @@ public static class UtilClass
 
     static void SendFileToErrorFolder(string InitialFilePath)
     {
-        string ErrorFolderPath = Application.persistentDataPath + "/ErrorFolder";
+        string ErrorFolderPath = Path.Combine(Application.persistentDataPath, "ErrorFolder");
 
         string[] folderNames = Directory.GetDirectories(Application.persistentDataPath);
         bool ErrorFolderExists = false;
@@ -313,6 +307,15 @@ public static class UtilClass
     public static bool isDistWithinErrorRange(Vector2 a, Vector2 b, float ErrorRange)
     {
         return Vector2.Distance(a,b) <= ErrorRange;
+    }
+
+    public static void FileSelector(Canvas canvas, string initialPath, string[] extentionsToSearchFor, bool lockSearchToInitialPath, System.Action<string[]> callback)
+    {
+        GameObject go = new GameObject("FileSelector");
+        go.transform.parent = canvas.transform;
+        FileSelector fs = go.AddComponent<FileSelector>();
+        fs.GenerateFileSelectorUi(go);
+        fs.OpenFileSelector(initialPath, extentionsToSearchFor, lockSearchToInitialPath, callback);
     }
 
 }
