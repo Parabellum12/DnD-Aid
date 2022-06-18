@@ -50,14 +50,8 @@ public class LineCreatorHandler_Script : MonoBehaviour
         }
 
 
-<<<<<<< Updated upstream
-        Vector2 a = new Vector2(0, 0);
-        Vector2 b = new Vector2(5, 0);
-        Vector2 c = new Vector2(1, 0);
-=======
         UtilClass.FileSelector(canvas, Application.streamingAssetsPath, new string[] { ".txt" }, true, (selectedFiles) =>
         {
->>>>>>> Stashed changes
 
         });
 
