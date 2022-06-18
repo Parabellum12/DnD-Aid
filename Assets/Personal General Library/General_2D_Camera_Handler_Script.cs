@@ -55,55 +55,55 @@ public class General_2D_Camera_Handler_Script : MonoBehaviour
 
 
 
-        InputManager.AddKeyBinding(KeyCode.A, InputManager.KeyActionType.Down, "KeyCameraMoveLeft", () =>
+        InputManager.AddKeyBinding(KeyCode.A, false, InputManager.KeyActionType.Down, "KeyCameraMoveLeft", () =>
         {
             horizontalMove--;
             //Debug.Log("Pressed A");
         });
-        InputManager.AddKeyBinding(KeyCode.D, InputManager.KeyActionType.Down, "KeyCameraMoveRight", () =>
+        InputManager.AddKeyBinding(KeyCode.D, false, InputManager.KeyActionType.Down, "KeyCameraMoveRight", () =>
         {
             horizontalMove++;
             //Debug.Log("Pressed D");
         });
-        InputManager.AddKeyBinding(KeyCode.W, InputManager.KeyActionType.Down, "KeyCameraMoveUp", () =>
+        InputManager.AddKeyBinding(KeyCode.W, false, InputManager.KeyActionType.Down, "KeyCameraMoveUp", () =>
         {
             verticalMove++;
             //Debug.Log("Pressed W");
         });
-        InputManager.AddKeyBinding(KeyCode.S, InputManager.KeyActionType.Down, "KeyCameraMoveDown", () =>
+        InputManager.AddKeyBinding(KeyCode.S, false, InputManager.KeyActionType.Down, "KeyCameraMoveDown", () =>
         {
             verticalMove--;
             //Debug.Log("Pressed S");
         });
 
 
-        InputManager.AddKeyBinding(KeyCode.A, InputManager.KeyActionType.Up, "KeyCameraMoveLeftEND", () =>
+        InputManager.AddKeyBinding(KeyCode.A, false, InputManager.KeyActionType.Up, "KeyCameraMoveLeftEND", () =>
         {
             horizontalMove++;
             //Debug.Log("Up A");
         });
-        InputManager.AddKeyBinding(KeyCode.D, InputManager.KeyActionType.Up, "KeyCameraMoveRightEND", () =>
+        InputManager.AddKeyBinding(KeyCode.D, false, InputManager.KeyActionType.Up, "KeyCameraMoveRightEND", () =>
         {
             horizontalMove--;
             //Debug.Log("Up D");
         });
-        InputManager.AddKeyBinding(KeyCode.W, InputManager.KeyActionType.Up, "KeyCameraMoveUpEND", () =>
+        InputManager.AddKeyBinding(KeyCode.W, false, InputManager.KeyActionType.Up, "KeyCameraMoveUpEND", () =>
         {
             verticalMove--;
             //Debug.Log("Up W");
         });
-        InputManager.AddKeyBinding(KeyCode.S, InputManager.KeyActionType.Up, "KeyCameraMoveDownEND", () =>
+        InputManager.AddKeyBinding(KeyCode.S, false, InputManager.KeyActionType.Up, "KeyCameraMoveDownEND", () =>
         {
             verticalMove++;
             // Debug.Log("Up S");
         });
 
 
-        InputManager.AddKeyBinding(KeyCode.LeftShift, InputManager.KeyActionType.Down, "KeyCameraMoveSpeedUpStart", () =>
+        InputManager.AddKeyBinding(KeyCode.LeftShift, false, InputManager.KeyActionType.Down, "KeyCameraMoveSpeedUpStart", () =>
         {
             moveSpeedUpActive = true;
         });
-        InputManager.AddKeyBinding(KeyCode.LeftShift, InputManager.KeyActionType.Up, "KeyCameraMoveSpeedUpEnd", () =>
+        InputManager.AddKeyBinding(KeyCode.LeftShift, false, InputManager.KeyActionType.Up, "KeyCameraMoveSpeedUpEnd", () =>
         {
             moveSpeedUpActive = false;
         });

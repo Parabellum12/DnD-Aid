@@ -4,10 +4,12 @@ using UnityEngine;
 
 public class InputManager : MonoBehaviour
 {
+    [SerializeField] KeyCode modifierKey = KeyCode.LeftAlt;
     Dictionary<string, KeyCode> actionNameToKey = new Dictionary<string, KeyCode>();
     Dictionary<KeyCode, List<string>> keyToActionName = new Dictionary<KeyCode, List<string>>();
     Dictionary<string, System.Action> actionNameToFunctionCall = new Dictionary<string, System.Action>();
     Dictionary<string, KeyActionType> actionCallType = new Dictionary<string, KeyActionType>();
+    Dictionary<string, bool> ActionToRequiresModifier = new Dictionary<string, bool>();
     [SerializeField]List<string> KeyBindings = new List<string>();
     public enum KeyActionType
     {
@@ -18,15 +20,15 @@ public class InputManager : MonoBehaviour
     }
 
 
-    public IEnumerator ReturnKeyPressed(System.Action<KeyCode> callback)
+    public IEnumerator ReturnKeyDown(System.Action<KeyCode, bool> callback)
     {
         while (true)
         {
             foreach (KeyCode key in System.Enum.GetValues(typeof(KeyCode)))
             {
-                if (Input.GetKeyDown(key))
+                if (Input.GetKeyDown(key) && key != modifierKey)
                 {
-                    callback.Invoke(key);
+                    callback.Invoke(key, Input.GetKey(modifierKey));
                     yield break;
                 }
             }
@@ -50,7 +52,7 @@ public class InputManager : MonoBehaviour
 
 
 
-    public void AddKeyBinding(KeyCode key, KeyActionType actionType, string ActionNameOrID, System.Action action)
+    public void AddKeyBinding(KeyCode key, bool requiresModifier, KeyActionType actionType, string ActionNameOrID, System.Action action)
     {
         if (actionNameToKey.ContainsKey(ActionNameOrID))
         {
@@ -58,6 +60,7 @@ public class InputManager : MonoBehaviour
         }
         actionCallType.Add(ActionNameOrID, actionType);
         actionNameToKey.Add(ActionNameOrID, key);
+        ActionToRequiresModifier.Add(ActionNameOrID, requiresModifier);
         if (keyToActionName.ContainsKey(key))
         {
             keyToActionName.TryGetValue(key, out List<string> temp);
@@ -108,6 +111,7 @@ public class InputManager : MonoBehaviour
             keyToActionName.Remove(key);
             keyToActionName.Add(key, temp);
             actionNameToKey.Remove(actionName);
+            ActionToRequiresModifier.Remove(actionName);
         }
         handleInspectorVisuals();
     }
@@ -133,13 +137,21 @@ public class InputManager : MonoBehaviour
 
 
             actionCallType.TryGetValue(actionName, out KeyActionType type);
+            bool modifierActive = true;
+            ActionToRequiresModifier.TryGetValue(actionName, out bool result);
+            if (result)
+            {
+                modifierActive = Input.GetKey(modifierKey);
+            }
             switch (type)
             {
                 case KeyActionType.None:
                     //Debug.Log("Call " + actionName + " Error");
                     return;
                 case KeyActionType.Down:
-                    if (Input.GetKeyDown(key))
+
+
+                    if (Input.GetKeyDown(key) && modifierActive)
                     {
                         actionNameToFunctionCall.TryGetValue(actionName, out System.Action callback);
                         //Debug.Log("Call " + actionName + " Down");
@@ -148,7 +160,7 @@ public class InputManager : MonoBehaviour
                     //Debug.Log("Test Call " + actionName + " Down");
                     break;
                 case KeyActionType.Up:
-                    if (Input.GetKeyUp(key))
+                    if (Input.GetKeyUp(key) && modifierActive)
                     {
                         actionNameToFunctionCall.TryGetValue(actionName, out System.Action callback);
                         //Debug.Log("Call " + actionName + " Up");
@@ -157,7 +169,7 @@ public class InputManager : MonoBehaviour
                     //Debug.Log("Test Call " + actionName + " Up");
                     break;
                 case KeyActionType.Pressed:
-                    if (Input.GetKey(key))
+                    if (Input.GetKey(key) && modifierActive)
                     {
                         actionNameToFunctionCall.TryGetValue(actionName, out System.Action callback);
                         //Debug.Log("Call " + actionName +" pressed");

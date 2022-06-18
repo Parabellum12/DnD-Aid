@@ -5,6 +5,9 @@ using System.IO;
 public class FileSelector : MonoBehaviour
 {
     RectTransform UiHolder;
+    int memSize = 10;
+    List<string> pathMemory = new List<string>();
+    int memIndex = 0;
     public void GenerateFileSelectorUi(GameObject holder)
     {
         UiHolder = holder.AddComponent<RectTransform>();
@@ -18,5 +21,11 @@ public class FileSelector : MonoBehaviour
     public void OpenFileSelector(string initialPath, string[] extentionsToSearchFor, bool lockSearchToInitialPath, System.Action<string[]> callback)
     {
 
+    }
+
+
+    void addToPathMemory(string pathToAdd)
+    {
+        pathMemory.Add(pathToAdd);
     }
 }

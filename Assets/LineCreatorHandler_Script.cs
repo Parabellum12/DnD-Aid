@@ -17,11 +17,11 @@ public class LineCreatorHandler_Script : MonoBehaviour
     {
         if (autoAddKeyBindings)
         {
-            inputManager.AddKeyBinding(KeyCode.Mouse0, InputManager.KeyActionType.Down, "AddStraightLine", () =>
+            inputManager.AddKeyBinding(KeyCode.Mouse0, false, InputManager.KeyActionType.Down, "AddStraightLine", () =>
             {
                 handleClick();
             });
-            inputManager.AddKeyBinding(KeyCode.Mouse1, InputManager.KeyActionType.Up, "EndStraightLine", () =>
+            inputManager.AddKeyBinding(KeyCode.Mouse1, false, InputManager.KeyActionType.Up, "EndStraightLine", () =>
             {
                 if (!General_2D_CameraHandler.CameraMousePaning)
                 {
@@ -31,19 +31,19 @@ public class LineCreatorHandler_Script : MonoBehaviour
             });
 
 
-            inputManager.AddKeyBinding(KeyCode.Alpha1, InputManager.KeyActionType.Down, "SelectToolOff", () =>
+            inputManager.AddKeyBinding(KeyCode.Alpha1, false, InputManager.KeyActionType.Down, "SelectToolOff", () =>
             {
                 setTool(Tools.Off);
             });
-            inputManager.AddKeyBinding(KeyCode.Alpha2, InputManager.KeyActionType.Down, "SelectToolSelect", () =>
+            inputManager.AddKeyBinding(KeyCode.Alpha2, false, InputManager.KeyActionType.Down, "SelectToolSelect", () =>
             {
                 setTool(Tools.Select);
             });
-            inputManager.AddKeyBinding(KeyCode.Alpha3, InputManager.KeyActionType.Down, "SelectToolStraightLine", () =>
+            inputManager.AddKeyBinding(KeyCode.Alpha3, false, InputManager.KeyActionType.Down, "SelectToolStraightLine", () =>
             {
                 setTool(Tools.StraightLine);
             });
-            inputManager.AddKeyBinding(KeyCode.Alpha4, InputManager.KeyActionType.Down, "SelectToolCurveLine", () =>
+            inputManager.AddKeyBinding(KeyCode.Alpha4, false, InputManager.KeyActionType.Down, "SelectToolCurveLine", () =>
             {
                 setTool(Tools.CurvedLine);
             });
