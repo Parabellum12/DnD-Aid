@@ -314,8 +314,35 @@ public static class UtilClass
         GameObject go = new GameObject("FileSelector");
         go.transform.parent = canvas.transform;
         FileSelector fs = go.AddComponent<FileSelector>();
-        fs.GenerateFileSelectorUi(go);
+        fs.GenerateFileSelectorUi();
         fs.OpenFileSelector(initialPath, extentionsToSearchFor, lockSearchToInitialPath, callback);
+    }
+
+    public static void CreateUiElementWithImage(Transform parent, string objectName, Vector2 position, Vector2 sizeDelta, string imagePath, Color imageColor, out GameObject UiGameObject, out RectTransform UiRectTransform, out Image UiImage)
+    {
+        UiGameObject = new GameObject(objectName);
+        UiGameObject.transform.parent = parent;
+
+        UiRectTransform = UiGameObject.AddComponent<RectTransform>();
+        UiRectTransform.sizeDelta = sizeDelta;
+        UiRectTransform.localScale = Vector3.one;
+        UiRectTransform.localPosition = position;
+
+        UiImage = UiGameObject.AddComponent<Image>();
+        UiImage.color = imageColor;
+        if (imagePath.Length != 0)
+        {
+            try
+            {
+                UiImage.sprite = (Sprite) Resources.Load(imagePath);
+            }
+            catch
+            {
+                UiImage = null;
+            }
+        }
+
+
     }
 
 }

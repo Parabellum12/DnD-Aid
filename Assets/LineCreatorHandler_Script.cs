@@ -49,11 +49,12 @@ public class LineCreatorHandler_Script : MonoBehaviour
             });
         }
 
-
+        
         UtilClass.FileSelector(canvas, Application.streamingAssetsPath, new string[] { ".txt" }, true, (selectedFiles) =>
         {
 
         });
+        
 
     }
 
