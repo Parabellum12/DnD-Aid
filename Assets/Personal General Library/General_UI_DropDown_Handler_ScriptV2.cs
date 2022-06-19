@@ -32,6 +32,7 @@ public class General_UI_DropDown_Handler_ScriptV2 : MonoBehaviour
     [SerializeField] Image mainImage = null;
     [SerializeField] GameObject dropDownBackgroundImage = null;
     [SerializeField] Button InteractionButton = null;
+    [SerializeField] bool lockInteractionButtonVisuals = false;
     RectTransform buttonRectTransform;
     [SerializeField] RectTransform contentRectTransform;
 
@@ -197,9 +198,9 @@ public class General_UI_DropDown_Handler_ScriptV2 : MonoBehaviour
         }
         if (!isCanvasOrUiItem)
         {
+            RectTransform temp = dropDownBackgroundImage.GetComponent<RectTransform>();
             if (dropDownImageFollowChildSize)
             {
-                RectTransform temp = dropDownBackgroundImage.GetComponent<RectTransform>();
                 if (dropDownDirection == DropDownDirection.Vertical)
                 {
                     temp.sizeDelta = new Vector2(temp.rect.width, offsetDist - (mainImage.rectTransform.rect.height / 2f));
@@ -211,12 +212,23 @@ public class General_UI_DropDown_Handler_ScriptV2 : MonoBehaviour
                     temp.localPosition = new Vector2(-(temp.rect.size.y / 2) - (gameObject.GetComponent<RectTransform>().rect.height / 2), 0);
                 }
             }
+            else
+            {
+                if (dropDownDirection == DropDownDirection.Vertical)
+                {
+                    temp.localPosition = new Vector2(0, -(temp.rect.size.y / 2) - (gameObject.GetComponent<RectTransform>().rect.height / 2));
+                }
+                else
+                { 
+                    temp.localPosition = new Vector2(-(temp.rect.size.y / 2) - (gameObject.GetComponent<RectTransform>().rect.height / 2), 0);
+                }
+            }
         }
         else
         {
             contentRectTransform.anchorMin = new Vector2(.5f, 1f);
             contentRectTransform.anchorMax = new Vector2(.5f, 1f);
-            contentRectTransform.sizeDelta = new Vector2(512, offsetDist - globalOffsetDist);
+            contentRectTransform.sizeDelta = new Vector2(contentRectTransform.sizeDelta.x, offsetDist - globalOffsetDist);
         }
     }
 
@@ -244,7 +256,10 @@ public class General_UI_DropDown_Handler_ScriptV2 : MonoBehaviour
     {
         setup();
         dropDownBackgroundImage.SetActive(true);
-        buttonRectTransform.rotation = Quaternion.Euler(0, 0, 180);
+        if (!lockInteractionButtonVisuals)
+        {
+            buttonRectTransform.rotation = Quaternion.Euler(0, 0, 180);
+        }
         ChildrenObjectHolder.SetActive(true);
         setUIPositions();
     }
@@ -253,7 +268,10 @@ public class General_UI_DropDown_Handler_ScriptV2 : MonoBehaviour
     {
         setup();
         dropDownBackgroundImage.SetActive(false);
-        buttonRectTransform.rotation = Quaternion.Euler(0, 0, 0);
+        if (!lockInteractionButtonVisuals)
+        {
+            buttonRectTransform.rotation = Quaternion.Euler(0, 0, 0);
+        }
         ChildrenObjectHolder.SetActive(false);
         setUIPositions();
     }
@@ -291,5 +309,10 @@ public class General_UI_DropDown_Handler_ScriptV2 : MonoBehaviour
     public bool getShowInfoForDebug()
     {
         return showInfoForDebug;
+    }
+
+    public bool getLockInteractionButtonVisuals()
+    {
+        return lockInteractionButtonVisuals;
     }
 }
