@@ -13,9 +13,19 @@ public class General_UI_DropDown_Handler_ScriptV2 : MonoBehaviour
      * also it turns out its only minor improvements over v1 but i use v1 and have calculated stuff for v1 in too many places for me to care enough to change it all right now
      * 
      */
-    [SerializeField] bool isHolder = false;
+    [SerializeField] bool showInfoForDebug = false;
+    [SerializeField] bool isHolder = false ;
     [SerializeField] bool isCanvasOrUiItem = false;
     [SerializeField] bool dropDownImageFollowChildSize = true;
+
+    enum DropDownDirection
+    {
+        Vertical,
+        Horizontal
+    }
+    [SerializeField] DropDownDirection dropDownDirection = DropDownDirection.Vertical;
+
+
 
     [SerializeField] bool engaged = false;
 
@@ -91,24 +101,47 @@ public class General_UI_DropDown_Handler_ScriptV2 : MonoBehaviour
     }
 
 
-
     public float getSize()
     {
-        if (dropDownBackgroundImage != null && dropDownBackgroundImage.activeSelf && !isHolder)
+        if (dropDownDirection == DropDownDirection.Vertical)
         {
-            return dropDownBackgroundImage.GetComponent<RectTransform>().rect.height + mainImage.rectTransform.rect.height;
+            if (dropDownBackgroundImage != null && dropDownBackgroundImage.activeSelf && !isHolder)
+            {
+                return dropDownBackgroundImage.GetComponent<RectTransform>().rect.height + mainImage.rectTransform.rect.height;
+            }
+            else
+            {
+                return mainImage.rectTransform.rect.height;
+            }
         }
         else
         {
-            return mainImage.rectTransform.rect.height;
+            if (dropDownBackgroundImage != null && dropDownBackgroundImage.activeSelf && !isHolder)
+            {
+                return dropDownBackgroundImage.GetComponent<RectTransform>().rect.width + mainImage.rectTransform.rect.width;
+            }
+            else
+            {
+                return mainImage.rectTransform.rect.width;
+            }
         }
     }
 
     public float getMainImageSize()
     {
-        if (mainImage != null)
+        if (dropDownDirection == DropDownDirection.Vertical)
         {
-            return mainImage.rectTransform.rect.height;
+            if (mainImage != null)
+            {
+                return mainImage.rectTransform.rect.height;
+            }
+        }
+        else
+        {
+            if (mainImage != null)
+            {
+                return mainImage.rectTransform.rect.width;
+            }
         }
         return 0;
     }
@@ -116,23 +149,7 @@ public class General_UI_DropDown_Handler_ScriptV2 : MonoBehaviour
     //called after setup and child or self changed
     public void setUIPositions()
     {
-        float mainImageHeight = 0;
-        if (mainImage != null)
-        {
-            mainImageHeight = (mainImage.rectTransform.rect.height / 2);
-        }
-        offsetDist = globalOffsetDist + mainImageHeight + itemSeperationDist + 2;
-        for (int i = 0; i < childDropDowns.Count; i++)
-        {
-            if (!childDropDowns[i].gameObject.activeSelf)
-            {
-                continue;
-            }
-            childDropDowns[i].transform.localPosition = new Vector3(0, -offsetDist - (childDropDowns[i].getMainImageSize() / 2), 0);
-            offsetDist += childDropDowns[i].getSize() + itemSeperationDist;
-            lastOffsetSize = childDropDowns[i].getSize() + itemSeperationDist;
-        }
-        setPosHelper();
+        setUIPositionsNoCallback();
         updateUICallback?.Invoke();
     }
 
@@ -142,7 +159,14 @@ public class General_UI_DropDown_Handler_ScriptV2 : MonoBehaviour
         float mainImageHeight = 0;
         if (mainImage != null)
         {
-            mainImageHeight = (mainImage.rectTransform.rect.height / 2f);
+            if (dropDownDirection == DropDownDirection.Vertical)
+            {
+                mainImageHeight = (mainImage.rectTransform.rect.height / 2);
+            }
+            else
+            {
+                mainImageHeight = (mainImage.rectTransform.rect.width / 2);
+            }
         }
         offsetDist = globalOffsetDist + mainImageHeight + itemSeperationDist + 2;
         for (int i = 0; i < childDropDowns.Count; i++)
@@ -151,8 +175,14 @@ public class General_UI_DropDown_Handler_ScriptV2 : MonoBehaviour
             {
                 continue;
             }
-            childDropDowns[i].setUIPositionsNoCallback();
-            childDropDowns[i].transform.localPosition = new Vector3(0, -offsetDist - (childDropDowns[i].getSize()/2), 0);
+            if (dropDownDirection == DropDownDirection.Vertical)
+            {
+                childDropDowns[i].transform.localPosition = new Vector3(0, -offsetDist - (childDropDowns[i].getMainImageSize() / 2), 0);
+            }
+            else
+            {
+                childDropDowns[i].transform.localPosition = new Vector3(-offsetDist - (childDropDowns[i].getMainImageSize() / 2), 0, 0);
+            }
             offsetDist += childDropDowns[i].getSize() + itemSeperationDist;
             lastOffsetSize = childDropDowns[i].getSize() + itemSeperationDist;
         }
@@ -170,13 +200,16 @@ public class General_UI_DropDown_Handler_ScriptV2 : MonoBehaviour
             if (dropDownImageFollowChildSize)
             {
                 RectTransform temp = dropDownBackgroundImage.GetComponent<RectTransform>();
-                //Debug.Log(gameObject.name + ":rectFollowSize");
-                //temp.rect.Set(temp.rect.x, temp.rect.y, temp.rect.width, offsetDist - globalOffset);
-                temp.sizeDelta = new Vector2(temp.rect.width, offsetDist- (mainImage.rectTransform.rect.height / 2f));// - globalOffsetDist - (childDropDowns.Count * itemSeperationDist));
-                //Debug.Log(gameObject.name + ":TempHeight5:" + ((temp.rect.size.y / 2f) - globalOffset));
-                //temp.localPosition = Vector2.zero;
-                temp.localPosition = new Vector2(0, -(temp.rect.size.y / 2) - (gameObject.GetComponent<RectTransform>().rect.height / 2));
-                //Debug.Log(gameObject.name + ":TemplocalPos:" + temp.localPosition);
+                if (dropDownDirection == DropDownDirection.Vertical)
+                {
+                    temp.sizeDelta = new Vector2(temp.rect.width, offsetDist - (mainImage.rectTransform.rect.height / 2f));
+                    temp.localPosition = new Vector2(0, -(temp.rect.size.y / 2) - (gameObject.GetComponent<RectTransform>().rect.height / 2));
+                }
+                else
+                {
+                    temp.sizeDelta = new Vector2(offsetDist - (mainImage.rectTransform.rect.height / 2f), temp.rect.height);
+                    temp.localPosition = new Vector2(-(temp.rect.size.y / 2) - (gameObject.GetComponent<RectTransform>().rect.height / 2), 0);
+                }
             }
         }
         else
@@ -225,8 +258,6 @@ public class General_UI_DropDown_Handler_ScriptV2 : MonoBehaviour
         setUIPositions();
     }
 
-
-
     public void addToChildDropDowns(General_UI_DropDown_Handler_ScriptV2 childToAdd)
     {
         childDropDowns.Add(childToAdd);
@@ -247,5 +278,18 @@ public class General_UI_DropDown_Handler_ScriptV2 : MonoBehaviour
         childDropDowns.Clear();
     }
 
+    public bool getIsHolder()
+    {
+        return isHolder;
+    }
 
+    public bool getIsCanvasOrUiItem()
+    {
+        return isCanvasOrUiItem;
+    }
+
+    public bool getShowInfoForDebug()
+    {
+        return showInfoForDebug;
+    }
 }
