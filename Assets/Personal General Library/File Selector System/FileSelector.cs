@@ -16,8 +16,8 @@ public class FileSelector : MonoBehaviour
         transform.localPosition = Vector2.zero;
         transform.localScale = Vector3.one;
         GameObject gameObject = Resources.Load("FileSelector/FileSelector") as GameObject;
-        FileSelectorHandler = gameObject.GetComponent<FileSelectorHandler>();
         GameObject Selector = Instantiate(gameObject, transform);
+        FileSelectorHandler = Selector.GetComponent<FileSelectorHandler>();
         Selector.transform.localPosition = Vector2.zero;
 
     }

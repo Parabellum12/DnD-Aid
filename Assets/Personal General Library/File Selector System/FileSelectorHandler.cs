@@ -14,6 +14,7 @@ public class FileSelectorHandler : MonoBehaviour
     [SerializeField] Button ForwardButton;
 
     [SerializeField] TMP_InputField FilePath;
+    [SerializeField] RectTransform FilePathTextRect;
     [SerializeField] TMP_InputField FileName;
 
     [SerializeField] Button AcceptButton;
@@ -29,7 +30,7 @@ public class FileSelectorHandler : MonoBehaviour
 
     string selectedFilePath = "";
 
-    private void Start()
+    private void Awake()
     {
         FileTypeSelectorGO.SetActive(false);
         BackButton.onClick.AddListener(() =>
@@ -57,26 +58,36 @@ public class FileSelectorHandler : MonoBehaviour
         this.extentionsToSearchFor = extentionsToSearchFor;
         GoToPath(initialPath);
     }
+    private void Start()
+    {
+        Debug.Log("START:"+ filePathHistory);
+    }
 
     void addToHistory(string path)
     {
+        Debug.Log("addToHistory: " + path);
         if (filePathHistory.Count > 0)
         {
+            Debug.Log("addToHistory1: " + path);
             List<string> tempFilePathHistory = new List<string>();
             for (int i = 0; i <= filePathHistorySelectionIndex; i++)
             {
+                Debug.Log("addToHistory RECOVER " + filePathHistory[i]);
                 tempFilePathHistory.Add(filePathHistory[i]);
-                tempFilePathHistory.Add(path);
             }
+            tempFilePathHistory.Add(path);
             filePathHistory.Clear();
             filePathHistory.AddRange(tempFilePathHistory);
             filePathHistorySelectionIndex = filePathHistory.Count - 1;
         }
         else
         {
+            Debug.Log("addToHistory2: " + path);
             filePathHistory.Add(path);
-            filePathHistorySelectionIndex = 0;
+            filePathHistorySelectionIndex = filePathHistory.Count - 1;
+            Debug.Log("addToHistory2B: " + filePathHistory[filePathHistorySelectionIndex]);
         }
+        updateHistorySelectorsVisuals();
     }
 
 
@@ -84,16 +95,33 @@ public class FileSelectorHandler : MonoBehaviour
     {
         addToHistory(path);
         loadPath();
+        Debug.Log("WHAT IS HAPPENING??????:" + filePathHistory[filePathHistorySelectionIndex]);
+    }
+
+    [SerializeField] string toChange;
+    bool wantToChange = false;
+    private void Update()
+    {
+        if (wantToChange)
+        {
+            wantToChange = false;
+            FilePath.text = toChange;
+        }
+        //Debug.Log("WHY:" + filePathHistory.Count);
     }
     void loadPath()
     {
         string path = filePathHistory[filePathHistorySelectionIndex];
+        FilePathTextRect.localPosition = new Vector2(0, FilePathTextRect.localPosition.y);
         FilePath.text = path;
+        toChange = path;
+        wantToChange = true;
         Debug.Log("loadPath:" + path + "    " + FilePath.text);
         if (Directory.Exists(path))
         {
             //handle show files
             Debug.Log("Show Folder COntents:" + path);
+            Debug.Log("1: " + filePathHistory[filePathHistorySelectionIndex]);
         }
         else
         {
@@ -101,13 +129,16 @@ public class FileSelectorHandler : MonoBehaviour
             {
                 //handle select File
                 Debug.Log("Select File:" + path);
+                Debug.Log("2: " + filePathHistory[filePathHistorySelectionIndex]);
             }
             else
             {
                 //show nothing found
                 Debug.Log("Nothing Found: " + path);
+                Debug.Log("3: " + filePathHistory[filePathHistorySelectionIndex]);
             }
         }
+        Debug.Log("4: " + filePathHistory[filePathHistorySelectionIndex]);
     }
 
 
@@ -115,7 +146,7 @@ public class FileSelectorHandler : MonoBehaviour
 
     void updateHistorySelectorsVisuals()
     {
-        ForwardButton.interactable = (filePathHistorySelectionIndex < filePathHistory.Count - 1) && filePathHistory.Count > 0;
+        ForwardButton.interactable = filePathHistory.Count > 0 && (filePathHistorySelectionIndex < filePathHistory.Count - 1);
         BackButton.interactable = filePathHistorySelectionIndex > 0 && filePathHistory.Count > 1;
     }
 
@@ -163,7 +194,20 @@ public class FileSelectorHandler : MonoBehaviour
 
     public void HandleFilePathEndEdit()
     {
-        GoToPath(FilePath.text);
+        if (FilePath.text.Length > 0)
+        {
+            if (filePathHistory.Count > 0)
+            {
+                if (!FilePath.text.Equals(filePathHistory[filePathHistorySelectionIndex]))
+                {
+                    GoToPath(FilePath.text);
+                }
+            }
+            else
+            {
+                GoToPath(FilePath.text);
+            }
+        }
     }
 }
 
