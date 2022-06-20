@@ -807,7 +807,7 @@ GameObject:
   - component: {fileID: 2113822584}
   - component: {fileID: 2113822586}
   - component: {fileID: 2113822585}
-  m_Layer: 5
+  m_Layer: 7
   m_Name: holder
   m_TagString: Untagged
   m_Icon: {fileID: 0}

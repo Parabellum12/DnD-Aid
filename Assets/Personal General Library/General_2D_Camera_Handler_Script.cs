@@ -144,7 +144,7 @@ public class General_2D_Camera_Handler_Script : MonoBehaviour
     float timeStartZoom = 0;
     void handleScroll()
     {
-        if (lockMovement || !CamZoom || (lockZoomIfOverUi && UtilClass.IsPointerOverUIElement(LayerMask.NameToLayer("UI"))) || !UtilClass.IsPointerOverUIElement(LayerMask.NameToLayer("mouseOverCanvas")))
+        if (lockMovement || !CamZoom || (lockZoomIfOverUi && UtilClass.IsPointerOverUIElement(LayerMask.NameToLayer("UI"))) || !UtilClass.IsPointerOverUIElement(LayerMask.NameToLayer("mouseOverCanvas")) || UtilClass.IsPointerOverUIElement(LayerMask.NameToLayer("Popup Layer")))
         {
             return;
         }
@@ -198,7 +198,7 @@ public class General_2D_Camera_Handler_Script : MonoBehaviour
     void handleKeyMove()
     {
        //Debug.Log("handleKeyMove");
-        if (lockMovement || lockMoveIfOverUi && UtilClass.IsPointerOverUIElement(LayerMask.NameToLayer("UI")) || !Application.isFocused)
+        if (lockMovement || lockMoveIfOverUi && UtilClass.IsPointerOverUIElement(LayerMask.NameToLayer("UI")) || !Application.isFocused || UtilClass.IsPointerOverUIElement(LayerMask.NameToLayer("Popup Layer")))
         {
             return;
         }
@@ -218,7 +218,7 @@ public class General_2D_Camera_Handler_Script : MonoBehaviour
     bool waitingForRelease = false;
     void handleCameraPan()
     {
-        if ((lockMovement || !MousePan || (lockMoveIfOverUi && UtilClass.IsPointerOverUIElement(LayerMask.NameToLayer("UI"))) || !Application.isFocused) && !CameraMousePaning)
+        if ((lockMovement || !MousePan || (lockMoveIfOverUi && UtilClass.IsPointerOverUIElement(LayerMask.NameToLayer("UI"))) || !Application.isFocused) && !CameraMousePaning || UtilClass.IsPointerOverUIElement(LayerMask.NameToLayer("Popup Layer")))
         {
             CameraMousePaning = false;
             waitingForRelease = false;
