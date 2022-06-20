@@ -186,6 +186,17 @@ public static class UtilClass
         return fileNames;
     }
 
+    public static string[] GetFileNamesWithExtension(string DirectoryPath, string FileType)
+    {
+        string[] files = System.IO.Directory.GetFiles(DirectoryPath, "*." + FileType);
+        string[] fileNames = new string[files.Length];
+        for (int i = 0; i < files.Length; i++)
+        {
+            fileNames[i] = Path.GetFileName(files[i]);
+        }
+        return fileNames;
+    }
+
     public static string[] GetFileNames(string DirectoryPath)
     {
         string[] files = System.IO.Directory.GetFiles(DirectoryPath, "*");
@@ -193,6 +204,17 @@ public static class UtilClass
         for (int i = 0; i < files.Length; i++)
         {
             fileNames[i] = Path.GetFileNameWithoutExtension(files[i]);
+        }
+        return fileNames;
+    }
+
+    public static string[] GetFileNamesWithExtension(string DirectoryPath)
+    {
+        string[] files = System.IO.Directory.GetFiles(DirectoryPath, "*");
+        string[] fileNames = new string[files.Length];
+        for (int i = 0; i < files.Length; i++)
+        {
+            fileNames[i] = Path.GetFileName(files[i]);
         }
         return fileNames;
     }

@@ -30,6 +30,8 @@ public class FileSelectorHandler : MonoBehaviour
 
     string selectedFilePath = "";
 
+    string currentlySelectedExtentionType;
+
     private void Awake()
     {
         FileTypeSelectorGO.SetActive(false);
@@ -55,7 +57,22 @@ public class FileSelectorHandler : MonoBehaviour
     public void OpenFileSelector(string initialPath, string[] extentionsToSearchFor, bool lockSearchToInitialPath, System.Action<string[]> callback)
     {
         this.callback = callback;
+        for (int i = 0; i < extentionsToSearchFor.Length; i++)
+        {
+            extentionsToSearchFor[i] = extentionsToSearchFor[i].ToLower();
+            if (extentionsToSearchFor[i].ToCharArray()[0] != '.')
+            {
+                extentionsToSearchFor[i] = "." + extentionsToSearchFor[i];
+            }
+        }
         this.extentionsToSearchFor = extentionsToSearchFor;
+        currentlySelectedExtentionType = extentionsToSearchFor[0];
+
+        fileExtentionToSearchForText.text = currentlySelectedExtentionType + " (*" + currentlySelectedExtentionType + ")";
+
+
+
+
         GoToPath(initialPath);
     }
     private void Start()
@@ -98,30 +115,21 @@ public class FileSelectorHandler : MonoBehaviour
         Debug.Log("WHAT IS HAPPENING??????:" + filePathHistory[filePathHistorySelectionIndex]);
     }
 
-    [SerializeField] string toChange;
-    bool wantToChange = false;
-    private void Update()
-    {
-        if (wantToChange)
-        {
-            wantToChange = false;
-            FilePath.text = toChange;
-        }
-        //Debug.Log("WHY:" + filePathHistory.Count);
-    }
-    void loadPath()
+
+
+
+    public void loadPath()
     {
         string path = filePathHistory[filePathHistorySelectionIndex];
         FilePathTextRect.localPosition = new Vector2(0, FilePathTextRect.localPosition.y);
         FilePath.text = path;
-        toChange = path;
-        wantToChange = true;
         Debug.Log("loadPath:" + path + "    " + FilePath.text);
         if (Directory.Exists(path))
         {
             //handle show files
             Debug.Log("Show Folder COntents:" + path);
             Debug.Log("1: " + filePathHistory[filePathHistorySelectionIndex]);
+            loadDirectory();
         }
         else
         {
@@ -139,6 +147,115 @@ public class FileSelectorHandler : MonoBehaviour
             }
         }
         Debug.Log("4: " + filePathHistory[filePathHistorySelectionIndex]);
+    }
+
+    List<FileFolderSelector_Handler> fileFolderSelector_Handlers = new List<FileFolderSelector_Handler>();
+    [SerializeField] GameObject FileFolderSelectorPrefab;
+    [SerializeField] GameObject NothingFoundText;
+    void loadDirectory()
+    {
+        foreach (FileFolderSelector_Handler ff in fileFolderSelector_Handlers)
+        {
+            Destroy(ff.gameObject);
+        }
+        fileFolderSelector_Handlers.Clear();
+        FileSeclector.clearChildDropDowns();
+
+        string path = filePathHistory[filePathHistorySelectionIndex];
+        string[] folderNames = Directory.GetDirectories(path);
+        string[] fileNames = UtilClass.GetFileNamesWithExtension(path, currentlySelectedExtentionType.Substring(1));
+
+        if (FileName.text.Length  == 0)
+        {
+
+            for (int i = 0; i < folderNames.Length; i++)
+            {
+                GameObject temp = Instantiate(FileFolderSelectorPrefab, FileSeclector.ChildrenObjectHolder.transform);
+                General_UI_DropDown_Handler_ScriptV2 tempUIHandler = temp.GetComponent<General_UI_DropDown_Handler_ScriptV2>();
+                FileFolderSelector_Handler tempHandler = temp.GetComponent<FileFolderSelector_Handler>();
+                fileFolderSelector_Handlers.Add(tempHandler);
+                FileSeclector.addToChildDropDowns(tempUIHandler);
+                string originPath = folderNames[i];
+                string[] temps = folderNames[i].Split(Path.DirectorySeparatorChar);
+                tempHandler.setup(true, temps[temps.Length - 1], "", (name) =>
+                {
+                //need to handleClick
+                    Debug.Log("Handler Folder Click");
+                    GoToPath(originPath);
+                });
+            }
+            for (int i = 0; i < fileNames.Length; i++)
+            {
+                GameObject temp = Instantiate(FileFolderSelectorPrefab, FileSeclector.ChildrenObjectHolder.transform);
+                General_UI_DropDown_Handler_ScriptV2 tempUIHandler = temp.GetComponent<General_UI_DropDown_Handler_ScriptV2>();
+                FileFolderSelector_Handler tempHandler = temp.GetComponent<FileFolderSelector_Handler>();
+                fileFolderSelector_Handlers.Add(tempHandler);
+                FileSeclector.addToChildDropDowns(tempUIHandler);
+                string[] temps = fileNames[i].Split(".");
+                tempHandler.setup(false, fileNames[i], temps[temps.Length - 1], (name) =>
+                {
+                    //need to handleClick
+                    Debug.Log("Handler File Click");
+                });
+            }
+        }
+        else
+        {
+            for (int i = 0; i < folderNames.Length; i++)
+            {
+                if (!folderNames[i].Split(".")[0].ToLower().Contains(FileName.text.ToLower()))
+                {
+                    continue;
+                }
+                GameObject temp = Instantiate(FileFolderSelectorPrefab, FileSeclector.ChildrenObjectHolder.transform);
+                General_UI_DropDown_Handler_ScriptV2 tempUIHandler = temp.GetComponent<General_UI_DropDown_Handler_ScriptV2>();
+                FileFolderSelector_Handler tempHandler = temp.GetComponent<FileFolderSelector_Handler>();
+                fileFolderSelector_Handlers.Add(tempHandler);
+                FileSeclector.addToChildDropDowns(tempUIHandler);
+                string originPath = folderNames[i];
+                string[] temps = folderNames[i].Split(Path.DirectorySeparatorChar);
+                tempHandler.setup(true, temps[temps.Length - 1], "", (name) =>
+                {
+                    //need to handleClick
+                    Debug.Log("Handler Folder Click");
+                    GoToPath(originPath);
+                });
+            }
+            for (int i = 0; i < fileNames.Length; i++)
+            {                      
+                if (!fileNames[i].Split(".")[0].ToLower().Contains(FileName.text.ToLower()))
+                {
+                    continue;
+                }
+                GameObject temp = Instantiate(FileFolderSelectorPrefab, FileSeclector.ChildrenObjectHolder.transform);
+                General_UI_DropDown_Handler_ScriptV2 tempUIHandler = temp.GetComponent<General_UI_DropDown_Handler_ScriptV2>();
+                FileFolderSelector_Handler tempHandler = temp.GetComponent<FileFolderSelector_Handler>();
+                fileFolderSelector_Handlers.Add(tempHandler);
+                FileSeclector.addToChildDropDowns(tempUIHandler);
+                string[] temps = fileNames[i].Split(".");
+                tempHandler.setup(false, fileNames[i], temps[temps.Length-1], (name) =>
+                {
+                    //need to handleClick
+                    Debug.Log("Handler File Click");
+                });
+            }
+
+        }
+
+        if (fileFolderSelector_Handlers.Count == 0)
+        {
+            //show nothing found text
+            NothingFoundText.SetActive(true);
+        }
+        else
+        {
+            //hide nothing found text
+            NothingFoundText.SetActive(false);
+        }
+
+
+        FileSeclector.setUIPositionsNoCallback();
+        FileSeclector.setUIPositions();
     }
 
 
@@ -186,15 +303,80 @@ public class FileSelectorHandler : MonoBehaviour
         Destroy(gameObject.transform.parent.gameObject);
     }
 
+    List<Button> typeButtons = new List<Button>();
+    [SerializeField] GameObject typeSelectorPreFab;
+    [SerializeField] TMP_Text fileExtentionToSearchForText;
     public void handleFileTypeSelectorClick()
     {
         FileTypeSelectorGO.SetActive(!FileTypeSelectorGO.activeSelf);
+        if (FileTypeSelectorGO.activeSelf)
+        {
+            foreach (Button b in typeButtons)
+            {
+                Destroy(b.gameObject);
+            }
+            typeButtons.Clear();
+            FileTypeSelector.clearChildDropDowns();
+            for (int i = 0; i < extentionsToSearchFor.Length; i++)
+            {
+                if (currentlySelectedExtentionType.Equals(extentionsToSearchFor[i]))
+                {
+                    continue;
+                }
+                GameObject temp = Instantiate(typeSelectorPreFab, FileTypeSelector.gameObject.transform);
+                General_UI_DropDown_Handler_ScriptV2 tempHandler = temp.GetComponent<General_UI_DropDown_Handler_ScriptV2>();
+                TMP_Text tempText = temp.GetComponentInChildren<TMP_Text>();
+
+                string extentionName = extentionsToSearchFor[i].Substring(1);
+                if (extentionName.Equals("*"))
+                {
+                    extentionName = "All Files";
+                }
+
+                int index = i;
+                tempText.text = extentionName + " (*" + extentionsToSearchFor[index] + ")";
+                Button button = temp.GetComponent<Button>();
+                button.onClick.AddListener(() =>
+                {
+                    handleTypeSelectorSelected(extentionsToSearchFor[index]);
+                });
+                typeButtons.Add(button);
+                FileTypeSelector.addToChildDropDowns(tempHandler);
+            }
+            FileTypeSelector.setUIPositionsNoCallback();
+            FileTypeSelector.setUIPositions();
+        }
     }
+
+    public void handleTypeSelectorSelected(string extention)
+    {
+        for (int i = 0; i < extentionsToSearchFor.Length; i++)
+        {
+            if (extentionsToSearchFor[i].Equals(extention))
+            {
+                currentlySelectedExtentionType = extention;
+
+
+                string extentionName = extentionsToSearchFor[i].Substring(1);
+                if (extentionName.Equals("*"))
+                {
+                    extentionName = "All Files";
+                }
+                fileExtentionToSearchForText.text = extentionName + " (*" + extentionsToSearchFor[i] + ")";
+                handleFileTypeSelectorClick();
+                loadPath();
+            }
+        }
+    }
+
+
+
+
 
 
     public void HandleFilePathEndEdit()
     {
-        if (FilePath.text.Length > 0)
+        if (FilePath.text.Length > 0 && Directory.Exists(FilePath.text) || File.Exists(FilePath.text))
         {
             if (filePathHistory.Count > 0)
             {
@@ -208,6 +390,11 @@ public class FileSelectorHandler : MonoBehaviour
                 GoToPath(FilePath.text);
             }
         }
+        else
+        {
+            FilePath.text = filePathHistory[filePathHistorySelectionIndex];
+        }
+
     }
 }
 
