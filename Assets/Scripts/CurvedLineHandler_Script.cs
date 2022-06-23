@@ -88,7 +88,16 @@ public class CurvedLineHandler_Script : MonoBehaviour
 
 
 
+    public List<CurvedLine> GetSaveData()
+    {
+        return allLines;
+    }
 
+    public void LoadSaveData(List<CurvedLine> lines)
+    {
+        allLines = lines;
+        DrawLines();
+    }
 
 
 

@@ -89,6 +89,17 @@ public class StraightLineHandler_Script : MonoBehaviour
         }
     }
 
+    public List<Point> GetSaveData()
+    {
+        return allPoints;
+    }
+
+    public void LoadSaveData(List<Point> points)
+    {
+        allPoints = points;
+        DrawLines();
+    }
+
 
 
 
