@@ -77,19 +77,19 @@ public class FileSelectorHandler : MonoBehaviour
     }
     private void Start()
     {
-        Debug.Log("START:"+ filePathHistory);
+        //Debug.Log("START:"+ filePathHistory);
     }
 
     void addToHistory(string path)
     {
-        Debug.Log("addToHistory: " + path);
+        //Debug.Log("addToHistory: " + path);
         if (filePathHistory.Count > 0)
         {
-            Debug.Log("addToHistory1: " + path);
+            //Debug.Log("addToHistory1: " + path);
             List<string> tempFilePathHistory = new List<string>();
             for (int i = 0; i <= filePathHistorySelectionIndex; i++)
             {
-                Debug.Log("addToHistory RECOVER " + filePathHistory[i]);
+                // Debug.Log("addToHistory RECOVER " + filePathHistory[i]);
                 tempFilePathHistory.Add(filePathHistory[i]);
             }
             tempFilePathHistory.Add(path);
@@ -99,10 +99,10 @@ public class FileSelectorHandler : MonoBehaviour
         }
         else
         {
-            Debug.Log("addToHistory2: " + path);
+            //Debug.Log("addToHistory2: " + path);
             filePathHistory.Add(path);
             filePathHistorySelectionIndex = filePathHistory.Count - 1;
-            Debug.Log("addToHistory2B: " + filePathHistory[filePathHistorySelectionIndex]);
+            //Debug.Log("addToHistory2B: " + filePathHistory[filePathHistorySelectionIndex]);
         }
         updateHistorySelectorsVisuals();
     }
@@ -112,7 +112,7 @@ public class FileSelectorHandler : MonoBehaviour
     {
         addToHistory(path);
         loadPath();
-        Debug.Log("WHAT IS HAPPENING??????:" + filePathHistory[filePathHistorySelectionIndex]);
+        //Debug.Log("WHAT IS HAPPENING??????:" + filePathHistory[filePathHistorySelectionIndex]);
     }
 
 
@@ -123,12 +123,12 @@ public class FileSelectorHandler : MonoBehaviour
         string path = filePathHistory[filePathHistorySelectionIndex];
         FilePathTextRect.localPosition = new Vector2(0, FilePathTextRect.localPosition.y);
         FilePath.text = path;
-        Debug.Log("loadPath:" + path + "    " + FilePath.text);
+        //Debug.Log("loadPath:" + path + "    " + FilePath.text);
         if (Directory.Exists(path))
         {
             //handle show files
-            Debug.Log("Show Folder COntents:" + path);
-            Debug.Log("1: " + filePathHistory[filePathHistorySelectionIndex]);
+            //Debug.Log("Show Folder COntents:" + path);
+            //Debug.Log("1: " + filePathHistory[filePathHistorySelectionIndex]);
             loadDirectory();
         }
         else
@@ -136,17 +136,17 @@ public class FileSelectorHandler : MonoBehaviour
             if (File.Exists(path))
             {
                 //handle select File
-                Debug.Log("Select File:" + path);
-                Debug.Log("2: " + filePathHistory[filePathHistorySelectionIndex]);
+               Debug.Log("Select File:" + path);
+               // Debug.Log("2: " + filePathHistory[filePathHistorySelectionIndex]);
             }
             else
             {
                 //show nothing found
                 Debug.Log("Nothing Found: " + path);
-                Debug.Log("3: " + filePathHistory[filePathHistorySelectionIndex]);
+                //Debug.Log("3: " + filePathHistory[filePathHistorySelectionIndex]);
             }
         }
-        Debug.Log("4: " + filePathHistory[filePathHistorySelectionIndex]);
+       // Debug.Log("4: " + filePathHistory[filePathHistorySelectionIndex]);
     }
 
     List<FileFolderSelector_Handler> fileFolderSelector_Handlers = new List<FileFolderSelector_Handler>();
@@ -180,7 +180,7 @@ public class FileSelectorHandler : MonoBehaviour
                 tempHandler.setup(true, temps[temps.Length - 1], "", (name) =>
                 {
                 //need to handleClick
-                    Debug.Log("Handler Folder Click");
+                    //Debug.Log("Handler Folder Click");
                     GoToPath(originPath);
                 });
             }
@@ -195,7 +195,8 @@ public class FileSelectorHandler : MonoBehaviour
                 tempHandler.setup(false, fileNames[i], temps[temps.Length - 1], (name) =>
                 {
                     //need to handleClick
-                    Debug.Log("Handler File Click");
+                    //Debug.Log("Handler File Click");
+                    HandleFileSelect(name);
                 });
             }
         }
@@ -217,7 +218,7 @@ public class FileSelectorHandler : MonoBehaviour
                 tempHandler.setup(true, temps[temps.Length - 1], "", (name) =>
                 {
                     //need to handleClick
-                    Debug.Log("Handler Folder Click");
+                    //Debug.Log("Handler Folder Click");
                     GoToPath(originPath);
                 });
             }
@@ -236,7 +237,8 @@ public class FileSelectorHandler : MonoBehaviour
                 tempHandler.setup(false, fileNames[i], temps[temps.Length-1], (name) =>
                 {
                     //need to handleClick
-                    Debug.Log("Handler File Click");
+                    //Debug.Log("Handler File Click");
+                    HandleFileSelect(name);
                 });
             }
 
@@ -369,7 +371,13 @@ public class FileSelectorHandler : MonoBehaviour
         }
     }
 
-
+    void HandleFileSelect(string fileName)
+    {
+        string path = Path.Combine(FilePath.text, fileName);
+        //Debug.Log("HandleFileSelect:" + path);
+        callback.Invoke(new string[] { path});
+        Destroy(gameObject.transform.parent.gameObject);
+    }
 
 
 

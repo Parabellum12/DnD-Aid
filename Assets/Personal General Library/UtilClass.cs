@@ -219,22 +219,33 @@ public static class UtilClass
         return fileNames;
     }
 
-    public static void SaveToFile(string DirectoryPath, string FileType, string FileName, object graph)
+    public static void SaveToFile(string DirectoryPath, string FileName, string FileType, object graph)
     {
-        string path = Path.Combine(DirectoryPath, FileName + "." + FileType);
+        SaveToFile(DirectoryPath, FileName + "." + FileType, graph);
+    }
+
+    public static void SaveToFile(string DirectoryPath, string FileNameWithExtention, object graph)
+    {
+        SaveToFile(Path.Combine(DirectoryPath, FileNameWithExtention), graph);
+    }
+
+    public static void SaveToFile(string FullFilePath, object graph)
+    {
+        
         FileStream fileStream;
         BinaryFormatter binaryFormatter = new BinaryFormatter();
-        if (File.Exists(path))
+        if (File.Exists(FullFilePath))
         {
             //Debug.Log("replace F");
-            fileStream = new FileStream(path, FileMode.Truncate);
+            fileStream = new FileStream(FullFilePath, FileMode.Truncate);
         }
         else
         {
             //Debug.Log("new F");
-            fileStream = new FileStream(path, FileMode.CreateNew);
+            fileStream = new FileStream(FullFilePath, FileMode.CreateNew);
         }
         binaryFormatter.Serialize(fileStream, graph);
+        fileStream.Close();
     }
     
     public static TLoadObject LoadFromFile<TLoadObject>(string DirectoryPath, string FileType, string FileName, bool AutoErrorHandling)
@@ -268,11 +279,16 @@ public static class UtilClass
             }
             return default(TLoadObject);
         }
+        fileStream.Close();
         return returner;
     }
 
     static void SendFileToErrorFolder(string InitialFilePath)
     {
+        if (!InitialFilePath.Contains(Application.persistentDataPath) && !InitialFilePath.Contains(Application.streamingAssetsPath))
+        {
+            return;
+        }
         string ErrorFolderPath = Path.Combine(Application.persistentDataPath, "ErrorFolder");
 
         string[] folderNames = Directory.GetDirectories(Application.persistentDataPath);
