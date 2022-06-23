@@ -23,9 +23,16 @@ public class SaveLoadHandler : MonoBehaviour
 
     public void Save(string fileName)
     {
-        SaveData saveDat = new SaveData(straightLineHandler.GetSaveData(), curvedLineHandler.GetSaveData());
+        SaveData saveDat = new SaveData(straightLineHandler.GetSaveData(), curvedLineHandler.GetSaveData(), createMapId());
         UtilClass.SaveToFile(Application.persistentDataPath, fileName, saveFileType, saveDat);
     }
+
+    string createMapId()
+    {
+        string id = Random.Range(int.MinValue, int.MaxValue).ToString() + Random.Range(int.MinValue, int.MaxValue).ToString();
+        return id.GetHashCode().ToString() + id;
+    }
+
 
 
     public class SaveData
@@ -33,10 +40,13 @@ public class SaveLoadHandler : MonoBehaviour
         List<StraightLineHandler_Script.Point> straightLinePoints;
         List<CurvedLineHandler_Script.CurvedLine> curvedLineLines;
 
-        public SaveData(List<StraightLineHandler_Script.Point> straightLinePoints, List<CurvedLineHandler_Script.CurvedLine> curvedLineLines)
+        string MapId;
+
+        public SaveData(List<StraightLineHandler_Script.Point> straightLinePoints, List<CurvedLineHandler_Script.CurvedLine> curvedLineLines, string mapId)
         {
             this.straightLinePoints = straightLinePoints;
             this.curvedLineLines = curvedLineLines;
+            MapId = mapId;
         }
 
 
@@ -48,6 +58,11 @@ public class SaveLoadHandler : MonoBehaviour
         public List<CurvedLineHandler_Script.CurvedLine> GetCurvedLineLines()
         {
             return curvedLineLines;
+        }
+
+        public string GetMapId()
+        {
+            return MapId;
         }
     }
 } 
