@@ -9,7 +9,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 public static class UtilClass 
 {
     /*
-     * general cutom util class
+     * general custom util class
      * 
      */
 
