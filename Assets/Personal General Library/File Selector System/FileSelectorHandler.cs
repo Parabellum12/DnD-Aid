@@ -32,7 +32,11 @@ public class FileSelectorHandler : MonoBehaviour
 
     string currentlySelectedExtentionType;
 
-    private void Awake()
+    public List<FileFolderSelector_Handler> SelectedFiles = new List<FileFolderSelector_Handler>();
+
+    List<FileFolderSelector_Handler> fileFolderSelector_Handlers = new List<FileFolderSelector_Handler>();
+
+    private void Start()
     {
         FileTypeSelectorGO.SetActive(false);
         BackButton.onClick.AddListener(() =>
@@ -74,10 +78,6 @@ public class FileSelectorHandler : MonoBehaviour
 
 
         GoToPath(initialPath);
-    }
-    private void Start()
-    {
-        //Debug.Log("START:"+ filePathHistory);
     }
 
     void addToHistory(string path)
@@ -136,8 +136,8 @@ public class FileSelectorHandler : MonoBehaviour
             if (File.Exists(path))
             {
                 //handle select File
-               Debug.Log("Select File:" + path);
-               // Debug.Log("2: " + filePathHistory[filePathHistorySelectionIndex]);
+                Debug.Log("Select File:" + path);
+                // Debug.Log("2: " + filePathHistory[filePathHistorySelectionIndex]);
             }
             else
             {
@@ -146,10 +146,9 @@ public class FileSelectorHandler : MonoBehaviour
                 //Debug.Log("3: " + filePathHistory[filePathHistorySelectionIndex]);
             }
         }
-       // Debug.Log("4: " + filePathHistory[filePathHistorySelectionIndex]);
+        // Debug.Log("4: " + filePathHistory[filePathHistorySelectionIndex]);
     }
 
-    List<FileFolderSelector_Handler> fileFolderSelector_Handlers = new List<FileFolderSelector_Handler>();
     [SerializeField] GameObject FileFolderSelectorPrefab;
     [SerializeField] GameObject NothingFoundText;
     void loadDirectory()
@@ -165,7 +164,7 @@ public class FileSelectorHandler : MonoBehaviour
         string[] folderNames = Directory.GetDirectories(path);
         string[] fileNames = UtilClass.GetFileNamesWithExtension(path, currentlySelectedExtentionType.Substring(1));
 
-        if (FileName.text.Length  == 0)
+        if (FileName.text.Length == 0)
         {
 
             for (int i = 0; i < folderNames.Length; i++)
@@ -177,9 +176,9 @@ public class FileSelectorHandler : MonoBehaviour
                 FileSeclector.addToChildDropDowns(tempUIHandler);
                 string originPath = folderNames[i];
                 string[] temps = folderNames[i].Split(Path.DirectorySeparatorChar);
-                tempHandler.setup(true, temps[temps.Length - 1], "", (name) =>
+                tempHandler.setup(this, true, temps[temps.Length - 1], "", (name) =>
                 {
-                //need to handleClick
+                    //need to handleClick
                     //Debug.Log("Handler Folder Click");
                     GoToPath(originPath);
                 });
@@ -192,11 +191,11 @@ public class FileSelectorHandler : MonoBehaviour
                 fileFolderSelector_Handlers.Add(tempHandler);
                 FileSeclector.addToChildDropDowns(tempUIHandler);
                 string[] temps = fileNames[i].Split(".");
-                tempHandler.setup(false, fileNames[i], temps[temps.Length - 1], (name) =>
+                tempHandler.setup(this, false, fileNames[i], temps[temps.Length - 1], (name) =>
                 {
                     //need to handleClick
                     //Debug.Log("Handler File Click");
-                    HandleFileSelect(name);
+                    HandleFileSelect();
                 });
             }
         }
@@ -215,7 +214,7 @@ public class FileSelectorHandler : MonoBehaviour
                 FileSeclector.addToChildDropDowns(tempUIHandler);
                 string originPath = folderNames[i];
                 string[] temps = folderNames[i].Split(Path.DirectorySeparatorChar);
-                tempHandler.setup(true, temps[temps.Length - 1], "", (name) =>
+                tempHandler.setup(this, true, temps[temps.Length - 1], "", (name) =>
                 {
                     //need to handleClick
                     //Debug.Log("Handler Folder Click");
@@ -223,7 +222,7 @@ public class FileSelectorHandler : MonoBehaviour
                 });
             }
             for (int i = 0; i < fileNames.Length; i++)
-            {                      
+            {
                 if (!fileNames[i].Split(".")[0].ToLower().Contains(FileName.text.ToLower()))
                 {
                     continue;
@@ -234,11 +233,11 @@ public class FileSelectorHandler : MonoBehaviour
                 fileFolderSelector_Handlers.Add(tempHandler);
                 FileSeclector.addToChildDropDowns(tempUIHandler);
                 string[] temps = fileNames[i].Split(".");
-                tempHandler.setup(false, fileNames[i], temps[temps.Length-1], (name) =>
+                tempHandler.setup(this, false, fileNames[i], temps[temps.Length - 1], (name) =>
                 {
                     //need to handleClick
                     //Debug.Log("Handler File Click");
-                    HandleFileSelect(name);
+                    HandleFileSelect();
                 });
             }
 
@@ -288,13 +287,14 @@ public class FileSelectorHandler : MonoBehaviour
 
     public void handleAcceptClick()
     {
-        if (!File.Exists(selectedFilePath) || selectedFilePath.Length == 0)
+        if ((!File.Exists(selectedFilePath) || selectedFilePath.Length == 0) && SelectedFiles.Count == 0)
         {
+            Debug.Log("Cancel Accept: " + (!File.Exists(selectedFilePath) || selectedFilePath.Length == 0) + " OR:" + (SelectedFiles.Count == 0));
             return;
         }
         else
         {
-            callback?.Invoke(new string[] { selectedFilePath });
+            HandleFileSelect();
             Destroy(gameObject.transform.parent.gameObject);
         }
     }
@@ -371,11 +371,19 @@ public class FileSelectorHandler : MonoBehaviour
         }
     }
 
-    void HandleFileSelect(string fileName)
+    void HandleFileSelect()
     {
-        string path = Path.Combine(FilePath.text, fileName);
+        if (SelectedFiles.Count == 0)
+        {
+            return;
+        }
+        string[] paths = new string[SelectedFiles.Count];
+        for (int i = 0; i < SelectedFiles.Count; i++)
+        {
+            paths[i] = Path.Combine(FilePath.text, SelectedFiles[i].getText());
+        }
         //Debug.Log("HandleFileSelect:" + path);
-        callback.Invoke(new string[] { path});
+        callback?.Invoke(paths);
         Destroy(gameObject.transform.parent.gameObject);
     }
 
@@ -403,6 +411,57 @@ public class FileSelectorHandler : MonoBehaviour
             FilePath.text = filePathHistory[filePathHistorySelectionIndex];
         }
 
+    }
+
+    FileFolderSelector_Handler lastCaller;
+    public void HandleSelection(FileFolderSelector_Handler caller)
+    {
+        if (Input.GetKey(KeyCode.LeftShift) && lastCaller != null)
+        {
+            int firstIndex = 0;
+            int secondIndex = 0;
+            for (int i = 0; i < fileFolderSelector_Handlers.Count; i++)
+            {
+                if (fileFolderSelector_Handlers[i].Equals(lastCaller))
+                {
+                    secondIndex = i;
+                }
+                if (fileFolderSelector_Handlers[i].Equals(caller))
+                {
+                    firstIndex = i;
+                }
+            }
+            int max = Mathf.Max(firstIndex, secondIndex);
+            int min = Mathf.Min(firstIndex, secondIndex);
+
+            for (int i = 0; i < fileFolderSelector_Handlers.Count; i++)
+            {
+                if (i <= max && i >= min)
+                {
+                    fileFolderSelector_Handlers[i].SelectMe();
+                }
+                else
+                {
+                    fileFolderSelector_Handlers[i].DeselectMe();
+                }
+            }
+
+        }
+        else
+        {
+            for (int i = 0; i < fileFolderSelector_Handlers.Count; i++)
+            {
+                if (!caller.Equals(fileFolderSelector_Handlers[i]))
+                {
+                    fileFolderSelector_Handlers[i].DeselectMe();
+                }
+                else
+                {
+                    fileFolderSelector_Handlers[i].SelectMe();
+                }
+            }
+            lastCaller = caller;
+        }
     }
 }
 

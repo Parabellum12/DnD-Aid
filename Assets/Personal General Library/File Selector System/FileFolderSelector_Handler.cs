@@ -4,11 +4,14 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System.IO;
+using UnityEngine.EventSystems;
+
 
 public class FileFolderSelector_Handler : MonoBehaviour
 {
     [SerializeField] TMP_Text fileFolderName;
 
+    [SerializeField] Image BackgroundImage;
     [SerializeField] Image TypeImage;
 
 
@@ -25,12 +28,17 @@ public class FileFolderSelector_Handler : MonoBehaviour
 
     [SerializeField] Sprite OtherFileSprite;
 
-
+    bool selected;
+    FileSelectorHandler SelectorHandler;
 
 
     System.Action<string> callback;
-    public void setup(bool FolderOrFile, string name, string extentionType, System.Action<string> callback)
+
+    bool isFolder;
+    public void setup(FileSelectorHandler SelectorHandler, bool FolderOrFile, string name, string extentionType, System.Action<string> callback)
     {
+        isFolder = FolderOrFile;
+        this.SelectorHandler = SelectorHandler;
         this.callback = callback;
         fileFolderName.text = name;
         if (FolderOrFile)
@@ -59,12 +67,14 @@ public class FileFolderSelector_Handler : MonoBehaviour
             }
         }
 
+
     }
 
     float lastClickTime = 0;
     float maxTimeForDoubleCLick = .3f;
     public void handleClick()
     {
+
         if (Time.realtimeSinceStartup - lastClickTime <= maxTimeForDoubleCLick)
         {
             callback.Invoke(fileFolderName.text);
@@ -72,8 +82,51 @@ public class FileFolderSelector_Handler : MonoBehaviour
         else
         {
             lastClickTime = Time.realtimeSinceStartup;
+            SelectorHandler.HandleSelection(this);
         }
+    }
+    void handleSelectEvent()
+    {
+        if (isFolder)
+        {
+            return;
+        }
+        if (selected)
+        {
+            SelectorHandler.SelectedFiles.Add(this);
+        }
+        else
+        {
+            SelectorHandler.SelectedFiles.Remove(this);
+        }
+    }
 
+    public void SelectMe()
+    {
+        if (selected)
+        {
+            return;
+        }
+        Debug.Log("SelectMe");
+        BackgroundImage.color = new Color(0, 176, 251, 120);
+        selected = true;
+        handleSelectEvent();
+    }
 
+    public void DeselectMe()
+    {
+        if (!selected)
+        {
+            return;
+        }
+        Debug.Log("DeselectMe");
+        BackgroundImage.color = new Color(239, 235, 235, 255);
+        selected = false;
+        handleSelectEvent();
+    }
+
+    public string getText()
+    {
+        return fileFolderName.text;
     }
 }

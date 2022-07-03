@@ -27,7 +27,7 @@ public class TokenVisualHandler_Script : MonoBehaviour
     {
         this.referenceTokenData = referenceTokenData;
 
-        SetImage(referenceTokenData.TokenImage.texture);
+        SetImage(referenceTokenData.TokenImage);
         SetPosition(referenceTokenData.TokenPosition);
         setOrdering(referenceTokenData.ZPos, referenceTokenData.sortingOrder);
     }

@@ -49,12 +49,17 @@ public class LineCreatorHandler_Script : MonoBehaviour
             });
         }
 
-        /*
+        
         UtilClass.FileSelector(canvas, Application.streamingAssetsPath, new string[] { ".txt", ".*", ".PNG", ".Jpeg", ".exe" }, true, (selectedFiles) =>
         {
-            Debug.LogWarning(selectedFiles[0]);
+            Debug.LogWarning("START SELECTED LOG");
+            for (int i = 0; i < selectedFiles.Length; i++)
+            {
+                Debug.LogWarning("  "+selectedFiles[i]);
+            }
+            Debug.LogWarning("END SELECTED LOG");
         });
-        */
+        
         
 
     }

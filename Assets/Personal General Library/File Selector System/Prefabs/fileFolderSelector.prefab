@@ -176,12 +176,12 @@ MonoBehaviour:
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}
-  m_Transition: 1
+  m_Transition: 0
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
     m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
     m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
-    m_SelectedColor: {r: 0, g: 0.6900224, b: 0.9843137, a: 0.4392157}
+    m_SelectedColor: {r: 0, g: 0.6900224, b: 0.9843137, a: 0.47058824}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
@@ -226,6 +226,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fileFolderName: {fileID: 6762953974043257666}
+  BackgroundImage: {fileID: 5241075979410915069}
   TypeImage: {fileID: 3378879502208398885}
   FolderSprite: {fileID: 21300000, guid: 0ac5cb007bf48a74fa6625a8da0919f6, type: 3}
   TxtSprite: {fileID: 21300000, guid: c7ab2731d7fc34d4a94c6f33d5d103c4, type: 3}
