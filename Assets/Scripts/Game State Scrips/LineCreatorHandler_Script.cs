@@ -50,7 +50,7 @@ public class LineCreatorHandler_Script : MonoBehaviour
         }
 
         
-        UtilClass.FileSelector(canvas, Application.streamingAssetsPath, new string[] { ".txt", ".*", ".PNG", ".Jpeg", ".exe" }, true, (selectedFiles) =>
+        UtilClass.FileSelector(canvas, Application.streamingAssetsPath, new string[] { ".txt", ".*", ".PNG", ".Jpeg", ".exe" }, true, true, (selectedFiles) =>
         {
             Debug.LogWarning("START SELECTED LOG");
             for (int i = 0; i < selectedFiles.Length; i++)

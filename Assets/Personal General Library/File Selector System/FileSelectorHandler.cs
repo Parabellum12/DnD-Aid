@@ -36,6 +36,10 @@ public class FileSelectorHandler : MonoBehaviour
 
     List<FileFolderSelector_Handler> fileFolderSelector_Handlers = new List<FileFolderSelector_Handler>();
 
+
+    bool allowMultiSelect;
+
+
     private void Start()
     {
         FileTypeSelectorGO.SetActive(false);
@@ -58,8 +62,9 @@ public class FileSelectorHandler : MonoBehaviour
             handleCancelClick();
         });
     }
-    public void OpenFileSelector(string initialPath, string[] extentionsToSearchFor, bool lockSearchToInitialPath, System.Action<string[]> callback)
+    public void OpenFileSelector(string initialPath, string[] extentionsToSearchFor, bool lockSearchToInitialPath, bool allowMultiSelect, System.Action<string[]> callback)
     {
+        this.allowMultiSelect = allowMultiSelect;
         this.callback = callback;
         for (int i = 0; i < extentionsToSearchFor.Length; i++)
         {
@@ -287,9 +292,10 @@ public class FileSelectorHandler : MonoBehaviour
 
     public void handleAcceptClick()
     {
-        if ((!File.Exists(selectedFilePath) || selectedFilePath.Length == 0) && SelectedFiles.Count == 0)
+        if ((!File.Exists(selectedFilePath) || selectedFilePath.Length == 0) && SelectedFiles.Count == 0 || (SelectedFiles.Count > 1 && !allowMultiSelect))
         {
             Debug.Log("Cancel Accept: " + (!File.Exists(selectedFilePath) || selectedFilePath.Length == 0) + " OR:" + (SelectedFiles.Count == 0));
+            StartCoroutine(handleDenySelect());
             return;
         }
         else
@@ -462,6 +468,44 @@ public class FileSelectorHandler : MonoBehaviour
             }
             lastCaller = caller;
         }
+    }
+
+
+
+
+    IEnumerator handleDenySelect()
+    {
+        Vector2 currentPos = transform.localPosition;
+        float moveBy = 300f;
+        for (int i = 0; i < 10; i++)
+        {
+            Vector2 pos = transform.localPosition;
+            pos.x -= moveBy * Time.deltaTime;
+            transform.localPosition = pos;
+            yield return null;
+        }
+
+        yield return null;
+        for (int i = 0; i < 20; i++)
+        {
+            Vector2 pos = transform.localPosition;
+            pos.x += moveBy * Time.deltaTime;
+            transform.localPosition = pos;
+            yield return null;
+        }
+
+        yield return null;
+        for (int i = 0; i < 10; i++)
+        {
+            Vector2 pos = transform.localPosition;
+            pos.x -= moveBy * Time.deltaTime;
+            transform.localPosition = pos;
+            yield return null;
+        }
+
+        transform.localPosition = currentPos;
+
+        yield break;
     }
 }
 

@@ -35,6 +35,11 @@ public class FileFolderSelector_Handler : MonoBehaviour
     System.Action<string> callback;
 
     bool isFolder;
+
+    public void Awake()
+    {
+        DeselectMe();
+    }
     public void setup(FileSelectorHandler SelectorHandler, bool FolderOrFile, string name, string extentionType, System.Action<string> callback)
     {
         isFolder = FolderOrFile;
@@ -108,8 +113,10 @@ public class FileFolderSelector_Handler : MonoBehaviour
             return;
         }
         Debug.Log("SelectMe");
-        BackgroundImage.color = new Color(0, 176, 251, 120);
-        selected = true;
+       BackgroundImage.color = new Color(0, 176, 251);
+
+
+       selected = true;
         handleSelectEvent();
     }
 
@@ -120,7 +127,10 @@ public class FileFolderSelector_Handler : MonoBehaviour
             return;
         }
         Debug.Log("DeselectMe");
-        BackgroundImage.color = new Color(239, 235, 235, 255);
+        BackgroundImage.color = new Color(239, 235, 235, 120/255);
+
+
+
         selected = false;
         handleSelectEvent();
     }

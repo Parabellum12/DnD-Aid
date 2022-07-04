@@ -21,8 +21,8 @@ public class FileSelector : MonoBehaviour
         Selector.transform.localPosition = Vector2.zero;
 
     }
-    public void OpenFileSelector(string initialPath, string[] extentionsToSearchFor, bool lockSearchToInitialPath, System.Action<string[]> callback)
+    public void OpenFileSelector(string initialPath, string[] extentionsToSearchFor, bool lockSearchToInitialPath, bool allowMultiSelect, System.Action<string[]> callback)
     {
-        FileSelectorHandler.OpenFileSelector(initialPath, extentionsToSearchFor, lockSearchToInitialPath, callback);
+        FileSelectorHandler.OpenFileSelector(initialPath, extentionsToSearchFor, lockSearchToInitialPath, allowMultiSelect, callback);
     }
 }

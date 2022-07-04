@@ -347,13 +347,13 @@ public static class UtilClass
         return Vector2.Distance(a,b) <= ErrorRange;
     }
 
-    public static void FileSelector(Canvas canvas, string initialPath, string[] extentionsToSearchFor, bool lockSearchToInitialPath, System.Action<string[]> callback)
+    public static void FileSelector(Canvas canvas, string initialPath, string[] extentionsToSearchFor, bool lockSearchToInitialPath, bool allowMultiSelect, System.Action<string[]> callback)
     {
         GameObject go = new GameObject("FileSelector");
         go.transform.parent = canvas.transform;
         FileSelector fs = go.AddComponent<FileSelector>();
         fs.GenerateFileSelectorUi();
-        fs.OpenFileSelector(initialPath, extentionsToSearchFor, lockSearchToInitialPath, callback);
+        fs.OpenFileSelector(initialPath, extentionsToSearchFor, lockSearchToInitialPath, allowMultiSelect, callback);
     }
 
     public static void CreateUiElementWithImage(Transform parent, string objectName, Vector2 position, Vector2 sizeDelta, string imagePath, Color imageColor, out GameObject UiGameObject, out RectTransform UiRectTransform, out Image UiImage)
