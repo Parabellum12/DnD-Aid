@@ -247,7 +247,49 @@ public static class UtilClass
         binaryFormatter.Serialize(fileStream, graph);
         fileStream.Close();
     }
-    
+
+    public static void SaveToTextFile(string DirectoryPath, string FileName, string FileType, string[] contents)
+    {
+        SaveToTextFile(DirectoryPath, FileName + "." + FileType, contents);
+    }
+
+    public static void SaveToTextFile(string DirectoryPath, string FileNameWithExtention, string[] contents)
+    {
+        SaveToTextFile(Path.Combine(DirectoryPath, FileNameWithExtention), contents);
+    }
+
+    public static void SaveToTextFile(string FullFilePath, string[] contents)
+    {
+        if (File.Exists(FullFilePath) && !Path.GetExtension(FullFilePath).Equals(".txt"))
+        {
+            Debug.LogWarning("SaveToTextFile Error:" + Path.GetExtension(FullFilePath));
+            return;
+        }
+        File.WriteAllLines(FullFilePath, contents);
+
+    }
+
+    public static void SaveToTextFile(string DirectoryPath, string FileName, string FileType, string contents)
+    {
+        SaveToTextFile(DirectoryPath, FileName + "." + FileType, contents);
+    }
+
+    public static void SaveToTextFile(string DirectoryPath, string FileNameWithExtention, string contents)
+    {
+        SaveToTextFile(Path.Combine(DirectoryPath, FileNameWithExtention), contents);
+    }
+
+    public static void SaveToTextFile(string FullFilePath, string contents)
+    {
+        if (File.Exists(FullFilePath) && !Path.GetExtension(FullFilePath).Equals(".txt"))
+        {
+            Debug.LogWarning("SaveToTextFile Error:" + Path.GetExtension(FullFilePath));
+            return;
+        }
+        File.WriteAllText(FullFilePath, contents);
+
+    }
+
     public static TLoadObject LoadFromFile<TLoadObject>(string DirectoryPath, string FileType, string FileName, bool AutoErrorHandling)
     {
         return LoadFromFile<TLoadObject>(DirectoryPath, FileName+"."+FileType, AutoErrorHandling);
@@ -280,6 +322,38 @@ public static class UtilClass
             return default(TLoadObject);
         }
         fileStream.Close();
+        return returner;
+    }
+
+    public static string LoadFromTextFile(string DirectoryPath, string FileType, string FileName, bool AutoErrorHandling)
+    {
+        return LoadFromTextFile(DirectoryPath, FileName + "." + FileType, AutoErrorHandling);
+    }
+    public static string LoadFromTextFile(string DirectoryPath, string FileNameWithType, bool AutoErrorHandling)
+    {
+        return LoadFromTextFile(Path.Combine(DirectoryPath, FileNameWithType), AutoErrorHandling);
+    }
+    public static string LoadFromTextFile(string FullFilePath, bool AutoErrorHandling)
+    {
+        if (!File.Exists(FullFilePath))
+        {
+            return null;
+        }
+        string returner = null;
+        try
+        {
+            returner = File.ReadAllText(FullFilePath);
+        }
+        catch
+        {
+            Debug.LogWarning("LoadFromFile Error:" + FullFilePath);
+            if (AutoErrorHandling)
+            {
+                //send file to errorFoder
+                SendFileToErrorFolder(FullFilePath);
+            }
+            return null;
+        }
         return returner;
     }
 

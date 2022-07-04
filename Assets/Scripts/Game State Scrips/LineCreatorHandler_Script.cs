@@ -59,6 +59,11 @@ public class LineCreatorHandler_Script : MonoBehaviour
             }
             Debug.LogWarning("END SELECTED LOG");
         });
+
+
+        UtilClass.SaveToTextFile(Application.streamingAssetsPath, "testTextFile", "txt", new string[] { "hello world", "why", "hello" });
+        Debug.Log("test txt file reading:" + UtilClass.LoadFromTextFile(Application.streamingAssetsPath, "txt", "testTextFile", true));
+        Debug.Log("test txt file reading Arr:" + UtilClass.LoadFromTextFile(Application.streamingAssetsPath, "txt", "testTextFile", true).Split("\n").Length);
         
         
 
