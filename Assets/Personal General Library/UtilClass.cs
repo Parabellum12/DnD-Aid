@@ -335,7 +335,7 @@ public static class UtilClass
     }
     public static string LoadFromTextFile(string FullFilePath, bool AutoErrorHandling)
     {
-        if (!File.Exists(FullFilePath))
+        if (!File.Exists(FullFilePath) || (File.Exists(FullFilePath) && !Path.GetExtension(FullFilePath).Equals(".txt")))
         {
             return null;
         }
@@ -353,6 +353,44 @@ public static class UtilClass
                 SendFileToErrorFolder(FullFilePath);
             }
             return null;
+        }
+        return returner;
+    }
+
+    public static string[] LoadFromTextFileAsLines(string DirectoryPath, string FileType, string FileName, bool AutoErrorHandling)
+    {
+        return LoadFromTextFileAsLines(DirectoryPath, FileName + "." + FileType, AutoErrorHandling);
+    }
+    public static string[] LoadFromTextFileAsLines(string DirectoryPath, string FileNameWithType, bool AutoErrorHandling)
+    {
+        return LoadFromTextFileAsLines(Path.Combine(DirectoryPath, FileNameWithType), AutoErrorHandling);
+    }
+    public static string[] LoadFromTextFileAsLines(string FullFilePath, bool AutoErrorHandling)
+    {
+        if (!File.Exists(FullFilePath) || (File.Exists(FullFilePath) && !Path.GetExtension(FullFilePath).Equals(".txt")))
+        {
+            return null;
+        }
+        string returner1 = null;
+        try
+        {
+            returner1 = File.ReadAllText(FullFilePath);
+        }
+        catch
+        {
+            Debug.LogWarning("LoadFromFile Error:" + FullFilePath);
+            if (AutoErrorHandling)
+            {
+                //send file to errorFoder
+                SendFileToErrorFolder(FullFilePath);
+            }
+            return null;
+        }
+        string[] returner1arr = returner1.Split("\n");
+        string[] returner = new string[returner1.Length-1];
+        for (int i = 0; i < returner1.Length-1; i++)
+        {
+            returner[i] = returner1arr[i];
         }
         return returner;
     }
