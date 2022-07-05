@@ -48,23 +48,6 @@ public class LineCreatorHandler_Script : MonoBehaviour
                 setTool(Tools.CurvedLine);
             });
         }
-
-        
-        UtilClass.FileSelector(canvas, Application.streamingAssetsPath, new string[] { ".txt", ".*", ".PNG", ".Jpeg", ".exe" }, true, true, (selectedFiles) =>
-        {
-            Debug.LogWarning("START SELECTED LOG");
-            for (int i = 0; i < selectedFiles.Length; i++)
-            {
-                Debug.LogWarning("  "+selectedFiles[i]);
-            }
-            Debug.LogWarning("END SELECTED LOG");
-        });
-
-
-        UtilClass.SaveToTextFile(Application.streamingAssetsPath, "testTextFile", "txt", new string[] { "hello world", "why", "hello" });
-        Debug.Log("test txt file reading:" + UtilClass.LoadFromTextFile(Application.streamingAssetsPath, "txt", "testTextFile", true));
-        Debug.Log("test txt file reading Arr:" + UtilClass.LoadFromTextFile(Application.streamingAssetsPath, "txt", "testTextFile", true).Split("\n").Length);
-        
         
 
     }

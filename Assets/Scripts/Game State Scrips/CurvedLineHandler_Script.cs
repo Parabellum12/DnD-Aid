@@ -11,6 +11,11 @@ public class CurvedLineHandler_Script : MonoBehaviour
     [SerializeField] int maxResCountHolder = 1000;
     [SerializeField]int maxResCount;
 
+    Vector2 OriginPos = Vector2.zero;
+    [SerializeField] float zPos = -2;
+    [SerializeField] Material curvedLineMaterial;
+
+
     private void Start()
     {
         maxResCount = maxResCountHolder;
@@ -30,7 +35,7 @@ public class CurvedLineHandler_Script : MonoBehaviour
         {
             maxResCount = maxResCountHolder;
             currentState = State.ContinueLine;
-            lastAddedLine = new CurvedLine(CurvedLineHolder);
+            lastAddedLine = new CurvedLine(CurvedLineHolder, OriginPos, zPos);
             allLines.Add(lastAddedLine);
         }
         lastAddedLine.AddPoint(pos);
@@ -129,7 +134,7 @@ public class CurvedLineHandler_Script : MonoBehaviour
         }
         else
         {
-            line.draw(maxResCount);
+            line.draw(maxResCount, curvedLineMaterial);
         }
         if (updateRes)
         {
@@ -148,7 +153,7 @@ public class CurvedLineHandler_Script : MonoBehaviour
         }
         else
         {
-            line.draw(resCount);
+            line.draw(resCount, curvedLineMaterial);
         }
         updateMaxRes(Time.realtimeSinceStartup - startTime > minTestAmount, Time.realtimeSinceStartup - startTime);
 
@@ -167,7 +172,7 @@ public class CurvedLineHandler_Script : MonoBehaviour
             }
             else
             {
-                cl.draw(maxResCount);
+                cl.draw(maxResCount, curvedLineMaterial);
             }
         }
         updateMaxRes(Time.realtimeSinceStartup - startTime > minTestAmount, Time.realtimeSinceStartup - startTime);
@@ -238,14 +243,19 @@ public class CurvedLineHandler_Script : MonoBehaviour
         Vector3[] drawnPositions = null;
         Vector2 centerOfCurve;
         float maxDistFromCurveCenter;
-        public CurvedLine(GameObject CurvedLineLineRendererHolder)
+
+        Vector2 originPoint;
+        float zPos;
+        public CurvedLine(GameObject CurvedLineLineRendererHolder, Vector2 originPoint, float zPos)
         {
             this.CurvedLineLineRendererHolder = CurvedLineLineRendererHolder;
             GameObject go = new GameObject("LineRenderer");
             go.transform.parent = this.CurvedLineLineRendererHolder.transform;
-            go.transform.position = new Vector3(0,0,-2);
+            go.transform.position = new Vector3(0, 0, zPos);
             lineRenderer = go.AddComponent<LineRenderer>();
             lerpData = null;
+            this.originPoint = originPoint;
+            this.zPos = zPos;
         }
 
         public bool IsSelected(Vector2 pos, bool firstORSecondCatch)
@@ -307,7 +317,7 @@ public class CurvedLineHandler_Script : MonoBehaviour
             return Points.Count;
         }
 
-        public void draw(int maxResolutionCount)
+        public void draw(int maxResolutionCount, Material curvedLineMaterial)
         {
             if (Points.Count <= 1)
             {
@@ -357,7 +367,7 @@ public class CurvedLineHandler_Script : MonoBehaviour
             for (float i = 0; i <= 1f; i += 1f/ lineResolution)
             {
                 Vector2 temp = lerpData.getLerpPos(i);
-                poses.Add(new Vector3(temp.x, temp.y, -2));
+                poses.Add(new Vector3(temp.x, temp.y, zPos));
 
                 if (Vector2.Distance(centerOfCurve, temp) > maxDistFromCenter)
                 {
@@ -373,13 +383,15 @@ public class CurvedLineHandler_Script : MonoBehaviour
                 {
                     maxDistFromCenter = Vector2.Distance(centerOfCurve, temp);
                 }
-                poses.Add(new Vector3(temp.x, temp.y, -2));
+                Vector3 tempVec3 = new Vector3(temp.x + originPoint.x, temp.y + originPoint.y, zPos);
+                poses.Add(tempVec3);
             }
             maxDistFromCurveCenter = maxDistFromCenter;
             drawnPositions = poses.ToArray();
             lineRenderer.positionCount = poses.Count;
             lineRenderer.SetPositions(poses.ToArray());
             drawnPositions = poses.ToArray();
+            lineRenderer.material = curvedLineMaterial;
         }
 
         public void KillMe()

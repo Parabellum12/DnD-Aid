@@ -431,17 +431,23 @@ public static class UtilClass
 
     public static Texture2D LoadPNG(string filePath)
     {
-
-        Texture2D tex = null;
-        byte[] fileData;
-
-        if (File.Exists(filePath))
+        try
         {
-            fileData = File.ReadAllBytes(filePath);
-            tex = new Texture2D(2, 2);
-            tex.LoadImage(fileData); //..this will auto-resize the texture dimensions.
+            Texture2D tex = null;
+            byte[] fileData;
+
+            if (File.Exists(filePath) && Path.HasExtension(".png"))
+            {
+                fileData = File.ReadAllBytes(filePath);
+                tex = new Texture2D(2, 2);
+                tex.LoadImage(fileData); //..this will auto-resize the texture dimensions.
+            }
+            return tex;
+        } 
+        catch
+        {
+            return null;
         }
-        return tex;
     }
 
     public static float getPointDist2D(float a, float b)

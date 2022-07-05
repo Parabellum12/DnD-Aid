@@ -9,6 +9,12 @@ public class StraightLineHandler_Script : MonoBehaviour
     List<LineRenderer> allLineRenderers = new List<LineRenderer>();
     LineRenderer guideLineRendederer;
 
+    Vector2 OriginPos = Vector2.zero;
+    [SerializeField] float zPos = -2;
+
+    [SerializeField] Material straightLineMaterial;
+
+
     private void Start()
     {
         lineRendererHolder = new GameObject("Straight Line LineRender Holder");
@@ -34,7 +40,7 @@ public class StraightLineHandler_Script : MonoBehaviour
     int currentLineCount = 0;
     public void AddPoint(Vector2 pos, bool alsoDrawLines)
     {
-        Point newPoint = new Point(pos);
+        Point newPoint = new Point(pos, OriginPos);
         if (currentState == State.ContinueLine)
         {
             currentLineCount++;
@@ -80,8 +86,8 @@ public class StraightLineHandler_Script : MonoBehaviour
         if (currentState == State.ContinueLine)
         {
             guideLineRendederer.positionCount = 2;
-            guideLineRendederer.SetPosition(0, new Vector3(lastPointAdded.GetPos().x, lastPointAdded.GetPos().y, -2));
-            guideLineRendederer.SetPosition(1, new Vector3(Pos.x, Pos.y, -2));
+            guideLineRendederer.SetPosition(0, new Vector3(lastPointAdded.GetPos().x, lastPointAdded.GetPos().y, zPos));
+            guideLineRendederer.SetPosition(1, new Vector3(Pos.x, Pos.y, zPos));
         }
         else if (currentState == State.NewLine)
         {
@@ -137,9 +143,12 @@ public class StraightLineHandler_Script : MonoBehaviour
         go.transform.position = Vector3.zero;
         LineRenderer lr = go.AddComponent<LineRenderer>();
         lr.positionCount = 2;
-        lr.SetPosition(0, new Vector3(line.x, line.y, -2));
-        lr.SetPosition(1, new Vector3(line.z, line.w, -2));
+        Vector3 start = new Vector3(line.x, line.y, zPos);
+        Vector3 end = new Vector3(line.z, line.w, zPos);
+        lr.SetPosition(0, start);
+        lr.SetPosition(1, end);
         allLineRenderers.Add(lr);
+        lr.material = straightLineMaterial;
     }
 
     void PrunePoints()
@@ -242,10 +251,11 @@ public class StraightLineHandler_Script : MonoBehaviour
     {
         Vector2 pos;
         List<Point> PointsIPointTo = new List<Point>();
-
-        public Point(Vector2 pos)
+        Vector2 OriginPos = Vector2.zero;
+        public Point(Vector2 pos, Vector2 originPos)
         {
             this.pos = pos;
+            OriginPos = originPos;
         }
 
         public void AddPoint(Point nextPoint)
@@ -276,7 +286,7 @@ public class StraightLineHandler_Script : MonoBehaviour
 
         public Vector2 GetPos()
         {
-            return pos;
+            return pos + OriginPos;
         }
 
         public List<Point> ReturnPointsIPointTo()
